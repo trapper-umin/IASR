@@ -8,8 +8,8 @@ import com.iasr.core.dataset.DatasetLogger;
 import com.iasr.core.guardrail.Guardrails;
 import com.iasr.core.metrics.MetricsProvider;
 import com.iasr.core.metrics.MetricsSnapshot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -34,13 +34,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * <p>Lifecycle: call {@link #start()} after construction and {@link #stop()}
  * to shut down.  The engine is not reusable after stopping.
  */
+@Slf4j
 public class ControlEngine {
 
-    private static final Logger log = LoggerFactory.getLogger(ControlEngine.class);
-
+    @Getter
     private final ControlEngineConfig config;
     private final MetricsProvider metricsProvider;
     private final Controller controller;
+    @Getter
     private final List<Actuator> actuators;
     private final Guardrails guardrails;
     private final DatasetLogger datasetLogger;
@@ -154,13 +155,4 @@ public class ControlEngine {
         }
     }
 
-    // ── Accessors for testing / monitoring ───────────────────────────────
-
-    public ControlEngineConfig getConfig() {
-        return config;
-    }
-
-    public List<Actuator> getActuators() {
-        return actuators;
-    }
 }

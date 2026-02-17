@@ -1,8 +1,7 @@
 package com.iasr.core.actuator;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Actuator that adjusts {@code maximumPoolSize} of a HikariCP connection pool
@@ -16,11 +15,10 @@ import org.slf4j.LoggerFactory;
  * JMX/MXBean is a supported hot-config operation.  The pool will gradually
  * converge to the new size as connections are returned or evicted.
  */
+@Slf4j
 public class HikariPoolActuator implements Actuator {
 
     public static final String ACTUATOR_NAME = "hikari_max_pool";
-
-    private static final Logger log = LoggerFactory.getLogger(HikariPoolActuator.class);
 
     private final HikariDataSource dataSource;
     private final int minPoolSize;

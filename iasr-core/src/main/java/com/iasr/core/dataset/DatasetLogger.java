@@ -2,8 +2,8 @@ package com.iasr.core.dataset;
 
 import com.iasr.core.controller.ControlAction;
 import com.iasr.core.metrics.MetricsSnapshot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
 import java.util.Map;
@@ -25,19 +25,16 @@ import java.util.Map;
  *   <li>On shutdown, {@link #flush()} writes the last record with {@code outcome=null}.</li>
  * </ol>
  */
+@Slf4j(topic = DatasetLogger.LOGGER_NAME)
+@RequiredArgsConstructor
 public class DatasetLogger {
 
     public static final String LOGGER_NAME = "softres.dataset";
-    private static final Logger datasetLog = LoggerFactory.getLogger(LOGGER_NAME);
 
     private final double windowSec;
 
     /** Previous tick record waiting for its outcome. */
     private volatile DatasetRecord pending;
-
-    public DatasetLogger(double windowSec) {
-        this.windowSec = windowSec;
-    }
 
     /**
      * Record state and action for the current tick.
@@ -73,8 +70,8 @@ public class DatasetLogger {
     }
 
     private void writeLine(DatasetRecord record) {
-        if (datasetLog.isInfoEnabled()) {
-            datasetLog.info(record.toJsonLine());
+        if (log.isInfoEnabled()) {
+            log.info(record.toJsonLine());
         }
     }
 }

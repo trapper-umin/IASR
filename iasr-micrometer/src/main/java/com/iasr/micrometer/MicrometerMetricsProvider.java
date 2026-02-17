@@ -6,8 +6,7 @@ import com.iasr.core.metrics.MetricsSnapshot;
 import io.micrometer.core.instrument.*;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
 import io.micrometer.core.instrument.distribution.ValueAtPercentile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,9 +29,8 @@ import java.util.concurrent.TimeUnit;
  *   <li>{@code jvm.gc.pause} — Timer</li>
  * </ul>
  */
+@Slf4j
 public class MicrometerMetricsProvider implements MetricsProvider {
-
-    private static final Logger log = LoggerFactory.getLogger(MicrometerMetricsProvider.class);
 
     private final MeterRegistry registry;
     private final String hikariPoolName;

@@ -6,8 +6,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -24,21 +24,13 @@ import java.util.concurrent.TimeUnit;
  * If the downstream processing results in a 5xx status code, the error
  * counter is incremented.
  */
+@Slf4j
+@RequiredArgsConstructor
 public class ConcurrencyLimitFilter extends OncePerRequestFilter {
-
-    private static final Logger log = LoggerFactory.getLogger(ConcurrencyLimitFilter.class);
 
     private final ConcurrencyLimiter limiter;
     private final long acquireTimeoutMs;
     private final IasrMeterBinder meterBinder;
-
-    public ConcurrencyLimitFilter(ConcurrencyLimiter limiter,
-                                  long acquireTimeoutMs,
-                                  IasrMeterBinder meterBinder) {
-        this.limiter = limiter;
-        this.acquireTimeoutMs = acquireTimeoutMs;
-        this.meterBinder = meterBinder;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

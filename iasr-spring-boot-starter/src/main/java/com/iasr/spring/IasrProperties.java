@@ -1,5 +1,8 @@
 package com.iasr.spring;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Configuration properties for IASR Spring Boot integration.
  * <p>
@@ -34,6 +37,8 @@ package com.iasr.spring;
  *     hikari-acquire-time-threshold-ms: 10
  * </pre>
  */
+@Getter
+@Setter
 public class IasrProperties {
 
     private boolean enabled = true;
@@ -45,26 +50,10 @@ public class IasrProperties {
     private final Hikari hikari = new Hikari();
     private final ControllerProps controller = new ControllerProps();
 
-    // ── Getters / Setters ────────────────────────────────────────────────
-
-    public boolean isEnabled() { return enabled; }
-    public void setEnabled(boolean enabled) { this.enabled = enabled; }
-
-    public boolean isDatasetLoggingEnabled() { return datasetLoggingEnabled; }
-    public void setDatasetLoggingEnabled(boolean v) { this.datasetLoggingEnabled = v; }
-
-    public double getSloLatencyMs() { return sloLatencyMs; }
-    public void setSloLatencyMs(double sloLatencyMs) { this.sloLatencyMs = sloLatencyMs; }
-
-    public long getWindowMs() { return windowMs; }
-    public void setWindowMs(long windowMs) { this.windowMs = windowMs; }
-
-    public Concurrency getConcurrency() { return concurrency; }
-    public Hikari getHikari() { return hikari; }
-    public ControllerProps getController() { return controller; }
-
     // ── Nested: Concurrency ──────────────────────────────────────────────
 
+    @Getter
+    @Setter
     public static class Concurrency {
         private int initialLimit = 100;
         private int minLimit = 10;
@@ -72,49 +61,23 @@ public class IasrProperties {
         private int maxStep = 20;
         private int cooldownTicks = 3;
         private long acquireTimeoutMs = 500;
-
-        public int getInitialLimit() { return initialLimit; }
-        public void setInitialLimit(int v) { this.initialLimit = v; }
-
-        public int getMinLimit() { return minLimit; }
-        public void setMinLimit(int v) { this.minLimit = v; }
-
-        public int getMaxLimit() { return maxLimit; }
-        public void setMaxLimit(int v) { this.maxLimit = v; }
-
-        public int getMaxStep() { return maxStep; }
-        public void setMaxStep(int v) { this.maxStep = v; }
-
-        public int getCooldownTicks() { return cooldownTicks; }
-        public void setCooldownTicks(int v) { this.cooldownTicks = v; }
-
-        public long getAcquireTimeoutMs() { return acquireTimeoutMs; }
-        public void setAcquireTimeoutMs(long v) { this.acquireTimeoutMs = v; }
     }
 
     // ── Nested: Hikari ───────────────────────────────────────────────────
 
+    @Getter
+    @Setter
     public static class Hikari {
         private int minPoolSize = 5;
         private int maxPoolSize = 50;
         private int maxStep = 2;
         private int cooldownTicks = 5;
-
-        public int getMinPoolSize() { return minPoolSize; }
-        public void setMinPoolSize(int v) { this.minPoolSize = v; }
-
-        public int getMaxPoolSize() { return maxPoolSize; }
-        public void setMaxPoolSize(int v) { this.maxPoolSize = v; }
-
-        public int getMaxStep() { return maxStep; }
-        public void setMaxStep(int v) { this.maxStep = v; }
-
-        public int getCooldownTicks() { return cooldownTicks; }
-        public void setCooldownTicks(int v) { this.cooldownTicks = v; }
     }
 
     // ── Nested: Controller tuning ────────────────────────────────────────
 
+    @Getter
+    @Setter
     public static class ControllerProps {
         private double comfortFactor = 0.7;
         private int concurrencyIncreaseStep = 5;
@@ -124,29 +87,5 @@ public class IasrProperties {
         private int hikariStep = 1;
         private double hikariPendingThreshold = 0.0;
         private double hikariAcquireTimeThresholdMs = 10.0;
-
-        public double getComfortFactor() { return comfortFactor; }
-        public void setComfortFactor(double v) { this.comfortFactor = v; }
-
-        public int getConcurrencyIncreaseStep() { return concurrencyIncreaseStep; }
-        public void setConcurrencyIncreaseStep(int v) { this.concurrencyIncreaseStep = v; }
-
-        public double getConcurrencyDecreaseFactor() { return concurrencyDecreaseFactor; }
-        public void setConcurrencyDecreaseFactor(double v) { this.concurrencyDecreaseFactor = v; }
-
-        public double getErrorRateThreshold() { return errorRateThreshold; }
-        public void setErrorRateThreshold(double v) { this.errorRateThreshold = v; }
-
-        public double getTimeoutRateThreshold() { return timeoutRateThreshold; }
-        public void setTimeoutRateThreshold(double v) { this.timeoutRateThreshold = v; }
-
-        public int getHikariStep() { return hikariStep; }
-        public void setHikariStep(int v) { this.hikariStep = v; }
-
-        public double getHikariPendingThreshold() { return hikariPendingThreshold; }
-        public void setHikariPendingThreshold(double v) { this.hikariPendingThreshold = v; }
-
-        public double getHikariAcquireTimeThresholdMs() { return hikariAcquireTimeThresholdMs; }
-        public void setHikariAcquireTimeThresholdMs(double v) { this.hikariAcquireTimeThresholdMs = v; }
     }
 }
