@@ -10,8 +10,7 @@ import com.iasr.micrometer.IasrMeterBinder;
 import com.iasr.micrometer.MicrometerMetricsProvider;
 import com.zaxxer.hikari.HikariDataSource;
 import io.micrometer.core.instrument.MeterRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -40,12 +39,11 @@ import javax.sql.DataSource;
  *   <li>Creates and starts the {@link ControlEngine}</li>
  * </ol>
  */
+@Slf4j
 @AutoConfiguration
 @ConditionalOnClass(MeterRegistry.class)
 @ConditionalOnProperty(prefix = "iasr", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class IasrAutoConfiguration {
-
-    private static final Logger log = LoggerFactory.getLogger(IasrAutoConfiguration.class);
 
     @Bean
     @ConfigurationProperties(prefix = "iasr")

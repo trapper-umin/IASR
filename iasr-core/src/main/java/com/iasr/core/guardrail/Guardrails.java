@@ -4,8 +4,7 @@ import com.iasr.core.actuator.Actuator;
 import com.iasr.core.controller.ControlAction;
 import com.iasr.core.metrics.MetricNames;
 import com.iasr.core.metrics.MetricsSnapshot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *   <li>No increase while SLO is violated (latency p95 &gt; SLO target)</li>
  * </ol>
  */
+@Slf4j
 public class Guardrails {
-
-    private static final Logger log = LoggerFactory.getLogger(Guardrails.class);
 
     private final Map<String, ActuatorGuardrail> rules;
     private final double sloLatencyMs;

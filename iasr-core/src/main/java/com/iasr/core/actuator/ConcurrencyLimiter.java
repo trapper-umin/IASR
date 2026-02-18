@@ -1,7 +1,6 @@
 package com.iasr.core.actuator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -23,11 +22,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <h3>Thread safety</h3>
  * All public methods are thread-safe.
  */
+@Slf4j
 public class ConcurrencyLimiter implements Actuator {
 
     public static final String ACTUATOR_NAME = "concurrency_limit";
-
-    private static final Logger log = LoggerFactory.getLogger(ConcurrencyLimiter.class);
 
     private final int minLimit;
     private final int maxLimit;

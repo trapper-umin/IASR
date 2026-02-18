@@ -5,8 +5,7 @@ import com.iasr.core.actuator.ConcurrencyLimiter;
 import com.iasr.core.actuator.HikariPoolActuator;
 import com.iasr.core.metrics.MetricNames;
 import com.iasr.core.metrics.MetricsSnapshot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
@@ -37,9 +36,8 @@ import java.util.List;
  * <p>This controller is designed to be <b>explainable</b>: every decision is
  * traceable to simple threshold comparisons with named parameters.
  */
+@Slf4j
 public class BaselineController implements Controller {
-
-    private static final Logger log = LoggerFactory.getLogger(BaselineController.class);
 
     // ── Configurable parameters ─────────────────────────────────────────
 

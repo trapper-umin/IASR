@@ -5,6 +5,8 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.MeterBinder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Registers IASR-specific meters in the Micrometer registry:
@@ -19,16 +21,15 @@ import io.micrometer.core.instrument.binder.MeterBinder;
  * The timeout and error counters are exposed as public fields so the
  * integration filter can increment them.
  */
+@RequiredArgsConstructor
 public class IasrMeterBinder implements MeterBinder {
 
     private final ConcurrencyLimiter limiter;
 
+    @Getter
     private Counter timeoutCounter;
+    @Getter
     private Counter errorCounter;
-
-    public IasrMeterBinder(ConcurrencyLimiter limiter) {
-        this.limiter = limiter;
-    }
 
     @Override
     public void bindTo(MeterRegistry registry) {
@@ -67,11 +68,4 @@ public class IasrMeterBinder implements MeterBinder {
         }
     }
 
-    public Counter getTimeoutCounter() {
-        return timeoutCounter;
-    }
-
-    public Counter getErrorCounter() {
-        return errorCounter;
-    }
 }

@@ -1,5 +1,7 @@
 package com.iasr.core.dataset;
 
+import lombok.Getter;
+
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -23,6 +25,7 @@ import java.util.Map;
  * we log the record from tick t).  The very last record of a session may
  * have {@code outcome = null}.
  */
+@Getter
 public final class DatasetRecord {
 
     private final Instant timestamp;
@@ -40,12 +43,6 @@ public final class DatasetRecord {
         this.state = new LinkedHashMap<>(state);
         this.action = new LinkedHashMap<>(action);
     }
-
-    public Instant getTimestamp() { return timestamp; }
-    public double getWindowSec() { return windowSec; }
-    public Map<String, Double> getState() { return state; }
-    public Map<String, Integer> getAction() { return action; }
-    public Map<String, Double> getOutcome() { return outcome; }
 
     public boolean hasOutcome() { return outcome != null; }
 

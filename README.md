@@ -7,11 +7,11 @@ Runtime-контур управления (control loop) для динамиче
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                   iasr-core (0 deps*)                   │
-│  ┌──────────┐  ┌────────────┐  ┌───────────────────┐   │
-│  │ Metrics   │  │ Controller │  │    Actuators       │   │
-│  │ Provider  │──│ (Baseline/ │──│ ConcurrencyLimiter │   │
-│  │ (SPI)    │  │  ML-ready) │  │ HikariPoolActuator │   │
-│  └──────────┘  └────────────┘  └───────────────────┘   │
+│  ┌──────────┐  ┌────────────┐  ┌───────────────────┐    │
+│  │ Metrics  │  │ Controller │  │    Actuators      │    │
+│  │ Provider │──│ (Baseline/ │──│ ConcurrencyLimiter│    │
+│  │ (SPI)    │  │  ML-ready) │  │ HikariPoolActuator│    │
+│  └──────────┘  └────────────┘  └───────────────────┘    │
 │         │              │               │                │
 │         ▼              ▼               ▼                │
 │  ┌──────────────────────────────────────────────────┐   │
@@ -34,6 +34,62 @@ Runtime-контур управления (control loop) для динамиче
 │  IasrMeterBinder     │   │  IasrProperties            │
 └──────────────────────┘   └────────────────────────────┘
 ```
+
+## Папочная структура
+```
+IASR/
+├── pom.xml                            ← Parent POM (multi-module)
+├── README.md                          ← Документация
+│
+├── iasr-core/                         ← Ядро (0 внешних зависимостей кроме SLF4J + HikariCP provided)
+│   ├── pom.xml
+│   └── src/main/java/com/iasr/core/
+│       ├── metrics/
+│       │   ├── MetricsProvider.java       SPI — абстрактный источник метрик
+│       │   ├── MetricsSnapshot.java       Immutable bag of named double values
+│       │   └── MetricNames.java           Константы ключей метрик
+│       ├── actuator/
+│       │   ├── Actuator.java              SPI — управляемый ресурс
+│       │   ├── ConcurrencyLimiter.java    Semaphore + runtime resize
+│       │   └── HikariPoolActuator.java    HikariCP maximumPoolSize
+│       ├── controller/
+│       │   ├── Controller.java            SPI — стратегия принятия решений
+│       │   ├── ControlAction.java         Immutable set of desired values
+│       │   └── BaselineController.java    AIMD threshold controller
+│       ├── guardrail/
+│       │   ├── ActuatorGuardrail.java     Per-actuator constraints (record)
+│       │   └── Guardrails.java            Enforcer: clamp, cooldown, SLO block
+│       ├── dataset/
+│       │   ├── DatasetRecord.java         JSONL row + hand-rolled serialization
+│       │   └── DatasetLogger.java         SLF4J logger "softres.dataset"
+│       ├── config/
+│       │   └── ControlEngineConfig.java   Builder-based immutable config
+│       └── engine/
+│           └── ControlEngine.java         ScheduledExecutorService control loop
+│
+├── iasr-micrometer/                   ← Адаптер к Micrometer
+│   ├── pom.xml
+│   └── src/main/java/com/iasr/micrometer/
+│       ├── MicrometerMetricsProvider.java  MetricsProvider → MeterRegistry
+│       └── IasrMeterBinder.java           Регистрация кастомных Gauge/Counter
+│
+└── iasr-spring-boot-starter/          ← Spring Boot 3.x Starter
+    ├── pom.xml
+    └── src/main/java/com/iasr/spring/
+    │   ├── IasrAutoConfiguration.java     @AutoConfiguration + bean wiring
+    │   ├── IasrProperties.java            @ConfigurationProperties (prefix "iasr")
+    │   └── ConcurrencyLimitFilter.java    Servlet Filter (429 при таймауте)
+    └── src/main/resources/META-INF/spring/
+        └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
+```
+## Ключевые решения архитектуры
+- Разделение ядро / адаптеры — iasr-core не имеет compile-time зависимостей на Micrometer, Spring, Jackson. Ядро максимально лёгкое.
+- SPI-интерфейсы — MetricsProvider, Controller, Actuator — все точки расширения. ML-контроллер подключается заменой одного интерфейса.
+- ConcurrencyLimiter — fair Semaphore с атомарным runtime-resize: увеличение — мгновенный release(delta), уменьшение — eager reclaim через tryAcquire() без блокировки.
+- BaselineController (AIMD) — additive increase +k, multiplicative decrease ×0.85. Для Hikari — ещё более консервативная логика (изменение реже и на 1 шаг).
+- Guardrails — min/max + maxStep + cooldown + SLO violation block — применяются поверх решений любого контроллера.
+- Dataset Logger — state_t → action_t → outcome_{t+1} через отложенное заполнение outcome на следующем тике. Логируется через SLF4J logger softres.dataset в формате JSONL.
+- Spring Boot Starter — автоматически создаёт ConcurrencyLimiter, находит HikariDataSource, регистрирует фильтр и запускает ControlEngine. Все настройки через application.yml.
 
 ## Модули
 
