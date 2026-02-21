@@ -18,11 +18,10 @@ import java.util.concurrent.TimeUnit;
  * HTTP request.
  * <p>
  * If a permit cannot be acquired within the configured timeout the filter
- * responds with <b>429 Too Many Requests</b> (or 503 Service Unavailable
- * depending on preference) and increments the timeout counter.
+ * responds with <b>429 Too Many Requests</b> and increments the timeout counter.
  * <p>
- * If the downstream processing results in a 5xx status code, the error
- * counter is incremented.
+ * Errors are tracked both from response status (5xx) and from exceptions
+ * thrown by the downstream filter chain.
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -48,7 +47,6 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
         }
 
         if (!acquired) {
-            // Permit not obtained within timeout → reject
             if (meterBinder != null) {
                 meterBinder.recordTimeout();
             }
@@ -56,7 +54,7 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
                     limiter.currentValue(), limiter.getInflight(), limiter.getQueueLength(),
                     request.getMethod(), request.getRequestURI());
 
-            response.setStatus(429); // Too Many Requests
+            response.setStatus(429);
             response.setContentType("application/json");
             response.getWriter().write("{\"error\":\"Too many requests\",\"retryAfterMs\":" + acquireTimeoutMs + "}");
             return;
@@ -65,10 +63,16 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
         try {
             chain.doFilter(request, response);
 
-            // Track server errors
             if (response.getStatus() >= 500 && meterBinder != null) {
                 meterBinder.recordError();
             }
+        } catch (Exception e) {
+            if (meterBinder != null) {
+                meterBinder.recordError();
+            }
+            if (e instanceof ServletException se) throw se;
+            if (e instanceof IOException ioe) throw ioe;
+            throw new ServletException(e);
         } finally {
             limiter.release();
         }

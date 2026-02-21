@@ -220,8 +220,7 @@ public class BaselineController implements Controller {
 
         // ── Decrease: latency degradation after pool increase ──
         if (sloViolated && !Double.isNaN(prevLatencyP95) && latencyP95 > prevLatencyP95 * 1.1) {
-            // Possible DB overload — conservative decrease
-            return currentPool - hikariStep;
+            return Math.max(1, currentPool - hikariStep);
         }
 
         // ── Hold ──

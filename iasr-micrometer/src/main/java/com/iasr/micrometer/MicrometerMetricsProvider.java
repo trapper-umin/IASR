@@ -74,13 +74,26 @@ public class MicrometerMetricsProvider implements MetricsProvider {
                     ? (now - prevSnapshotTimeNs) / 1_000_000_000.0
                     : 1.0;
 
-            // Error count from tagged subset
+            // Error/timeout counts from IASR's own counters (incremented by ConcurrencyLimitFilter)
             long errorNow = countErrors();
             long timeoutNow = countTimeouts();
 
             long requestsDelta = totalNow - prevTotalRequests;
             long errorsDelta = errorNow - prevErrorRequests;
             long timeoutsDelta = timeoutNow - prevTimeoutCount;
+
+            if (requestsDelta < 0 || errorsDelta < 0 || timeoutsDelta < 0) {
+                // Counter reset detected (registry reset, hot reload, etc.)
+                // Reset baseline — skip this window, emit zeroes
+                log.warn("Counter reset detected (reqΔ={}, errΔ={}, toutΔ={}), resetting baseline",
+                        requestsDelta, errorsDelta, timeoutsDelta);
+                prevTotalRequests = totalNow;
+                prevErrorRequests = errorNow;
+                prevTimeoutCount = timeoutNow;
+                requestsDelta = 0;
+                errorsDelta = 0;
+                timeoutsDelta = 0;
+            }
 
             double goodput = elapsedSec > 0 ? Math.max(0, requestsDelta - errorsDelta) / elapsedSec : 0;
             double errorRate = requestsDelta > 0 ? (double) errorsDelta / requestsDelta : 0;

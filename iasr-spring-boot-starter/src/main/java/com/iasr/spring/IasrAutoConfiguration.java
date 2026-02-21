@@ -11,18 +11,18 @@ import com.iasr.micrometer.MicrometerMetricsProvider;
 import com.zaxxer.hikari.HikariDataSource;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-
-import javax.sql.DataSource;
 
 /**
  * Spring Boot auto-configuration for IASR.
@@ -71,43 +71,50 @@ public class IasrAutoConfiguration {
         return binder;
     }
 
-    // ── Servlet filter ───────────────────────────────────────────────────
+    // ── Servlet filter (only in servlet web apps) ────────────────────────
 
-    @Bean
-    public FilterRegistrationBean<ConcurrencyLimitFilter> iasrConcurrencyFilter(
-            ConcurrencyLimiter limiter,
-            IasrProperties props,
-            IasrMeterBinder meterBinder) {
+    @Configuration(proxyBeanMethods = false)
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    static class ServletFilterConfiguration {
 
-        ConcurrencyLimitFilter filter = new ConcurrencyLimitFilter(
-                limiter,
-                props.getConcurrency().getAcquireTimeoutMs(),
-                meterBinder);
+        @Bean
+        public FilterRegistrationBean<ConcurrencyLimitFilter> iasrConcurrencyFilter(
+                ConcurrencyLimiter limiter,
+                IasrProperties props,
+                IasrMeterBinder meterBinder) {
 
-        FilterRegistrationBean<ConcurrencyLimitFilter> reg = new FilterRegistrationBean<>(filter);
-        reg.setOrder(Ordered.HIGHEST_PRECEDENCE + 10); // early in the chain
-        reg.addUrlPatterns("/*");
-        reg.setName("iasrConcurrencyLimitFilter");
-        return reg;
+            ConcurrencyLimitFilter filter = new ConcurrencyLimitFilter(
+                    limiter,
+                    props.getConcurrency().getAcquireTimeoutMs(),
+                    meterBinder);
+
+            FilterRegistrationBean<ConcurrencyLimitFilter> reg = new FilterRegistrationBean<>(filter);
+            reg.setOrder(Ordered.HIGHEST_PRECEDENCE + 10);
+            reg.addUrlPatterns("/*");
+            reg.setName("iasrConcurrencyLimitFilter");
+            return reg;
+        }
     }
 
-    // ── HikariPoolActuator (optional) ────────────────────────────────────
+    // ── HikariPoolActuator (only when HikariDataSource is present) ───────
 
-    @Bean
-    @ConditionalOnBean(DataSource.class)
-    @ConditionalOnMissingBean(HikariPoolActuator.class)
-    public HikariPoolActuator iasrHikariPoolActuator(
-            DataSource dataSource,
-            IasrProperties props) {
+    @Slf4j
+    @Configuration(proxyBeanMethods = false)
+    @ConditionalOnClass(HikariDataSource.class)
+    @ConditionalOnBean(HikariDataSource.class)
+    static class HikariActuatorConfiguration {
 
-        if (dataSource instanceof HikariDataSource hds) {
+        @Bean
+        @ConditionalOnMissingBean(HikariPoolActuator.class)
+        public HikariPoolActuator iasrHikariPoolActuator(
+                HikariDataSource dataSource,
+                IasrProperties props) {
+
             IasrProperties.Hikari h = props.getHikari();
             log.info("IASR: HikariDataSource detected, registering HikariPoolActuator [{}-{}]",
                     h.getMinPoolSize(), h.getMaxPoolSize());
-            return new HikariPoolActuator(hds, h.getMinPoolSize(), h.getMaxPoolSize());
+            return new HikariPoolActuator(dataSource, h.getMinPoolSize(), h.getMaxPoolSize());
         }
-        log.info("IASR: DataSource is not HikariDataSource, HikariPoolActuator will not be created");
-        return null;
     }
 
     // ── MetricsProvider ──────────────────────────────────────────────────
@@ -126,7 +133,7 @@ public class IasrAutoConfiguration {
             IasrProperties props,
             MicrometerMetricsProvider metricsProvider,
             ConcurrencyLimiter concurrencyLimiter,
-            @Autowired(required = false) HikariPoolActuator hikariPoolActuator) {
+            ObjectProvider<HikariPoolActuator> hikariPoolActuatorProvider) {
 
         IasrProperties.ControllerProps cp = props.getController();
         BaselineController controller = new BaselineController(
@@ -157,6 +164,7 @@ public class IasrAutoConfiguration {
                         props.getConcurrency().getCooldownTicks()
                 ));
 
+        HikariPoolActuator hikariPoolActuator = hikariPoolActuatorProvider.getIfAvailable();
         if (hikariPoolActuator != null) {
             cfgBuilder
                     .addActuator(hikariPoolActuator)

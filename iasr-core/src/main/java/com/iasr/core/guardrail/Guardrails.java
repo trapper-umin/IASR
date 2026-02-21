@@ -7,8 +7,10 @@ import com.iasr.core.metrics.MetricsSnapshot;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -53,7 +55,7 @@ public class Guardrails {
      */
     public ControlAction enforce(ControlAction raw, List<Actuator> actuators, MetricsSnapshot snapshot) {
         if (raw.isEmpty()) {
-            incrementAllCooldowns();
+            advanceCooldowns(Set.of());
             return ControlAction.NONE;
         }
 
@@ -61,17 +63,18 @@ public class Guardrails {
                 && snapshot.get(MetricNames.LATENCY_P95_MS) > sloLatencyMs;
 
         ControlAction.Builder builder = ControlAction.builder();
+        Set<String> changedThisTick = new HashSet<>();
 
         for (Actuator actuator : actuators) {
             String name = actuator.name();
-            int desired = raw.getOrDefault(name, actuator.currentValue());
             int current = actuator.currentValue();
+            int desired = raw.getOrDefault(name, current);
             ActuatorGuardrail rule = rules.get(name);
 
             if (rule == null) {
-                // No guardrail configured — pass through unchanged
                 if (desired != current) {
                     builder.set(name, desired);
+                    changedThisTick.add(name);
                 }
                 continue;
             }
@@ -103,17 +106,26 @@ public class Guardrails {
 
             if (clamped != current) {
                 builder.set(name, clamped);
-                ticksSinceChange.put(name, 0);
+                changedThisTick.add(name);
             }
         }
 
-        incrementAllCooldowns();
+        advanceCooldowns(changedThisTick);
         return builder.build();
     }
 
-    private void incrementAllCooldowns() {
+    /**
+     * Advance cooldown counters: reset to 0 for actuators that changed this tick,
+     * increment by 1 for all others.  This avoids the off-by-one where a reset-then-
+     * increment would shorten the effective cooldown by 1 tick.
+     */
+    private void advanceCooldowns(Set<String> changedThisTick) {
         for (String name : rules.keySet()) {
-            ticksSinceChange.merge(name, 1, Integer::sum);
+            if (changedThisTick.contains(name)) {
+                ticksSinceChange.put(name, 0);
+            } else {
+                ticksSinceChange.merge(name, 1, Integer::sum);
+            }
         }
     }
 }

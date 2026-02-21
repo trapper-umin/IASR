@@ -13,14 +13,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  * be processed concurrently.  It exposes {@link #tryAcquire(long, TimeUnit)}
  * and {@link #release()} for integration layers (servlet filters, interceptors,
  * middleware, etc.).
- * <p>
- * When the control engine changes the limit via {@link #apply(int)}, the
- * semaphore's permit count is adjusted atomically without recreating the
- * semaphore.  The implementation uses a fair semaphore so that waiters are
- * served in FIFO order.
+ *
+ * <h3>Resize mechanism</h3>
+ * Uses a {@link ResizableSemaphore} subclass that exposes the JDK's
+ * {@code reducePermits(int)} — a single O(1) CAS operation that adjusts
+ * the internal permit counter directly (and may drive it negative, creating
+ * a "permit debt" that is repaid naturally by subsequent {@link #release()}
+ * calls).  This eliminates the need for an external {@code issuedPermits}
+ * counter or drain loops.
  *
  * <h3>Thread safety</h3>
- * All public methods are thread-safe.
+ * All public methods are thread-safe.  The semaphore is fair (FIFO).
  */
 @Slf4j
 public class ConcurrencyLimiter implements Actuator {
@@ -30,16 +33,13 @@ public class ConcurrencyLimiter implements Actuator {
     private final int minLimit;
     private final int maxLimit;
 
-    /**
-     * Current logical limit.  We track it separately because Semaphore does
-     * not expose its "initial permits" and {@code availablePermits()} fluctuates.
-     */
+    /** Target concurrency limit set by the controller. */
     private final AtomicInteger currentLimit;
 
-    /** Fair semaphore — guarantees FIFO ordering for waiters. */
-    private final Semaphore semaphore;
+    /** Fair semaphore with exposed {@code reducePermits}. */
+    private final ResizableSemaphore semaphore;
 
-    /** Counter of currently acquired permits (inflight requests). */
+    /** Counter of currently acquired permits (in-flight requests). */
     private final AtomicInteger inflight = new AtomicInteger(0);
 
     /**
@@ -55,7 +55,7 @@ public class ConcurrencyLimiter implements Actuator {
         this.minLimit = minLimit;
         this.maxLimit = maxLimit;
         this.currentLimit = new AtomicInteger(clamped);
-        this.semaphore = new Semaphore(clamped, true);
+        this.semaphore = new ResizableSemaphore(clamped);
     }
 
     // ── Actuator contract ────────────────────────────────────────────────
@@ -73,10 +73,14 @@ public class ConcurrencyLimiter implements Actuator {
     /**
      * Adjust the concurrency limit at runtime.
      * <p>
-     * If the new limit is higher, extra permits are released immediately.
-     * If it is lower, permits are <b>not</b> forcibly revoked — the
-     * effective reduction happens naturally as in-flight requests complete
-     * and the excess permits are simply not re-issued.
+     * <b>Increase:</b> permits are released into the semaphore immediately;
+     * blocked waiters (if any) are woken in FIFO order.
+     * <p>
+     * <b>Decrease:</b> {@code reducePermits()} atomically lowers the
+     * internal counter in O(1).  If more permits are currently held than
+     * the new limit, {@code availablePermits()} goes negative — the
+     * semaphore naturally blocks new acquires until enough in-flight
+     * requests complete and the debt is repaid via {@link #release()}.
      */
     @Override
     public void apply(int newValue) {
@@ -85,19 +89,11 @@ public class ConcurrencyLimiter implements Actuator {
         int delta = clamped - prev;
         if (delta > 0) {
             semaphore.release(delta);
-            log.info("ConcurrencyLimiter: increased {} → {} (+{})", prev, clamped, delta);
+            log.info("ConcurrencyLimiter: {} → {} (+{})", prev, clamped, delta);
         } else if (delta < 0) {
-            // Reduce permits eagerly where possible, but never block.
-            int reduced = 0;
-            for (int i = 0; i < -delta; i++) {
-                if (semaphore.tryAcquire()) {
-                    reduced++;
-                } else {
-                    break; // remaining reduction will happen as requests complete
-                }
-            }
-            log.info("ConcurrencyLimiter: decreased {} → {} (eagerly reclaimed {} permits)",
-                    prev, clamped, reduced);
+            semaphore.reducePermits(-delta);
+            log.info("ConcurrencyLimiter: {} → {} (−{}, available={})",
+                    prev, clamped, -delta, semaphore.availablePermits());
         }
     }
 
@@ -130,17 +126,18 @@ public class ConcurrencyLimiter implements Actuator {
     /**
      * Release a previously acquired permit.
      * <p>
-     * If the current limit has been lowered below the old limit, excess
-     * permits are silently absorbed (the semaphore may temporarily have
-     * fewer available permits than the logical limit until convergence).
+     * If permits are in debt (after a limit decrease), this release
+     * repays part of the debt rather than making a permit available.
      */
     public void release() {
-        inflight.decrementAndGet();
-        // Only release back to semaphore if we haven't overshot the current limit.
-        // This naturally "drains" excess permits when the limit was reduced.
-        if (semaphore.availablePermits() < currentLimit.get()) {
-            semaphore.release();
+        int prev = inflight.decrementAndGet();
+        if (prev < 0) {
+            inflight.incrementAndGet();
+            log.warn("release() called without matching acquire() — ignoring. " +
+                    "Check integration code for asymmetric acquire/release.");
+            return;
         }
+        semaphore.release();
     }
 
     /** Returns the number of currently acquired permits (in-flight requests). */
@@ -151,5 +148,23 @@ public class ConcurrencyLimiter implements Actuator {
     /** Returns the number of threads waiting to acquire a permit. */
     public int getQueueLength() {
         return semaphore.getQueueLength();
+    }
+
+    // ── Resizable semaphore ──────────────────────────────────────────────
+
+    /**
+     * Thin subclass that exposes the JDK's protected
+     * {@link Semaphore#reducePermits(int)} as public.
+     */
+    private static final class ResizableSemaphore extends Semaphore {
+
+        ResizableSemaphore(int permits) {
+            super(permits, true);
+        }
+
+        @Override
+        public void reducePermits(int reduction) {
+            super.reducePermits(reduction);
+        }
     }
 }
