@@ -67,13 +67,25 @@ public class BaselineController implements Controller {
     /** Acquire time p95 (ms) threshold to trigger pool increase. */
     private final double hikariAcquireTimeThresholdMs;
 
+    /**
+     * Minimum goodput (RPS) to consider the system "actively serving traffic".
+     * Below this threshold the system is treated as idle regardless of
+     * health-check / actuator / monitoring endpoints generating low-volume
+     * background traffic.
+     */
+    private static final double MIN_ACTIVE_RPS = 1.0;
+
+    /** Ticks of consecutive idle (goodput < minActiveRps) before starting to shrink resources. */
+    private static final int IDLE_SHRINK_THRESHOLD = 24;
+
     // ── State for trend detection ───────────────────────────────────────
 
     private double prevLatencyP95 = Double.NaN;
     private double prevErrorRate = Double.NaN;
     private double prevTimeoutRate = Double.NaN;
-    private double prevAcquireTimeP95 = Double.NaN;
     private int ticksWithoutPending = 0;
+    private int consecutiveIdleTicks = 0;
+    private int prevHikariPool = -1;
 
     // ── Constructors ────────────────────────────────────────────────────
 
@@ -125,14 +137,23 @@ public class BaselineController implements Controller {
         ControlAction.Builder action = ControlAction.builder();
 
         double latencyP95 = snapshot.get(MetricNames.LATENCY_P95_MS, 0.0);
+        double goodputRps = snapshot.get(MetricNames.GOODPUT_RPS, 0.0);
         double errorRate = snapshot.get(MetricNames.ERROR_RATE, 0.0);
         double timeoutRate = snapshot.get(MetricNames.TIMEOUT_RATE, 0.0);
+
+        boolean idle = goodputRps < MIN_ACTIVE_RPS && errorRate <= 0 && timeoutRate <= 0;
+        if (idle) {
+            consecutiveIdleTicks++;
+        } else {
+            consecutiveIdleTicks = 0;
+        }
+        boolean idleShrink = consecutiveIdleTicks >= IDLE_SHRINK_THRESHOLD;
 
         // ── Concurrency decision ─────────────────────────────────────────
         Actuator concurrencyActuator = findActuator(actuators, ConcurrencyLimiter.ACTUATOR_NAME);
         if (concurrencyActuator != null) {
             int currentLimit = concurrencyActuator.currentValue();
-            int newLimit = decideConcurrency(currentLimit, latencyP95, errorRate, timeoutRate);
+            int newLimit = decideConcurrency(currentLimit, latencyP95, goodputRps, errorRate, timeoutRate, idleShrink);
             if (newLimit != currentLimit) {
                 action.set(concurrencyActuator.name(), newLimit);
                 log.debug("Baseline: concurrency {} → {} (p95={} slo={} err={} tout={})",
@@ -144,7 +165,7 @@ public class BaselineController implements Controller {
         Actuator hikariActuator = findActuator(actuators, HikariPoolActuator.ACTUATOR_NAME);
         if (hikariActuator != null) {
             int currentPool = hikariActuator.currentValue();
-            int newPool = decideHikariPool(currentPool, snapshot, latencyP95);
+            int newPool = decideHikariPool(currentPool, snapshot, latencyP95, goodputRps, idleShrink);
             if (newPool != currentPool) {
                 action.set(hikariActuator.name(), newPool);
                 log.debug("Baseline: hikari pool {} → {} (pending={} acquire_p95={})",
@@ -158,16 +179,24 @@ public class BaselineController implements Controller {
         prevLatencyP95 = latencyP95;
         prevErrorRate = errorRate;
         prevTimeoutRate = timeoutRate;
-        prevAcquireTimeP95 = snapshot.get(MetricNames.HIKARI_ACQUIRE_P95_MS, 0.0);
 
         return action.build();
     }
 
     // ── Concurrency logic ────────────────────────────────────────────────
 
-    private int decideConcurrency(int current, double latencyP95, double errorRate, double timeoutRate) {
+    private int decideConcurrency(int current, double latencyP95, double goodputRps,
+                                   double errorRate, double timeoutRate, boolean idleShrink) {
+        // Below active-traffic threshold: short idle → hold, sustained idle → gradually shrink
+        if (goodputRps < MIN_ACTIVE_RPS && errorRate <= 0 && timeoutRate <= 0) {
+            if (idleShrink) {
+                return Math.max(1, current - concurrencyIncreaseStep);
+            }
+            return current;
+        }
+
         boolean sloViolated = latencyP95 > sloLatencyMs;
-        boolean comfortable = latencyP95 < (sloLatencyMs * comfortFactor);
+        boolean comfortable = latencyP95 > 0 && latencyP95 < (sloLatencyMs * comfortFactor);
         boolean errorsRising = errorRate > errorRateThreshold
                 || (!Double.isNaN(prevErrorRate) && errorRate > prevErrorRate * 1.5 && errorRate > 0.001);
         boolean timeoutsRising = timeoutRate > timeoutRateThreshold
@@ -176,7 +205,7 @@ public class BaselineController implements Controller {
         // ── Decrease path (multiplicative) ──
         if (sloViolated || timeoutsRising || errorsRising) {
             int decreased = (int) Math.floor(current * concurrencyDecreaseFactor);
-            return Math.max(decreased, 1); // never go below 1
+            return Math.max(decreased, 1);
         }
 
         // ── Increase path (additive) ──
@@ -190,36 +219,54 @@ public class BaselineController implements Controller {
 
     // ── Hikari pool logic ────────────────────────────────────────────────
 
-    private int decideHikariPool(int currentPool, MetricsSnapshot snapshot, double latencyP95) {
+    private int decideHikariPool(int currentPool, MetricsSnapshot snapshot,
+                                  double latencyP95, double goodputRps, boolean idleShrink) {
         double pending = snapshot.get(MetricNames.HIKARI_PENDING, 0.0);
         double acquireP95 = snapshot.get(MetricNames.HIKARI_ACQUIRE_P95_MS, 0.0);
         boolean sloViolated = latencyP95 > sloLatencyMs;
 
         boolean hasPendingDeficit = pending > hikariPendingThreshold;
-        boolean acquireTimeGrowing = !Double.isNaN(prevAcquireTimeP95)
-                && acquireP95 > prevAcquireTimeP95 * 1.2
-                && acquireP95 > hikariAcquireTimeThresholdMs;
+        boolean acquireTimeHigh = acquireP95 > hikariAcquireTimeThresholdMs;
 
-        // Track ticks without pending
-        if (pending <= hikariPendingThreshold) {
-            ticksWithoutPending++;
-        } else {
-            ticksWithoutPending = 0;
+        // Track ticks without pending only under real traffic.
+        if (goodputRps >= MIN_ACTIVE_RPS) {
+            if (pending <= hikariPendingThreshold) {
+                ticksWithoutPending++;
+            } else {
+                ticksWithoutPending = 0;
+            }
         }
 
-        // ── Increase: deficit detected AND not in SLO violation zone ──
-        if (hasPendingDeficit && acquireTimeGrowing && !sloViolated) {
+        // Below active-traffic threshold: short idle → hold, sustained idle → gradually shrink
+        if (goodputRps < MIN_ACTIVE_RPS && pending <= 0) {
+            if (idleShrink) {
+                return Math.max(1, currentPool - hikariStep);
+            }
+            return currentPool;
+        }
+
+        // ── Increase: clear connection deficit detected ──
+        // Pending threads + high acquire time = pool is the bottleneck.
+        // Allow increase even during SLO violation when the deficit is the
+        // likely cause (pending > 0 means requests are queued for connections).
+        if (hasPendingDeficit && acquireTimeHigh) {
             return currentPool + hikariStep;
         }
 
-        // ── Decrease: no deficit for a sustained period (e.g. 10+ ticks) ──
+        // ── Decrease: no deficit for a sustained period under active traffic ──
         if (ticksWithoutPending >= 10 && currentPool > 1) {
-            ticksWithoutPending = 0; // reset after action
+            ticksWithoutPending = 0;
             return currentPool - hikariStep;
         }
 
         // ── Decrease: latency degradation after pool increase ──
-        if (sloViolated && !Double.isNaN(prevLatencyP95) && latencyP95 > prevLatencyP95 * 1.1) {
+        // Only fires if pool was actually increased on a recent tick.
+        // Without this guard, any idle→load transition (latency spike)
+        // would falsely trigger a pool decrease.
+        boolean poolWasIncreased = prevHikariPool >= 0 && currentPool > prevHikariPool;
+        prevHikariPool = currentPool;
+        if (poolWasIncreased && sloViolated
+                && !Double.isNaN(prevLatencyP95) && latencyP95 > prevLatencyP95 * 1.1) {
             return Math.max(1, currentPool - hikariStep);
         }
 

@@ -107,7 +107,7 @@ IASR/
 <dependency>
     <groupId>com.iasr</groupId>
     <artifactId>iasr-spring-boot-starter</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.11</version>
 </dependency>
 ```
 

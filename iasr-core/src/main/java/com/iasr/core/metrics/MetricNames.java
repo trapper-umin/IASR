@@ -14,6 +14,7 @@ public final class MetricNames {
     // ── Latency ──────────────────────────────────────────────────────────
     public static final String LATENCY_P95_MS       = "latency_p95_ms";
     public static final String LATENCY_P99_MS       = "latency_p99_ms";
+    public static final String LATENCY_MEAN_MS      = "latency_mean_ms";
 
     // ── Throughput ───────────────────────────────────────────────────────
     public static final String GOODPUT_RPS          = "goodput_rps";

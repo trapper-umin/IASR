@@ -132,8 +132,13 @@ public class ControlEngine {
             }
 
             // 5. Dataset logging (if datasetLoggingEnabled)
+            //    Always log absolute actuator values, not just the diff
             if (datasetLogger != null) {
-                datasetLogger.recordTick(snapshot, action);
+                ControlAction.Builder absoluteAction = ControlAction.builder();
+                for (Actuator actuator : actuators) {
+                    absoluteAction.set(actuator.name(), actuator.currentValue());
+                }
+                datasetLogger.recordTick(snapshot, absoluteAction.build());
             }
 
         } catch (Exception e) {
