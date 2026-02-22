@@ -107,7 +107,7 @@ IASR/
 <dependency>
     <groupId>com.iasr</groupId>
     <artifactId>iasr-spring-boot-starter</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
@@ -147,17 +147,33 @@ iasr:
 В `logback-spring.xml`:
 
 ```xml
-<appender name="DATASET" class="ch.qos.logback.core.FileAppender">
-    <file>logs/iasr-dataset.jsonl</file>
-    <encoder>
-        <pattern>%msg%n</pattern>
-    </encoder>
-</appender>
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
 
-<logger name="softres.dataset" level="INFO" additivity="false">
-    <appender-ref ref="DATASET"/>
-</logger>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <property name="DATASET_DIR" value="${DATASET_DIR:-logs}"/>
+    <appender name="DATASET" class="ch.qos.logback.core.FileAppender">
+        <file>${DATASET_DIR}/iasr-dataset.jsonl</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="softres.dataset" level="INFO" additivity="false">
+        <appender-ref ref="DATASET"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
 ```
+
+```DATASET_DIR=./service-name/logs```
 
 ### 4. Готово!
 
