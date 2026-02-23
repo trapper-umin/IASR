@@ -72,9 +72,11 @@ public class ControlEngine {
         if (running.compareAndSet(false, true)) {
             long windowMs = config.windowMs();
             tickFuture = scheduler.scheduleAtFixedRate(
-                    this::tick, windowMs, windowMs, TimeUnit.MILLISECONDS);
-            log.info("ControlEngine started: window={}ms, SLO={}ms, enabled={}, actuators={}",
-                    windowMs, config.sloLatencyMs(), config.enabled(), actuators.size());
+                    this::tick, 0, windowMs, TimeUnit.MILLISECONDS);
+
+            String mode = config.enabled() ? "active" : "observe-only (metrics + dataset, no actuator changes)";
+            log.info("ControlEngine started [{}]: window={}ms, SLO={}ms, actuators={}",
+                    mode, windowMs, config.sloLatencyMs(), actuators.size());
         }
     }
 
@@ -129,9 +131,14 @@ public class ControlEngine {
                 applyAction(action);
             }
 
-            // 5. Dataset logging (even when disabled — records metrics for ML)
+            // 5. Dataset logging (if datasetLoggingEnabled)
+            //    Always log absolute actuator values, not just the diff
             if (datasetLogger != null) {
-                datasetLogger.recordTick(snapshot, action);
+                ControlAction.Builder absoluteAction = ControlAction.builder();
+                for (Actuator actuator : actuators) {
+                    absoluteAction.set(actuator.name(), actuator.currentValue());
+                }
+                datasetLogger.recordTick(snapshot, absoluteAction.build());
             }
 
         } catch (Exception e) {
@@ -143,13 +150,14 @@ public class ControlEngine {
         if (action.isEmpty()) return;
 
         for (Actuator actuator : actuators) {
-            int desired = action.getOrDefault(actuator.name(), actuator.currentValue());
-            if (desired != actuator.currentValue()) {
+            int current = actuator.currentValue();
+            int desired = action.getOrDefault(actuator.name(), current);
+            if (desired != current) {
                 try {
                     actuator.apply(desired);
                 } catch (Exception e) {
                     log.error("Failed to apply action on actuator [{}]: {} → {}",
-                            actuator.name(), actuator.currentValue(), desired, e);
+                            actuator.name(), current, desired, e);
                 }
             }
         }

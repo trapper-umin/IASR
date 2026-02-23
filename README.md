@@ -5,34 +5,54 @@ Runtime-контур управления (control loop) для динамиче
 ## Архитектура
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                   iasr-core (0 deps*)                   │
-│  ┌──────────┐  ┌────────────┐  ┌───────────────────┐    │
-│  │ Metrics  │  │ Controller │  │    Actuators      │    │
-│  │ Provider │──│ (Baseline/ │──│ ConcurrencyLimiter│    │
-│  │ (SPI)    │  │  ML-ready) │  │ HikariPoolActuator│    │
-│  └──────────┘  └────────────┘  └───────────────────┘    │
-│         │              │               │                │
-│         ▼              ▼               ▼                │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │            ControlEngine (Δt loop)               │   │
-│  │   collect → decide → guardrail → apply → log     │   │
-│  └──────────────────────────────────────────────────┘   │
-│         │                                               │
-│  ┌──────────────┐  ┌────────────┐                       │
-│  │ Guardrails   │  │ Dataset    │                       │
-│  │ (min/max/    │  │ Logger     │                       │
-│  │  cooldown)   │  │ (JSONL)    │                       │
-│  └──────────────┘  └────────────┘                       │
-└─────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│                      iasr-core (0 deps*)                       │
+│                                                                │
+│  ┌─────────────────────┐  ┌────────────┐  ┌────────────────┐   │
+│  │     metrics/        │  │ controller/│  │   actuator/    │   │
+│  │  MetricsProvider    │  │ Controller │  │ Concurrency-   │   │
+│  │  (SPI)              │──│ (SPI)      │──│  Limiter       │   │
+│  │  MetricsSnapshot    │  │ Baseline-  │  │ HikariPool-    │   │
+│  │  WindowedLatency-   │  │ Controller │  │  Actuator      │   │
+│  │   Tracker           │  │ (AIMD)     │  │                │   │
+│  └─────────────────────┘  └────────────┘  └────────────────┘   │
+│           │                    │                  │            │
+│           ▼                    ▼                  ▼            │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │               ControlEngine (Δt loop)                   │   │
+│  │    collect → decide → guardrail → apply → log           │   │
+│  │    (observe-only mode: apply skipped when disabled)     │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│           │                                                    │
+│  ┌──────────────────┐  ┌──────────────────┐                    │
+│  │   guardrail/     │  │    dataset/      │                    │
+│  │ ActuatorGuardrail│  │  DatasetLogger   │                    │
+│  │ Guardrails       │  │  DatasetRecord   │                    │
+│  │ (cooldown/step/  │  │  (JSONL, state→  │                    │
+│  │  SLO block/clamp)│  │   action→outcome)│                    │
+│  └──────────────────┘  └──────────────────┘                    │
+│                                                                │
+│     config/ControlEngineConfig  (Builder, immutable)           │
+└────────────────────────────────────────────────────────────────┘
          * только slf4j-api + HikariCP (provided)
 
-┌──────────────────────┐   ┌────────────────────────────┐
-│  iasr-micrometer     │   │  iasr-spring-boot-starter  │
-│  MicrometerMetrics   │   │  AutoConfiguration         │
-│  Provider            │   │  ConcurrencyLimitFilter    │
-│  IasrMeterBinder     │   │  IasrProperties            │
-└──────────────────────┘   └────────────────────────────┘
+  HTTP-запрос
+      │  record(durationMs)
+      ▼
+  WindowedLatencyTracker ──drainAndCompute()──▶ MicrometerMetricsProvider
+  (ConcurrentLinkedQueue,                        (читает MeterRegistry +
+   lock-free write,                               per-window перцентили)
+   per-window drain)
+
+┌──────────────────────────┐   ┌────────────────────────────────┐
+│    iasr-micrometer       │   │    iasr-spring-boot-starter    │
+│  MicrometerMetrics-      │   │  IasrAutoConfiguration         │
+│   Provider               │   │  ConcurrencyLimitFilter        │
+│  IasrMeterBinder         │   │   (429, latency tracking,      │
+│  IasrMeterFilter-        │   │    infra-path exclusion)       │
+│   Configurer             │   │  IasrProperties                │
+│  (percentile histograms) │   │   (@ConfigurationProperties)   │
+└──────────────────────────┘   └────────────────────────────────┘
 ```
 
 ## Папочная структура
@@ -45,51 +65,106 @@ IASR/
 │   ├── pom.xml
 │   └── src/main/java/com/iasr/core/
 │       ├── metrics/
-│       │   ├── MetricsProvider.java       SPI — абстрактный источник метрик
-│       │   ├── MetricsSnapshot.java       Immutable bag of named double values
-│       │   └── MetricNames.java           Константы ключей метрик
+│       │   ├── MetricsProvider.java          SPI — абстрактный источник метрик
+│       │   ├── MetricsSnapshot.java          Immutable bag of named double values
+│       │   ├── MetricNames.java              Константы ключей метрик
+│       │   └── WindowedLatencyTracker.java   Lock-free per-window p95/p99 (ConcurrentLinkedQueue + drain)
 │       ├── actuator/
 │       │   ├── Actuator.java              SPI — управляемый ресурс
-│       │   ├── ConcurrencyLimiter.java    Semaphore + runtime resize
+│       │   ├── ConcurrencyLimiter.java    Fair semaphore + O(1) runtime resize (permit debt)
 │       │   └── HikariPoolActuator.java    HikariCP maximumPoolSize
 │       ├── controller/
 │       │   ├── Controller.java            SPI — стратегия принятия решений
 │       │   ├── ControlAction.java         Immutable set of desired values
-│       │   └── BaselineController.java    AIMD threshold controller
+│       │   └── BaselineController.java    AIMD threshold controller + idle-shrink
 │       ├── guardrail/
 │       │   ├── ActuatorGuardrail.java     Per-actuator constraints (record)
-│       │   └── Guardrails.java            Enforcer: clamp, cooldown, SLO block
+│       │   └── Guardrails.java            Enforcer: cooldown → SLO block → step clamp → abs clamp
 │       ├── dataset/
 │       │   ├── DatasetRecord.java         JSONL row + hand-rolled serialization
-│       │   └── DatasetLogger.java         SLF4J logger "softres.dataset"
+│       │   └── DatasetLogger.java         SLF4J logger "softres.dataset", state→action→outcome
 │       ├── config/
 │       │   └── ControlEngineConfig.java   Builder-based immutable config
 │       └── engine/
-│           └── ControlEngine.java         ScheduledExecutorService control loop
+│           └── ControlEngine.java         ScheduledExecutorService control loop, observe-only mode
 │
 ├── iasr-micrometer/                   ← Адаптер к Micrometer
 │   ├── pom.xml
 │   └── src/main/java/com/iasr/micrometer/
-│       ├── MicrometerMetricsProvider.java  MetricsProvider → MeterRegistry
-│       └── IasrMeterBinder.java           Регистрация кастомных Gauge/Counter
+│       ├── MicrometerMetricsProvider.java    MetricsProvider → MeterRegistry + WindowedLatencyTracker
+│       ├── IasrMeterBinder.java              Регистрация кастомных Gauge/Counter
+│       └── IasrMeterFilterConfigurer.java    MeterFilter — включение percentile histograms
 │
 └── iasr-spring-boot-starter/          ← Spring Boot 3.x Starter
     ├── pom.xml
     └── src/main/java/com/iasr/spring/
-    │   ├── IasrAutoConfiguration.java     @AutoConfiguration + bean wiring
+    │   ├── IasrAutoConfiguration.java     @AutoConfiguration, classpath-safe HikariCP detection,
+    │   │                                  auto-discovery Actuator-бинов через List<Actuator>
     │   ├── IasrProperties.java            @ConfigurationProperties (prefix "iasr")
-    │   └── ConcurrencyLimitFilter.java    Servlet Filter (429 при таймауте)
+    │   └── ConcurrencyLimitFilter.java    Servlet Filter: 429, latency tracking,
+    │                                      исключение /actuator /health /prometheus
     └── src/main/resources/META-INF/spring/
         └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
 ```
 ## Ключевые решения архитектуры
-- Разделение ядро / адаптеры — iasr-core не имеет compile-time зависимостей на Micrometer, Spring, Jackson. Ядро максимально лёгкое.
-- SPI-интерфейсы — MetricsProvider, Controller, Actuator — все точки расширения. ML-контроллер подключается заменой одного интерфейса.
-- ConcurrencyLimiter — fair Semaphore с атомарным runtime-resize: увеличение — мгновенный release(delta), уменьшение — eager reclaim через tryAcquire() без блокировки.
-- BaselineController (AIMD) — additive increase +k, multiplicative decrease ×0.85. Для Hikari — ещё более консервативная логика (изменение реже и на 1 шаг).
-- Guardrails — min/max + maxStep + cooldown + SLO violation block — применяются поверх решений любого контроллера.
-- Dataset Logger — state_t → action_t → outcome_{t+1} через отложенное заполнение outcome на следующем тике. Логируется через SLF4J logger softres.dataset в формате JSONL.
-- Spring Boot Starter — автоматически создаёт ConcurrencyLimiter, находит HikariDataSource, регистрирует фильтр и запускает ControlEngine. Все настройки через application.yml.
+
+### 1. Разделение ядро / адаптеры
+`iasr-core` не имеет compile-time зависимостей на Micrometer, Spring, Jackson — только `slf4j-api` и `HikariCP` в scope `provided`. Адаптеры (`iasr-micrometer`, `iasr-spring-boot-starter`) знают о ядре, но не наоборот. Это позволяет использовать ядро в любом JVM-приложении без транзитивных зависимостей.
+
+### 2. SPI-интерфейсы — три точки расширения
+`MetricsProvider`, `Controller`, `Actuator` — единственные интерфейсы, которые нужно реализовать для интеграции с произвольным стеком:
+
+| Интерфейс | Реализации | Для замены |
+|-----------|-----------|------------|
+| `MetricsProvider` | `MicrometerMetricsProvider` | Prometheus scrape, OpenTelemetry, custom |
+| `Controller` | `BaselineController` | RL-агент, MPC, ONNX-модель |
+| `Actuator` | `ConcurrencyLimiter`, `HikariPoolActuator` | Thread pool, rate limiter, cache size |
+
+ML-контроллер подключается заменой одного бина/параметра без изменения остального кода.
+
+### 3. ConcurrencyLimiter: permit debt через ResizableSemaphore
+Семафор fair (FIFO). Изменение лимита в runtime:
+- **Увеличение** — `semaphore.release(delta)`, заблокированные потоки пробуждаются немедленно, O(1).
+- **Уменьшение** — `ResizableSemaphore.reducePermits(delta)` (тонкий subclass, открывающий `protected` метод JDK) атомарно снижает внутренний счётчик — допустимо до отрицательных значений ("permit debt"). Долг естественно погашается последующими вызовами `release()` без дополнительных циклов drain или счётчиков. Это исключает race condition между уменьшением лимита и уже летящими запросами.
+
+### 4. WindowedLatencyTracker: per-window vs. decay-window перцентили
+Micrometer Timer хранит гистограмму с экспоненциальным затуханием (~2 мин). Два соседних 5-секундных снапшота дают почти идентичные p95/p99, что делает `state ≈ outcome` в датасете — данные непригодны для обучения ML.
+
+`WindowedLatencyTracker` решает это накоплением длительностей запросов в `ConcurrentLinkedQueue` (lock-free write из потоков запросов) и атомарным drain'ом в control-loop потоке один раз за тик. После drain буфер пуст — следующий тик получает только свежие наблюдения. Перцентили вычисляются сортировкой массива за O(n log n).
+
+`ConcurrencyLimitFilter` фильтрует инфраструктурные пути (`/actuator`, `/health`, `/prometheus`, `/live`, `/ready`) — их латентность не попадает в tracker и не загрязняет сигнал управляющего контура.
+
+### 5. BaselineController (AIMD) + idle-shrink
+Детерминированный контроллер с пороговой логикой. Подробнее — в разделе [Baseline Controller](#baseline-controller-aimd).
+
+Дополнительно: при отсутствии реального трафика (`goodput < 1 RPS`) более 24 тиков подряд контроллер постепенно уменьшает лимиты (`idle-shrink`), возвращая их к минимальным значениям. Это освобождает системные ресурсы в периоды простоя и гарантирует, что при возобновлении нагрузки контроллер начнёт с небольшого значения и будет наращивать его по AIMD, а не сохранит пик предыдущей сессии.
+
+### 6. Guardrails: многослойный предохранитель
+Guardrail — это независимый уровень безопасности поверх любого контроллера. Порядок применения для каждого актюатора:
+1. **Cooldown check** — подавить изменение, если после последнего прошло меньше N тиков.
+2. **SLO violation block** — запретить увеличение ресурса при нарушении SLO (защита от раскачки).
+3. **maxStep clamp** — ограничить шаг изменения за один тик.
+4. **absolute clamp** — зажать итоговое значение в `[min, max]`.
+
+Счётчик cooldown не уменьшается при подавлении изменения — только при реальном применении. Это гарантирует корректную длину cooldown вне зависимости от того, сколько раз было подавлено изменение.
+
+### 7. Dataset Logger: state → action → outcome через отложенный flush
+На тике **t**: запись `state_t` и `action_t` сохраняется в памяти (`pending`).
+На тике **t+1**: `pending` дополняется `outcome_t = state_{t+1}` и логируется в виде одной JSON-строки в SLF4J-логгер `softres.dataset`.
+При shutdown: `flush()` записывает последнюю запись с `outcome: null`.
+
+Это единственный способ построить датасет формата `(s, a, s')` без задержки хранения — вся логика умещается в одном объекте `DatasetLogger`, без внешней БД.
+
+### 8. Spring Boot Starter: classpath-safe автоконфигурация
+`IasrAutoConfiguration` активируется только при наличии `MeterRegistry` в контексте. Hikari-специфичный код вынесен во внутренний `@Configuration`-класс `HikariActuatorConfiguration`, защищённый **строковым** `@ConditionalOnClass` (имена классов как строки). При использовании `.class`-литералов Java разрешает их при загрузке outer-класса, что вызывает `NoClassDefFoundError`, если HikariCP отсутствует. Строковые условия Spring вычисляет через ASM-байткод без загрузки классов.
+
+`ControlEngine` получает все `Actuator`-бины через `List<Actuator>` из контекста Spring, а не через typed reference — это позволяет подключать произвольные кастомные актюаторы без изменения кода автоконфигурации.
+
+### 9. Observe-only режим
+При `iasr.enabled: false` control loop запускается, собирает метрики и пишет датасет, но **не применяет** действия к актюаторам. Это позволяет:
+- безопасно ввести IASR в production в режиме наблюдения;
+- накопить обучающий датасет с человеческой/внешней политикой управления;
+- валидировать, что метрики собираются корректно, до включения автоуправления.
 
 ## Модули
 
@@ -107,7 +182,7 @@ IASR/
 <dependency>
     <groupId>com.iasr</groupId>
     <artifactId>iasr-spring-boot-starter</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.12</version>
 </dependency>
 ```
 
@@ -147,17 +222,33 @@ iasr:
 В `logback-spring.xml`:
 
 ```xml
-<appender name="DATASET" class="ch.qos.logback.core.FileAppender">
-    <file>logs/iasr-dataset.jsonl</file>
-    <encoder>
-        <pattern>%msg%n</pattern>
-    </encoder>
-</appender>
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
 
-<logger name="softres.dataset" level="INFO" additivity="false">
-    <appender-ref ref="DATASET"/>
-</logger>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <property name="DATASET_DIR" value="${DATASET_DIR:-logs}"/>
+    <appender name="DATASET" class="ch.qos.logback.core.FileAppender">
+        <file>${DATASET_DIR}/iasr-dataset.jsonl</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="softres.dataset" level="INFO" additivity="false">
+        <appender-ref ref="DATASET"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
 ```
+
+```DATASET_DIR=./service-name/logs```
 
 ### 4. Готово!
 
