@@ -130,7 +130,11 @@ public class GradientController implements Controller {
             return ControlAction.builder().hold(limiter.name(), "gradient_no_change").build();
         }
 
-        String reason = gradient < 1.0 ? "gradient_shrink" : "gradient_grow";
+        // Label by the direction actually taken, not by the gradient: the
+        // allowance term can push the limit up even when the gradient is below
+        // one, and a record saying "shrink" next to a raised limit is worse
+        // than no record at all.
+        String reason = newLimit < current ? "gradient_shrink" : "gradient_grow";
         log.debug("Gradient: {} → {} (rttNoLoad={} rtt={} g={})",
                 current, newLimit, rttNoLoadMs, latency, gradient);
         return ControlAction.builder().set(limiter.name(), newLimit, reason).build();

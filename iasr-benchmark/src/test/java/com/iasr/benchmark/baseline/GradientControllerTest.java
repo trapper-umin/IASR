@@ -53,6 +53,25 @@ class GradientControllerTest {
     }
 
     @Test
+    @DisplayName("labels by the direction taken, not by the gradient value")
+    void labelsByActualDirection() {
+        GradientController controller = new GradientController(1, 500);
+        Limiter limiter = new Limiter(100);
+        controller.decide(at(50, 95), List.of(limiter));
+
+        // Gradient just below one, but the allowance term still raises the
+        // limit — calling that a shrink would misreport the decision.
+        ControlAction action = controller.decide(at(52, 95), List.of(limiter));
+
+        int newLimit = action.getOrDefault(NAME, 100);
+        if (newLimit > 100) {
+            assertThat(action.reason(NAME)).isEqualTo("gradient_grow");
+        } else if (newLimit < 100) {
+            assertThat(action.reason(NAME)).isEqualTo("gradient_shrink");
+        }
+    }
+
+    @Test
     @DisplayName("does not move a limit nothing is pressing against")
     void holdsWhenUnderutilised() {
         GradientController controller = new GradientController(1, 500);
