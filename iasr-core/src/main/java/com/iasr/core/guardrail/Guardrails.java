@@ -63,7 +63,11 @@ public class Guardrails {
     public ControlAction enforce(ControlAction raw, List<Actuator> actuators, MetricsSnapshot snapshot) {
         if (raw.isEmpty()) {
             advanceCooldowns(Set.of());
-            return ControlAction.NONE;
+            // Carry the controller's reasons through even when it asked for
+            // nothing: "held, metrics in band" and "held, demand gate" are
+            // different facts, and dropping them here would erase the only
+            // record of which one happened.
+            return raw.reasons().isEmpty() ? ControlAction.NONE : reasonsOnly(raw);
         }
 
         boolean sloViolated = snapshot.has(MetricNames.LATENCY_P95_MS)
@@ -80,8 +84,10 @@ public class Guardrails {
 
             if (rule == null) {
                 if (desired != current) {
-                    builder.set(name, desired);
+                    builder.set(name, desired, annotate(raw, name, "applied"));
                     changedThisTick.add(name);
+                } else {
+                    builder.hold(name, annotate(raw, name, "no_change"));
                 }
                 continue;
             }
@@ -93,6 +99,7 @@ public class Guardrails {
             if (delta != 0 && elapsed < rule.cooldownTicks()) {
                 log.debug("Guardrail [{}]: change suppressed, cooldown ({}/{} ticks)",
                         name, elapsed, rule.cooldownTicks());
+                builder.hold(name, annotate(raw, name, "suppressed_cooldown"));
                 continue;
             }
 
@@ -101,6 +108,7 @@ public class Guardrails {
             if (delta > 0 && sloViolated && rule.blockIncreaseOnSloViolation()) {
                 log.debug("Guardrail [{}]: increase suppressed, SLO violated (p95={} > {})",
                         name, snapshot.get(MetricNames.LATENCY_P95_MS), sloLatencyMs);
+                builder.hold(name, annotate(raw, name, "suppressed_slo_block"));
                 continue;
             }
 
@@ -110,22 +118,47 @@ public class Guardrails {
             //    the controller's emergency brake as hard as its accelerator.
             int maxUp = rule.maxStep();
             int maxDown = rule.effectiveMaxStepDown();
+            String outcome = "applied";
             if (delta > maxUp) {
                 delta = maxUp;
+                outcome = "clamped_max_step";
             } else if (delta < -maxDown) {
                 delta = -maxDown;
+                outcome = "clamped_max_step_down";
             }
 
             // 4. Clamp absolute value
-            int clamped = Math.max(rule.minValue(), Math.min(current + delta, rule.maxValue()));
+            int stepped = current + delta;
+            int clamped = Math.max(rule.minValue(), Math.min(stepped, rule.maxValue()));
+            if (clamped != stepped) {
+                outcome = "clamped_bounds";
+            }
 
             if (clamped != current) {
-                builder.set(name, clamped);
+                builder.set(name, clamped, annotate(raw, name, outcome));
                 changedThisTick.add(name);
+            } else {
+                builder.hold(name, annotate(raw, name, "no_change"));
             }
         }
 
         advanceCooldowns(changedThisTick);
+        return builder.build();
+    }
+
+    /**
+     * Join the controller's reason with what this layer did to it, so a record
+     * says both what was intended and what became of the intent.
+     */
+    private static String annotate(ControlAction raw, String name, String outcome) {
+        String decided = raw.reason(name);
+        return decided == null ? outcome : decided + "|" + outcome;
+    }
+
+    /** Pass reasons through when there is nothing to apply. */
+    private static ControlAction reasonsOnly(ControlAction raw) {
+        ControlAction.Builder builder = ControlAction.builder();
+        raw.reasons().forEach(builder::hold);
         return builder.build();
     }
 

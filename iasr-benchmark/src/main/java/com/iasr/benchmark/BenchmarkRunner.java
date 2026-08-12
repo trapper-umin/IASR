@@ -44,7 +44,14 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class BenchmarkRunner {
 
-    private static final double SLO_MS = 150;
+    /**
+     * Latency target the controller is asked to meet.  Configurable so the
+     * tuning can be checked in other regimes: a coefficient that only wins at
+     * one SLO and one dependency speed is fitted to this harness, not a
+     * property of the algorithm.
+     */
+    private static final double SLO_MS =
+            Double.parseDouble(System.getProperty("bench.sloMs", "150"));
 
     /** Deliberately non-default, to prove IASR reads the pool by its real name. */
     private static final String POOL_NAME = "bench-pool";

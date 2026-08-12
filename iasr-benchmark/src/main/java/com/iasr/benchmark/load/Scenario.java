@@ -25,7 +25,11 @@ public record Scenario(
         void applyAt(double elapsedSeconds, BackendModel backend);
     }
 
-    private static final long BASE_SERVICE_MS = 50;
+    /** Dependency service time; see BenchmarkRunner#SLO_MS for why it varies. */
+    private static final long BASE_SERVICE_MS = Long.getLong("bench.db.serviceMs", 50L);
+
+    /** Factor by which the dependency slows down in the degradation scenario. */
+    private static final double DEGRADED_FACTOR = 2.4;
 
     /** Dependency keeps its baseline latency for the whole run. */
     private static DependencySchedule steadyDependency() {
@@ -86,6 +90,8 @@ public record Scenario(
                 45_000,
                 t -> 150,
                 (t, backend) -> backend.setServiceTimeMs(
-                        (t >= 15 && t < 35) ? 120 : BASE_SERVICE_MS));
+                        (t >= 15 && t < 35)
+                                ? Math.round(BASE_SERVICE_MS * DEGRADED_FACTOR)
+                                : BASE_SERVICE_MS));
     }
 }

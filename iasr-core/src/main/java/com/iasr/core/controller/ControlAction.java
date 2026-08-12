@@ -10,20 +10,47 @@ import java.util.Map;
  * <p>
  * Keys are actuator names (matching {@link com.iasr.core.actuator.Actuator#name()}),
  * values are the <b>desired</b> new values (before guardrail clamping).
+ *
+ * <h3>Reasons</h3>
+ * Alongside the values, an action may carry a short reason per actuator —
+ * including for actuators it decided <em>not</em> to change.  Without it a tick
+ * that leaves the limit alone is indistinguishable from one where the
+ * controller wanted to act and something stopped it, and those are different
+ * states of the world: metrics in the neutral band, a cooldown still running,
+ * an SLO block, a demand gate that saw no queue.  The controller already
+ * computes the distinction; recording it turns the dataset into a decision log
+ * and makes "why did it not react?" answerable without attaching a debugger to
+ * production.
+ * <p>
+ * Reasons are optional and carry no semantics for the engine — they are
+ * observability, not control flow. {@link #isEmpty()} still reflects desired
+ * changes alone.
  */
 public final class ControlAction {
 
     /** Singleton empty action — "do nothing". */
-    public static final ControlAction NONE = new ControlAction(Collections.emptyMap());
+    public static final ControlAction NONE =
+            new ControlAction(Collections.emptyMap(), Collections.emptyMap());
 
     private final Map<String, Integer> desired;
+    private final Map<String, String> reasons;
 
-    private ControlAction(Map<String, Integer> desired) {
+    private ControlAction(Map<String, Integer> desired, Map<String, String> reasons) {
         this.desired = Collections.unmodifiableMap(new LinkedHashMap<>(desired));
+        this.reasons = Collections.unmodifiableMap(new LinkedHashMap<>(reasons));
     }
 
     public Map<String, Integer> desiredValues() {
         return desired;
+    }
+
+    /** Reason per actuator, for every actuator the controller considered. */
+    public Map<String, String> reasons() {
+        return reasons;
+    }
+
+    public String reason(String actuatorName) {
+        return reasons.get(actuatorName);
     }
 
     public int getOrDefault(String actuatorName, int fallback) {
@@ -36,7 +63,9 @@ public final class ControlAction {
 
     @Override
     public String toString() {
-        return "ControlAction" + desired;
+        return reasons.isEmpty()
+                ? "ControlAction" + desired
+                : "ControlAction" + desired + " " + reasons;
     }
 
     // ── Builder ──────────────────────────────────────────────────────────
@@ -47,6 +76,7 @@ public final class ControlAction {
 
     public static final class Builder {
         private final Map<String, Integer> map = new LinkedHashMap<>();
+        private final Map<String, String> why = new LinkedHashMap<>();
 
         private Builder() {}
 
@@ -55,9 +85,43 @@ public final class ControlAction {
             return this;
         }
 
+        /** Record a desired change together with why it was chosen. */
+        public Builder set(String actuatorName, int desiredValue, String reason) {
+            map.put(actuatorName, desiredValue);
+            return reason(actuatorName, reason);
+        }
+
+        /**
+         * Record why an actuator was left alone.  Deliberately separate from
+         * {@link #set}: a hold is a decision, but it is not a change, and the
+         * engine must keep treating it as "nothing to apply".
+         */
+        public Builder hold(String actuatorName, String reason) {
+            return reason(actuatorName, reason);
+        }
+
+        public Builder reason(String actuatorName, String reason) {
+            if (reason != null) {
+                why.put(actuatorName, reason);
+            }
+            return this;
+        }
+
+        /** Copy in desired values from another action. */
+        public Builder also(Map<String, Integer> values) {
+            map.putAll(values);
+            return this;
+        }
+
+        /** Copy in reasons from another action. */
+        public Builder alsoReasons(Map<String, String> otherReasons) {
+            why.putAll(otherReasons);
+            return this;
+        }
+
         public ControlAction build() {
-            if (map.isEmpty()) return NONE;
-            return new ControlAction(map);
+            if (map.isEmpty() && why.isEmpty()) return NONE;
+            return new ControlAction(map, why);
         }
     }
 }

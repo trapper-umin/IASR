@@ -27,6 +27,7 @@ class DatasetRecordTest {
         assertThat(json).isEqualTo("{\"timestamp\":\"2026-02-14T11:20:05.123Z\",\"windowSec\":5,"
                 + "\"state\":{\"latency_p95_ms\":42.5},"
                 + "\"action\":{\"concurrency_limit\":140},"
+                + "\"intent\":{},\"reasons\":{},"
                 + "\"outcome\":null}");
     }
 
@@ -80,6 +81,24 @@ class DatasetRecordTest {
         assertThat(record(Map.of(), Map.of()).toJsonLine())
                 .contains("\"state\":{}")
                 .contains("\"action\":{}");
+    }
+
+    @Test
+    @DisplayName("records what the controller wanted alongside what was applied")
+    void recordsIntentAndReasons() {
+        DatasetRecord r = new DatasetRecord(TS, 5.0,
+                Map.of("latency_p95_ms", 300.0),
+                Map.of("concurrency_limit", 120),
+                Map.of("concurrency_limit", 140),
+                Map.of("concurrency_limit", "decrease_slo_gradient|clamped_max_step"));
+
+        String json = r.toJsonLine();
+
+        assertThat(json)
+                .as("the applied value alone would teach a learner the guardrail, not the policy")
+                .contains("\"action\":{\"concurrency_limit\":120}")
+                .contains("\"intent\":{\"concurrency_limit\":140}")
+                .contains("\"reasons\":{\"concurrency_limit\":\"decrease_slo_gradient|clamped_max_step\"}");
     }
 
     @Test

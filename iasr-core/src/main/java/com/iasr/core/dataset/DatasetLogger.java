@@ -45,6 +45,24 @@ public class DatasetLogger {
      * @param action   control action applied at this tick
      */
     public synchronized void recordTick(MetricsSnapshot snapshot, ControlAction action) {
+        recordTick(snapshot, action, null);
+    }
+
+    /**
+     * Record state, the action actually applied, and what the controller
+     * intended before the guardrails saw it.
+     * <p>
+     * Both halves are needed. Training on the applied action alone teaches the
+     * guardrail rather than the policy, and the labels silently become wrong
+     * the moment the guardrail is retuned. The reasons attached to
+     * {@code intent} say which rule fired and what became of it.
+     *
+     * @param intent the controller's raw decision, or {@code null} when the
+     *               engine is not applying actions at all
+     */
+    public synchronized void recordTick(MetricsSnapshot snapshot,
+                                        ControlAction action,
+                                        ControlAction intent) {
         Map<String, Double> stateMap = snapshot.asMap();
 
         // Complete the previous record
@@ -55,7 +73,10 @@ public class DatasetLogger {
 
         // Build the new record (outcome will be filled at t+1)
         Map<String, Integer> actionMap = action != null ? action.desiredValues() : Map.of();
-        pending = new DatasetRecord(Instant.now(), windowSec, stateMap, actionMap);
+        Map<String, Integer> intentMap = intent != null ? intent.desiredValues() : Map.of();
+        Map<String, String> reasons = intent != null ? intent.reasons() : Map.of();
+        pending = new DatasetRecord(Instant.now(), windowSec, stateMap, actionMap,
+                intentMap, reasons);
     }
 
     /**

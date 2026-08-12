@@ -280,6 +280,58 @@ class GuardrailsTest {
         assertThat(result.isEmpty()).isTrue();
     }
 
+    @Nested
+    @DisplayName("decision reasons")
+    class Reasons {
+
+        private static ControlAction wantWithReason(int value, String reason) {
+            return ControlAction.builder().set(NAME, value, reason).build();
+        }
+
+        @Test
+        @DisplayName("joins what the controller decided with what this layer did to it")
+        void annotatesTheOutcome() {
+            TestActuator actuator = new TestActuator(NAME, 100, 1, 500);
+            Guardrails guardrails = new Guardrails(
+                    List.of(new ActuatorGuardrail(NAME, 1, 500, 20, 0)), SLO);
+
+            ControlAction result = guardrails.enforce(
+                    wantWithReason(400, "increase_headroom"), List.of(actuator), healthy());
+
+            assertThat(result.reason(NAME)).isEqualTo("increase_headroom|clamped_max_step");
+        }
+
+        @Test
+        @DisplayName("records suppression, so a blocked change is not mistaken for no decision")
+        void recordsSuppression() {
+            TestActuator actuator = new TestActuator(NAME, 100, 1, 500);
+            Guardrails guardrails = new Guardrails(
+                    List.of(new ActuatorGuardrail(NAME, 1, 500, 50, 0)), SLO);
+
+            ControlAction result = guardrails.enforce(
+                    wantWithReason(150, "increase_headroom"), List.of(actuator), violating());
+
+            assertThat(result.isEmpty()).as("nothing is applied").isTrue();
+            assertThat(result.reason(NAME))
+                    .as("but the intent and the block are both on record")
+                    .isEqualTo("increase_headroom|suppressed_slo_block");
+        }
+
+        @Test
+        @DisplayName("carries a hold reason through even when nothing was requested")
+        void carriesHoldReasons() {
+            TestActuator actuator = new TestActuator(NAME, 100, 1, 500);
+            Guardrails guardrails = new Guardrails(
+                    List.of(new ActuatorGuardrail(NAME, 1, 500, 50, 0)), SLO);
+
+            ControlAction result = guardrails.enforce(
+                    ControlAction.builder().hold(NAME, "hold_limit_not_binding").build(),
+                    List.of(actuator), healthy());
+
+            assertThat(result.reason(NAME)).isEqualTo("hold_limit_not_binding");
+        }
+    }
+
     @Test
     @DisplayName("rejects invalid guardrail configuration")
     void validatesConstructorArguments() {

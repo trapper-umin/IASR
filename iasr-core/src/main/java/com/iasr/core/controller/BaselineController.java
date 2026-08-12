@@ -283,12 +283,15 @@ public class BaselineController implements Controller {
             int currentLimit = concurrencyActuator.currentValue();
             double inflight = snapshot.get(MetricNames.INFLIGHT, 0.0);
             double queueLength = snapshot.get(MetricNames.QUEUE_LENGTH, 0.0);
-            int newLimit = decideConcurrency(currentLimit, latencyP95, goodputRps,
+            Decision decision = decideConcurrency(currentLimit, latencyP95, goodputRps,
                     errorRate, timeoutRate, inflight, queueLength, idleShrink);
-            if (newLimit != currentLimit) {
-                action.set(concurrencyActuator.name(), newLimit);
-                log.debug("Baseline: concurrency {} → {} (p95={} slo={} err={} tout={})",
-                        currentLimit, newLimit, latencyP95, sloLatencyMs, errorRate, timeoutRate);
+            if (decision.value() != currentLimit) {
+                action.set(concurrencyActuator.name(), decision.value(), decision.reason());
+                log.debug("Baseline: concurrency {} → {} [{}] (p95={} slo={} err={} tout={})",
+                        currentLimit, decision.value(), decision.reason(),
+                        latencyP95, sloLatencyMs, errorRate, timeoutRate);
+            } else {
+                action.hold(concurrencyActuator.name(), decision.reason());
             }
         }
 
@@ -296,13 +299,15 @@ public class BaselineController implements Controller {
         Actuator hikariActuator = findActuator(actuators, HikariPoolActuator.ACTUATOR_NAME);
         if (hikariActuator != null) {
             int currentPool = hikariActuator.currentValue();
-            int newPool = decideHikariPool(currentPool, snapshot, latencyP95, goodputRps, idleShrink);
-            if (newPool != currentPool) {
-                action.set(hikariActuator.name(), newPool);
-                log.debug("Baseline: hikari pool {} → {} (pending={} acquire_p95={})",
-                        currentPool, newPool,
+            Decision decision = decideHikariPool(currentPool, snapshot, latencyP95, goodputRps, idleShrink);
+            if (decision.value() != currentPool) {
+                action.set(hikariActuator.name(), decision.value(), decision.reason());
+                log.debug("Baseline: hikari pool {} → {} [{}] (pending={} acquire_p95={})",
+                        currentPool, decision.value(), decision.reason(),
                         snapshot.get(MetricNames.HIKARI_PENDING, 0.0),
                         snapshot.get(MetricNames.HIKARI_ACQUIRE_P95_MS, 0.0));
+            } else {
+                action.hold(hikariActuator.name(), decision.reason());
             }
         }
 
@@ -316,15 +321,15 @@ public class BaselineController implements Controller {
 
     // ── Concurrency logic ────────────────────────────────────────────────
 
-    private int decideConcurrency(int current, double latencyP95, double goodputRps,
-                                   double errorRate, double timeoutRate, double inflight,
-                                   double queueLength, boolean idleShrink) {
+    private Decision decideConcurrency(int current, double latencyP95, double goodputRps,
+                                       double errorRate, double timeoutRate, double inflight,
+                                       double queueLength, boolean idleShrink) {
         // Below active-traffic threshold: short idle → hold, sustained idle → gradually shrink
         if (goodputRps < MIN_ACTIVE_RPS && errorRate <= 0 && timeoutRate <= 0) {
             if (idleShrink) {
-                return Math.max(1, current - concurrencyIncreaseStep);
+                return new Decision(Math.max(1, current - concurrencyIncreaseStep), "idle_shrink");
             }
-            return current;
+            return new Decision(current, "idle_hold");
         }
 
         boolean sloViolated = latencyP95 > sloLatencyMs;
@@ -339,17 +344,24 @@ public class BaselineController implements Controller {
         // ── Decrease path ──
         if (sloViolated || timeoutsRising || errorsRising) {
             int decreased;
+            String reason;
             if (sloViolated && minGradient > 0 && latencyP95 > 0) {
                 // Correction proportional to the error, not a fixed fraction.
                 double gradient = Math.min(1.0, Math.max(minGradient, sloLatencyMs / latencyP95));
                 decreased = (int) Math.floor(current * gradient);
+                reason = "decrease_slo_gradient";
+            } else if (sloViolated) {
+                decreased = (int) Math.floor(current * concurrencyDecreaseFactor);
+                reason = "decrease_slo_factor";
             } else {
                 decreased = (int) Math.floor(current * concurrencyDecreaseFactor);
+                reason = errorsRising ? "decrease_errors" : "decrease_timeouts";
             }
-            if (sloViolated && sloTarget > 0) {
-                decreased = Math.min(decreased, sloTarget);
+            if (sloViolated && sloTarget > 0 && sloTarget < decreased) {
+                decreased = sloTarget;
+                reason = "decrease_slo_target";
             }
-            return Math.max(decreased, 1);
+            return new Decision(Math.max(decreased, 1), reason);
         }
 
         // ── Increase path (additive, demand-gated and capped) ──
@@ -357,17 +369,17 @@ public class BaselineController implements Controller {
             // Only grow the limit when it is actually the binding constraint.
             // Idle headroom is not a reason to add more.
             if (!limitIsBinding(current, inflight, queueLength)) {
-                return current;
+                return new Decision(current, "hold_limit_not_binding");
             }
             int increased = current + concurrencyIncreaseStep;
             if (sloTarget > 0 && increased > sloTarget) {
-                return current;
+                return new Decision(current, "hold_at_slo_target");
             }
-            return increased;
+            return new Decision(increased, "increase_headroom");
         }
 
         // ── Hold ──
-        return current;
+        return new Decision(current, "hold_in_band");
     }
 
     /**
@@ -388,6 +400,9 @@ public class BaselineController implements Controller {
         }
         return inflight >= utilizationGate * current;
     }
+
+    /** A chosen value together with the rule that chose it. */
+    private record Decision(int value, String reason) {}
 
     /**
      * Concurrency that Little's law says is needed to serve the observed
@@ -418,8 +433,8 @@ public class BaselineController implements Controller {
 
     // ── Hikari pool logic ────────────────────────────────────────────────
 
-    private int decideHikariPool(int currentPool, MetricsSnapshot snapshot,
-                                  double latencyP95, double goodputRps, boolean idleShrink) {
+    private Decision decideHikariPool(int currentPool, MetricsSnapshot snapshot,
+                                      double latencyP95, double goodputRps, boolean idleShrink) {
         double pending = snapshot.get(MetricNames.HIKARI_PENDING, 0.0);
         double acquireP95 = snapshot.get(MetricNames.HIKARI_ACQUIRE_P95_MS, 0.0);
         boolean sloViolated = latencyP95 > sloLatencyMs;
@@ -454,9 +469,9 @@ public class BaselineController implements Controller {
         // Below active-traffic threshold: short idle → hold, sustained idle → gradually shrink
         if (goodputRps < MIN_ACTIVE_RPS && pending <= 0) {
             if (idleShrink) {
-                return Math.max(1, currentPool - hikariStep);
+                return new Decision(Math.max(1, currentPool - hikariStep), "idle_shrink");
             }
-            return currentPool;
+            return new Decision(currentPool, "idle_hold");
         }
 
         // ── Increase: clear connection deficit detected ──
@@ -464,13 +479,13 @@ public class BaselineController implements Controller {
         // Allow increase even during SLO violation when the deficit is the
         // likely cause (pending > 0 means requests are queued for connections).
         if (hasPendingDeficit && acquireTimeHigh) {
-            return currentPool + hikariStep;
+            return new Decision(currentPool + hikariStep, "increase_connection_deficit");
         }
 
-        // ── Decrease: no deficit for a sustained period under active traffic ──
+        // ── Decrease: spare connections for a sustained period under active traffic ──
         if (ticksWithoutPending >= 10 && currentPool > 1) {
             ticksWithoutPending = 0;
-            return currentPool - hikariStep;
+            return new Decision(currentPool - hikariStep, "decrease_idle_connections");
         }
 
         // ── Decrease: latency degradation after pool increase ──
@@ -479,11 +494,11 @@ public class BaselineController implements Controller {
         // would falsely trigger a pool decrease.
         if (poolWasIncreased && sloViolated
                 && !Double.isNaN(prevLatencyP95) && latencyP95 > prevLatencyP95 * 1.1) {
-            return Math.max(1, currentPool - hikariStep);
+            return new Decision(Math.max(1, currentPool - hikariStep), "rollback_after_increase");
         }
 
         // ── Hold ──
-        return currentPool;
+        return new Decision(currentPool, "hold");
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────

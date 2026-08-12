@@ -32,16 +32,29 @@ public final class DatasetRecord {
     private final double windowSec;
     private final Map<String, Double> state;
     private final Map<String, Integer> action;
+    private final Map<String, Integer> intent;
+    private final Map<String, String> reasons;
     private Map<String, Double> outcome; // mutable — filled at t+1
 
     public DatasetRecord(Instant timestamp,
                          double windowSec,
                          Map<String, Double> state,
                          Map<String, Integer> action) {
+        this(timestamp, windowSec, state, action, Map.of(), Map.of());
+    }
+
+    public DatasetRecord(Instant timestamp,
+                         double windowSec,
+                         Map<String, Double> state,
+                         Map<String, Integer> action,
+                         Map<String, Integer> intent,
+                         Map<String, String> reasons) {
         this.timestamp = timestamp;
         this.windowSec = windowSec;
         this.state = new LinkedHashMap<>(state);
         this.action = new LinkedHashMap<>(action);
+        this.intent = new LinkedHashMap<>(intent);
+        this.reasons = new LinkedHashMap<>(reasons);
     }
 
     public boolean hasOutcome() { return outcome != null; }
@@ -70,6 +83,10 @@ public final class DatasetRecord {
         appendDoubleMap(sb, "state", state);
         sb.append(',');
         appendIntMap(sb, "action", action);
+        sb.append(',');
+        appendIntMap(sb, "intent", intent);
+        sb.append(',');
+        appendStringMap(sb, "reasons", reasons);
         sb.append(',');
         if (outcome != null) {
             appendDoubleMap(sb, "outcome", outcome);
@@ -110,6 +127,17 @@ public final class DatasetRecord {
             } else {
                 sb.append(v);
             }
+        }
+        sb.append('}');
+    }
+
+    private static void appendStringMap(StringBuilder sb, String key, Map<String, String> map) {
+        sb.append('"').append(key).append("\":{");
+        boolean first = true;
+        for (var entry : map.entrySet()) {
+            if (!first) sb.append(',');
+            first = false;
+            sb.append('"').append(entry.getKey()).append("\":\"").append(entry.getValue()).append('"');
         }
         sb.append('}');
     }

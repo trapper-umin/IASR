@@ -119,6 +119,7 @@ public class ControlEngine {
             }
 
             ControlAction action = ControlAction.NONE;
+            ControlAction intent = null;
 
             if (config.applyActions()) {
                 // 2. Controller decision
@@ -129,6 +130,13 @@ public class ControlEngine {
 
                 // 4. Apply actions
                 applyAction(action);
+
+                // What the controller asked for, before the guardrails clamped
+                // it, annotated with which rule fired and what became of it.
+                intent = ControlAction.builder()
+                        .also(rawAction.desiredValues())
+                        .alsoReasons(action.reasons())
+                        .build();
             }
 
             // 5. Dataset logging (if datasetLoggingEnabled)
@@ -138,7 +146,7 @@ public class ControlEngine {
                 for (Actuator actuator : actuators) {
                     absoluteAction.set(actuator.name(), actuator.currentValue());
                 }
-                datasetLogger.recordTick(snapshot, absoluteAction.build());
+                datasetLogger.recordTick(snapshot, absoluteAction.build(), intent);
             }
 
         } catch (Exception e) {
