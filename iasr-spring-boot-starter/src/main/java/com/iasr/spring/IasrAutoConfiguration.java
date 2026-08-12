@@ -190,24 +190,11 @@ public class IasrAutoConfiguration {
             IasrProperties props,
             MicrometerMetricsProvider metricsProvider,
             ConcurrencyLimiter concurrencyLimiter,
-            ObjectProvider<List<Actuator>> additionalActuatorsProvider) {
+            ObjectProvider<List<Actuator>> additionalActuatorsProvider,
+            ObjectProvider<com.iasr.core.controller.Controller> controllerProvider) {
 
         IasrProperties.ControllerProps cp = props.getController();
-        BaselineController controller = new BaselineController(
-                props.getSloLatencyMs(),
-                cp.getComfortFactor(),
-                cp.getConcurrencyIncreaseStep(),
-                cp.getConcurrencyDecreaseFactor(),
-                cp.getErrorRateThreshold(),
-                cp.getTimeoutRateThreshold(),
-                cp.getHikariStep(),
-                cp.getHikariPendingThreshold(),
-                cp.getHikariAcquireTimeThresholdMs(),
-                cp.getUtilizationGate(),
-                cp.getSloTargetHeadroom(),
-                cp.getMinGradient(),
-                cp.getHikariIdleShrinkThreshold()
-        );
+        com.iasr.core.controller.Controller controller = buildController(props, controllerProvider);
 
         ControlEngineConfig.Builder cfgBuilder = ControlEngineConfig.builder()
                 .windowMs(props.getWindowMs())
@@ -255,5 +242,42 @@ public class IasrAutoConfiguration {
                 hasHikari ? "concurrency+hikari" : "concurrency");
 
         return engine;
+    }
+
+    /**
+     * Use a {@link com.iasr.core.controller.Controller} bean when the
+     * application supplies one, otherwise build the bundled baseline.
+     * <p>
+     * Substituting the decision logic is the whole point of the SPI — a
+     * learned policy, an MPC, an alternative algorithm — and until this hook
+     * existed the only way to do it through Spring was to replace the entire
+     * {@code ControlEngine} bean and rebuild its configuration by hand, which
+     * is not the "swap one bean" the design promises.
+     */
+    private com.iasr.core.controller.Controller buildController(
+            IasrProperties props,
+            ObjectProvider<com.iasr.core.controller.Controller> controllerProvider) {
+
+        com.iasr.core.controller.Controller supplied = controllerProvider.getIfAvailable();
+        if (supplied != null) {
+            log.info("IASR: using supplied controller [{}]", supplied.getClass().getSimpleName());
+            return supplied;
+        }
+
+        IasrProperties.ControllerProps cp = props.getController();
+        return new BaselineController(
+                props.getSloLatencyMs(),
+                cp.getComfortFactor(),
+                cp.getConcurrencyIncreaseStep(),
+                cp.getConcurrencyDecreaseFactor(),
+                cp.getErrorRateThreshold(),
+                cp.getTimeoutRateThreshold(),
+                cp.getHikariStep(),
+                cp.getHikariPendingThreshold(),
+                cp.getHikariAcquireTimeThresholdMs(),
+                cp.getUtilizationGate(),
+                cp.getSloTargetHeadroom(),
+                cp.getMinGradient(),
+                cp.getHikariIdleShrinkThreshold());
     }
 }

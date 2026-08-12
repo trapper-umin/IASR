@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import com.iasr.benchmark.app.BackendModel;
+import com.iasr.benchmark.baseline.GradientController;
 import com.iasr.benchmark.app.BenchmarkApplication;
 import com.iasr.benchmark.load.LoadGenerator;
 import com.iasr.benchmark.load.Scenario;
@@ -106,7 +107,7 @@ public class BenchmarkRunner {
     private static List<String> selectModes() {
         String only = System.getProperty("bench.modes");
         if (only == null || only.isBlank()) {
-            return List.of("off", "fixed", "adaptive");
+            return List.of("off", "fixed", "adaptive", "gradient");
         }
         return List.of(only.split(","));
     }
@@ -181,11 +182,29 @@ public class BenchmarkRunner {
 
         props.putAll(iasrProperties(mode));
 
-        return new SpringApplicationBuilder(BenchmarkApplication.class)
+        SpringApplicationBuilder builder = "gradient".equals(mode)
+                ? new SpringApplicationBuilder(BenchmarkApplication.class, GradientBaselineConfig.class)
+                : new SpringApplicationBuilder(BenchmarkApplication.class);
+        return builder
                 .properties(props)
                 .web(WebApplicationType.SERVLET)
                 .bannerMode(org.springframework.boot.Banner.Mode.OFF)
                 .run();
+    }
+
+    /**
+     * Supplies the comparison controller through the SPI, which is also a test
+     * of the claim that the decision logic is swappable by adding one bean.
+     */
+    @org.springframework.context.annotation.Configuration(proxyBeanMethods = false)
+    static class GradientBaselineConfig {
+        @org.springframework.context.annotation.Bean
+        public com.iasr.core.controller.Controller gradientController(
+                com.iasr.spring.IasrProperties props) {
+            return new GradientController(
+                    props.getConcurrency().getMinLimit(),
+                    props.getConcurrency().getMaxLimit());
+        }
     }
 
     private static Map<String, Object> iasrProperties(String mode) {
@@ -196,7 +215,7 @@ public class BenchmarkRunner {
         }
 
         props.put("iasr.enabled", true);
-        props.put("iasr.apply-actions", "adaptive".equals(mode));
+        props.put("iasr.apply-actions", !"fixed".equals(mode));
         props.put("iasr.slo-latency-ms", SLO_MS);
         // 1 s instead of the 5 s default: a 45 s scenario must contain enough
         // control ticks for the loop to converge, otherwise the benchmark
