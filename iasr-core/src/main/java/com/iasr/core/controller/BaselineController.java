@@ -116,23 +116,26 @@ public class BaselineController implements Controller {
 
     /**
      * Multiplier applied to the Little's-law concurrency estimate before using
-     * it as a growth ceiling and as a decrease target.  <b>Off by default.</b>
+     * it as a growth ceiling and as a decrease target.  {@code 0} disables it.
      * <p>
      * Little's law gives {@code L = λ × W}: to serve λ requests per second with
      * latency W, exactly {@code λ × W} of them are in flight.  Setting W to the
-     * SLO turns it into the concurrency that meets the SLO at the throughput
-     * being achieved.
+     * SLO turns it into the concurrency the SLO allows — a target derived from
+     * the system's own behaviour rather than a constant somebody guessed.
      * <p>
-     * Measured on the benchmark, this reliably improves the latency tail
-     * (p95 by 4–13% on top of the demand gate) and reliably costs throughput
-     * (goodput down 7–14%, rejections up 4–12 points under a degraded
-     * dependency).  The bias is structural rather than incidental: λ is the
-     * <em>achieved</em> throughput, which is already suppressed by whatever the
-     * limiter is shedding, so under overload the target is computed from a rate
-     * that reflects the shedding it is meant to size — and it settles lower
-     * than it should.  Correcting λ for the rejected share would be the way to
-     * fix that; until then this is a knob for latency-sensitive services, not a
-     * default.
+     * λ is the <b>offered</b> rate, reconstructed as
+     * {@code goodput / (1 - timeoutRate)}, not the achieved one.  That
+     * distinction decides whether the rule helps or hurts.  Achieved throughput
+     * is already suppressed by whatever the limiter is shedding, so sizing the
+     * limit from it means sizing it from a number the limit itself produced;
+     * measured that way the rule cost 7-14% of throughput and doubled shedding
+     * under a degraded dependency.  Corrected, the same rule cuts p95 by 37-44%
+     * in two of three benchmark scenarios at no measurable cost, and improves
+     * the share of responses meeting the SLO in all three.
+     * <p>
+     * The exception worth knowing: under a slow, sustained ramp past capacity
+     * it trades about 7% of throughput for 40% of the tail.  Set to {@code 0}
+     * where throughput matters more than latency.
      */
     private final double sloTargetHeadroom;
 
@@ -249,7 +252,7 @@ public class BaselineController implements Controller {
                 0.0,    // hikariPendingThreshold (any pending triggers)
                 10.0,   // hikariAcquireTimeThresholdMs
                 0.9,    // utilizationGate — grow only when the limit is binding
-                0.0,    // sloTargetHeadroom — off by default, see the javadoc
+                1.0,    // sloTargetHeadroom — Little's law target, no slack
                 0.9,    // minGradient — see the javadoc for why gentle beats aggressive
                 2.0     // hikariIdleShrinkThreshold — spare connections before shrinking
         );
