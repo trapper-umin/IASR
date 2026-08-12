@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -53,8 +54,12 @@ public class MicrometerMetricsProvider implements MetricsProvider {
     /** How close a published percentile must be to the requested one to be used. */
     private static final double PERCENTILE_TOLERANCE = 1e-6;
 
+    /** Pool name HikariCP generates for the first pool created in a JVM. */
+    static final String DEFAULT_POOL_NAME = "HikariPool-1";
+
     private final MeterRegistry registry;
-    private final String hikariPoolName;
+    private final Supplier<String> poolNameSupplier;
+    private volatile String resolvedPoolName;
     private final WindowedLatencyTracker latencyTracker;
 
     /** Meter names already reported as missing percentile config (warn once each). */
@@ -72,16 +77,48 @@ public class MicrometerMetricsProvider implements MetricsProvider {
      * Full constructor.
      *
      * @param registry       the Micrometer registry to read meters from
-     * @param hikariPoolName HikariCP pool name (meter tag), e.g. "HikariPool-1"
+     * @param hikariPoolName HikariCP pool name (meter tag), e.g. "HikariPool-1";
+     *                       {@code null} falls back to {@value #DEFAULT_POOL_NAME}
      * @param latencyTracker per-window latency tracker (may be {@code null} for
      *                       Micrometer-only fallback)
      */
     public MicrometerMetricsProvider(MeterRegistry registry,
                                      String hikariPoolName,
                                      WindowedLatencyTracker latencyTracker) {
+        this(registry, latencyTracker, () -> hikariPoolName);
+    }
+
+    private MicrometerMetricsProvider(MeterRegistry registry,
+                                      WindowedLatencyTracker latencyTracker,
+                                      Supplier<String> poolNameSupplier) {
         this.registry = registry;
-        this.hikariPoolName = hikariPoolName != null ? hikariPoolName : "HikariPool-1";
+        this.poolNameSupplier = poolNameSupplier != null ? poolNameSupplier : () -> null;
         this.latencyTracker = latencyTracker;
+    }
+
+    /**
+     * Create a provider that resolves the Hikari pool name lazily.
+     * <p>
+     * HikariCP only assigns a generated name when the pool actually starts, so
+     * a name read while the Spring context is still wiring up is often
+     * {@code null}.  Resolving on first use instead lets the real name be
+     * picked up once the pool is live; the result is cached after the first
+     * non-null answer.
+     * <p>
+     * Deliberately a factory method rather than another three-argument
+     * constructor: an overload taking {@code Supplier<String>} alongside one
+     * taking {@code String} makes every existing {@code (registry, null,
+     * tracker)} call ambiguous, which would break source compatibility for
+     * callers that pass an explicit null.
+     *
+     * @param poolNameSupplier supplies the pool name; may return {@code null}
+     *                         until the pool has started
+     */
+    public static MicrometerMetricsProvider withPoolNameSupplier(
+            MeterRegistry registry,
+            Supplier<String> poolNameSupplier,
+            WindowedLatencyTracker latencyTracker) {
+        return new MicrometerMetricsProvider(registry, latencyTracker, poolNameSupplier);
     }
 
     public MicrometerMetricsProvider(MeterRegistry registry, String hikariPoolName) {
@@ -89,7 +126,26 @@ public class MicrometerMetricsProvider implements MetricsProvider {
     }
 
     public MicrometerMetricsProvider(MeterRegistry registry) {
-        this(registry, "HikariPool-1", null);
+        this(registry, (String) null, null);
+    }
+
+    /**
+     * The pool name to tag Hikari meter lookups with, resolved on first use and
+     * cached thereafter.
+     */
+    String hikariPoolName() {
+        String cached = resolvedPoolName;
+        if (cached != null) {
+            return cached;
+        }
+        String resolved = poolNameSupplier.get();
+        if (resolved == null || resolved.isBlank()) {
+            // Pool not started yet — use the conventional name for this window
+            // and try again next tick rather than caching a guess forever.
+            return DEFAULT_POOL_NAME;
+        }
+        resolvedPoolName = resolved;
+        return resolved;
     }
 
     @Override
@@ -199,7 +255,7 @@ public class MicrometerMetricsProvider implements MetricsProvider {
         b.put(MetricNames.HIKARI_PENDING, hPending != null ? hPending.value() : 0.0);
 
         Collection<Timer> acquireTimers = registry.find("hikaricp.connections.acquire")
-                .tag("pool", hikariPoolName).timers();
+                .tag("pool", hikariPoolName()).timers();
         long acquireCountNow = 0;
         double acquireTotalTimeNowMs = 0;
         for (Timer t : acquireTimers) {
@@ -303,7 +359,7 @@ public class MicrometerMetricsProvider implements MetricsProvider {
 
     private Gauge findHikariGauge(String name) {
         try {
-            return registry.find(name).tag("pool", hikariPoolName).gauge();
+            return registry.find(name).tag("pool", hikariPoolName()).gauge();
         } catch (Exception e) {
             return null;
         }

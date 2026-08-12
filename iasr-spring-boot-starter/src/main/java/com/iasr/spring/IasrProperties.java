@@ -127,5 +127,29 @@ public class IasrProperties {
         private int hikariStep = 1;
         private double hikariPendingThreshold = 0.0;
         private double hikariAcquireTimeThresholdMs = 10.0;
+
+        /**
+         * Fraction of the concurrency limit that must be in use before the
+         * limit may grow; {@code 0} disables the gate.
+         * <p>
+         * Additive increase without this has no notion of "enough" — it raises
+         * the limit on every comfortable tick regardless of whether anything is
+         * waiting for a permit, so a healthy service ratchets its limit to the
+         * ceiling and meets the next surge with no admission control left.
+         */
+        private double utilizationGate = 0.9;
+
+        /**
+         * Multiplier on the Little's-law concurrency estimate
+         * ({@code goodput × SLO}) used as a growth ceiling and as the target to
+         * descend to when the SLO is violated.  <b>Off by default</b>; set to
+         * about {@code 1.0} to enable.
+         * <p>
+         * On the benchmark this buys a better latency tail and pays for it in
+         * throughput and rejections, because the estimate is built from the
+         * throughput already suppressed by shedding. Worth enabling for
+         * latency-sensitive services, not as a general default.
+         */
+        private double sloTargetHeadroom = 0.0;
     }
 }

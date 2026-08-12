@@ -1,0 +1,4 @@
+scenario,mode,dispatched,succeeded,rejected_429,server_errors,client_timeouts,goodput_rps,p50_ms,p95_ms,p99_ms,max_ms,slo_breach_pct,rejection_pct,hard_failure_pct
+spike,off,10998,2487,0,0,8511,55.3,62.0,2646.0,2925.0,2999.0,40.6,0.0,77.4
+spike,fixed,10998,6876,4122,0,0,152.8,623.0,635.0,639.0,1104.0,58.2,37.5,0.0
+spike,adaptive,10998,7337,3661,0,0,163.0,202.0,577.0,625.0,1102.0,58.7,33.3,0.0

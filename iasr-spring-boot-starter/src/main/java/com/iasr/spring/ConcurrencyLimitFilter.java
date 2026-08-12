@@ -37,6 +37,14 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
             "/actuator", "/health", "/ready", "/live", "/prometheus"
     );
 
+    /** Minimum gap between aggregated rejection WARN lines. */
+    private static final long REJECTION_SUMMARY_INTERVAL_MS = 5_000;
+
+    private final java.util.concurrent.atomic.AtomicLong rejectionsSinceSummary =
+            new java.util.concurrent.atomic.AtomicLong();
+    private final java.util.concurrent.atomic.AtomicLong lastSummaryNs =
+            new java.util.concurrent.atomic.AtomicLong(System.nanoTime());
+
     private final ConcurrencyLimiter limiter;
     private final long acquireTimeoutMs;
     private final IasrMeterBinder meterBinder;
@@ -81,9 +89,7 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
             if (meterBinder != null) {
                 meterBinder.recordTimeout();
             }
-            log.warn("Concurrency limit reached (limit={}, inflight={}, queue={}), rejecting request: {} {}",
-                    limiter.currentValue(), limiter.getInflight(), limiter.getQueueLength(),
-                    request.getMethod(), request.getRequestURI());
+            logRejection(request);
 
             response.setStatus(429);
             response.setContentType("application/json");
@@ -122,6 +128,44 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         return isInfrastructurePath(pathWithinApplication(request));
+    }
+
+    /**
+     * Report a rejection without letting the log become part of the outage.
+     * <p>
+     * Rejections arrive in bursts by definition — shedding 300 rps would emit
+     * 300 log lines per second, and that I/O lands on an application that is
+     * already saturated, amplifying the very overload the limiter exists to
+     * contain.  So the per-request detail goes to DEBUG, and WARN carries at
+     * most one aggregated line per {@value #REJECTION_SUMMARY_INTERVAL_MS} ms.
+     * The authoritative signal is the {@code iasr.concurrency.timeouts} counter,
+     * which loses nothing.
+     */
+    private void logRejection(HttpServletRequest request) {
+        rejectionsSinceSummary.incrementAndGet();
+
+        if (log.isDebugEnabled()) {
+            log.debug("Concurrency limit reached (limit={}, inflight={}, queue={}), rejecting {} {}",
+                    limiter.currentValue(), limiter.getInflight(), limiter.getQueueLength(),
+                    request.getMethod(), request.getRequestURI());
+        }
+
+        long now = System.nanoTime();
+        long last = lastSummaryNs.get();
+        if (now - last < REJECTION_SUMMARY_INTERVAL_MS * 1_000_000L) {
+            return;
+        }
+        if (!lastSummaryNs.compareAndSet(last, now)) {
+            // Another thread is emitting the summary for this interval.
+            return;
+        }
+        long rejected = rejectionsSinceSummary.getAndSet(0);
+        if (rejected > 0) {
+            log.warn("Concurrency limit shedding load: {} request(s) rejected in the last {} ms "
+                            + "(limit={}, inflight={}, queue={})",
+                    rejected, REJECTION_SUMMARY_INTERVAL_MS,
+                    limiter.currentValue(), limiter.getInflight(), limiter.getQueueLength());
+        }
     }
 
     /**

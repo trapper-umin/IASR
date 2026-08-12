@@ -68,6 +68,41 @@ public class BaselineController implements Controller {
     private final double hikariAcquireTimeThresholdMs;
 
     /**
+     * Fraction of the current limit that must actually be in use before the
+     * limit is allowed to grow.  {@code 0} disables the gate.
+     * <p>
+     * Without this, additive increase has no notion of "enough": it raises the
+     * limit on every tick where latency is comfortable, whether or not anything
+     * is waiting for a permit.  A service running healthily at 7 concurrent
+     * requests will ratchet its limit to the configured ceiling and arrive at
+     * the next traffic surge with no admission control left — the limit is
+     * highest exactly when protection is needed most.
+     */
+    private final double utilizationGate;
+
+    /**
+     * Multiplier applied to the Little's-law concurrency estimate before using
+     * it as a growth ceiling and as a decrease target.  <b>Off by default.</b>
+     * <p>
+     * Little's law gives {@code L = λ × W}: to serve λ requests per second with
+     * latency W, exactly {@code λ × W} of them are in flight.  Setting W to the
+     * SLO turns it into the concurrency that meets the SLO at the throughput
+     * being achieved.
+     * <p>
+     * Measured on the benchmark, this reliably improves the latency tail
+     * (p95 by 4–13% on top of the demand gate) and reliably costs throughput
+     * (goodput down 7–14%, rejections up 4–12 points under a degraded
+     * dependency).  The bias is structural rather than incidental: λ is the
+     * <em>achieved</em> throughput, which is already suppressed by whatever the
+     * limiter is shedding, so under overload the target is computed from a rate
+     * that reflects the shedding it is meant to size — and it settles lower
+     * than it should.  Correcting λ for the rejected share would be the way to
+     * fix that; until then this is a knob for latency-sensitive services, not a
+     * default.
+     */
+    private final double sloTargetHeadroom;
+
+    /**
      * Minimum goodput (RPS) to consider the system "actively serving traffic".
      * Below this threshold the system is treated as idle regardless of
      * health-check / actuator / monitoring endpoints generating low-volume
@@ -100,7 +135,9 @@ public class BaselineController implements Controller {
                               double timeoutRateThreshold,
                               int hikariStep,
                               double hikariPendingThreshold,
-                              double hikariAcquireTimeThresholdMs) {
+                              double hikariAcquireTimeThresholdMs,
+                              double utilizationGate,
+                              double sloTargetHeadroom) {
         this.sloLatencyMs = sloLatencyMs;
         this.comfortFactor = comfortFactor;
         this.concurrencyIncreaseStep = concurrencyIncreaseStep;
@@ -110,6 +147,30 @@ public class BaselineController implements Controller {
         this.hikariStep = hikariStep;
         this.hikariPendingThreshold = hikariPendingThreshold;
         this.hikariAcquireTimeThresholdMs = hikariAcquireTimeThresholdMs;
+        this.utilizationGate = utilizationGate;
+        this.sloTargetHeadroom = sloTargetHeadroom;
+    }
+
+    /**
+     * @deprecated use the constructor that also takes {@code utilizationGate}
+     *             and {@code sloTargetHeadroom}.  This overload keeps the
+     *             pre-1.0.14 behaviour of growing the limit regardless of
+     *             demand, which drifts the limit to its ceiling under healthy
+     *             traffic.
+     */
+    @Deprecated(since = "1.0.14")
+    public BaselineController(double sloLatencyMs,
+                              double comfortFactor,
+                              int concurrencyIncreaseStep,
+                              double concurrencyDecreaseFactor,
+                              double errorRateThreshold,
+                              double timeoutRateThreshold,
+                              int hikariStep,
+                              double hikariPendingThreshold,
+                              double hikariAcquireTimeThresholdMs) {
+        this(sloLatencyMs, comfortFactor, concurrencyIncreaseStep, concurrencyDecreaseFactor,
+                errorRateThreshold, timeoutRateThreshold, hikariStep, hikariPendingThreshold,
+                hikariAcquireTimeThresholdMs, 0.0, 0.0);
     }
 
     /**
@@ -126,7 +187,9 @@ public class BaselineController implements Controller {
                 0.005,  // timeoutRateThreshold (0.5%)
                 1,      // hikariStep
                 0.0,    // hikariPendingThreshold (any pending triggers)
-                10.0    // hikariAcquireTimeThresholdMs
+                10.0,   // hikariAcquireTimeThresholdMs
+                0.9,    // utilizationGate — grow only when the limit is binding
+                0.0     // sloTargetHeadroom — off by default, see the javadoc
         );
     }
 
@@ -153,7 +216,9 @@ public class BaselineController implements Controller {
         Actuator concurrencyActuator = findActuator(actuators, ConcurrencyLimiter.ACTUATOR_NAME);
         if (concurrencyActuator != null) {
             int currentLimit = concurrencyActuator.currentValue();
-            int newLimit = decideConcurrency(currentLimit, latencyP95, goodputRps, errorRate, timeoutRate, idleShrink);
+            double inflight = snapshot.get(MetricNames.INFLIGHT, 0.0);
+            int newLimit = decideConcurrency(currentLimit, latencyP95, goodputRps,
+                    errorRate, timeoutRate, inflight, idleShrink);
             if (newLimit != currentLimit) {
                 action.set(concurrencyActuator.name(), newLimit);
                 log.debug("Baseline: concurrency {} → {} (p95={} slo={} err={} tout={})",
@@ -186,7 +251,8 @@ public class BaselineController implements Controller {
     // ── Concurrency logic ────────────────────────────────────────────────
 
     private int decideConcurrency(int current, double latencyP95, double goodputRps,
-                                   double errorRate, double timeoutRate, boolean idleShrink) {
+                                   double errorRate, double timeoutRate, double inflight,
+                                   boolean idleShrink) {
         // Below active-traffic threshold: short idle → hold, sustained idle → gradually shrink
         if (goodputRps < MIN_ACTIVE_RPS && errorRate <= 0 && timeoutRate <= 0) {
             if (idleShrink) {
@@ -202,19 +268,54 @@ public class BaselineController implements Controller {
         boolean timeoutsRising = timeoutRate > timeoutRateThreshold
                 || (!Double.isNaN(prevTimeoutRate) && timeoutRate > prevTimeoutRate * 1.5 && timeoutRate > 0.001);
 
-        // ── Decrease path (multiplicative) ──
+        int sloTarget = concurrencyTargetFor(goodputRps);
+
+        // ── Decrease path (multiplicative, floored at the SLO target) ──
         if (sloViolated || timeoutsRising || errorsRising) {
             int decreased = (int) Math.floor(current * concurrencyDecreaseFactor);
+            // Geometric decay alone needs ~19 ticks to fall from 190 to 33, which
+            // is longer than many surges last — the loop finishes converging just
+            // as the disturbance ends.  When Little's law can name the concurrency
+            // that meets the SLO at the throughput being achieved, descend to it
+            // directly instead of feeling the way down.
+            if (sloViolated && sloTarget > 0) {
+                decreased = Math.min(decreased, sloTarget);
+            }
             return Math.max(decreased, 1);
         }
 
-        // ── Increase path (additive) ──
+        // ── Increase path (additive, demand-gated and capped) ──
         if (comfortable && errorRate <= errorRateThreshold && timeoutRate <= timeoutRateThreshold) {
-            return current + concurrencyIncreaseStep;
+            // Only grow the limit when it is actually the binding constraint.
+            // Idle headroom is not a reason to add more.
+            if (utilizationGate > 0 && inflight < utilizationGate * current) {
+                return current;
+            }
+            int increased = current + concurrencyIncreaseStep;
+            if (sloTarget > 0 && increased > sloTarget) {
+                return current;
+            }
+            return increased;
         }
 
         // ── Hold ──
         return current;
+    }
+
+    /**
+     * Concurrency that Little's law says is needed to serve the observed
+     * throughput within the SLO: {@code L = λ × W}.
+     *
+     * @return the target, or {@code -1} when it cannot be estimated — either
+     *         the feature is off or there is too little traffic for the
+     *         throughput reading to mean anything
+     */
+    private int concurrencyTargetFor(double goodputRps) {
+        if (sloTargetHeadroom <= 0 || goodputRps < MIN_ACTIVE_RPS) {
+            return -1;
+        }
+        double target = sloTargetHeadroom * goodputRps * (sloLatencyMs / 1000.0);
+        return (int) Math.max(1, Math.ceil(target));
     }
 
     // ── Hikari pool logic ────────────────────────────────────────────────

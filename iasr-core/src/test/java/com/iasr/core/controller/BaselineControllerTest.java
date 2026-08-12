@@ -20,7 +20,15 @@ class BaselineControllerTest {
     private static final String CONCURRENCY = ConcurrencyLimiter.ACTUATOR_NAME;
     private static final String POOL = HikariPoolActuator.ACTUATOR_NAME;
 
+    /**
+     * Controller with the demand gate and the Little's-law target switched off,
+     * so the AIMD rules can be exercised in isolation.
+     */
     private static BaselineController controller() {
+        return controller(0.0, 0.0);
+    }
+
+    private static BaselineController controller(double utilizationGate, double sloTargetHeadroom) {
         return new BaselineController(
                 SLO,
                 0.7,    // comfortFactor -> comfortable below 140 ms
@@ -30,16 +38,27 @@ class BaselineControllerTest {
                 0.005,  // timeoutRateThreshold
                 1,      // hikariStep
                 0.0,    // hikariPendingThreshold
-                10.0);  // hikariAcquireTimeThresholdMs
+                10.0,   // hikariAcquireTimeThresholdMs
+                utilizationGate,
+                sloTargetHeadroom);
     }
 
-    /** Snapshot with live traffic and the given latency / error / timeout signals. */
+    /**
+     * Snapshot with live traffic.  In-flight is reported at the actuator's full
+     * value so the demand gate, when enabled, sees a saturated limit.
+     */
     private static MetricsSnapshot traffic(double p95, double errorRate, double timeoutRate) {
+        return traffic(p95, errorRate, timeoutRate, 100.0, 1000.0);
+    }
+
+    private static MetricsSnapshot traffic(double p95, double errorRate, double timeoutRate,
+                                           double goodputRps, double inflight) {
         return MetricsSnapshot.builder()
                 .put(MetricNames.LATENCY_P95_MS, p95)
-                .put(MetricNames.GOODPUT_RPS, 100.0)
+                .put(MetricNames.GOODPUT_RPS, goodputRps)
                 .put(MetricNames.ERROR_RATE, errorRate)
                 .put(MetricNames.TIMEOUT_RATE, timeoutRate)
+                .put(MetricNames.INFLIGHT, inflight)
                 .build();
     }
 
@@ -127,6 +146,135 @@ class BaselineControllerTest {
 
             assertThat(action.isEmpty()).isTrue();
             assertThat(limiter.currentValue()).isEqualTo(1);
+        }
+    }
+
+    @Nested
+    @DisplayName("demand gate")
+    class DemandGate {
+
+        @Test
+        @DisplayName("does not grow the limit while most of it sits unused")
+        void doesNotGrowWithoutDemand() {
+            TestActuator limiter = new TestActuator(CONCURRENCY, 100, 1, 500);
+
+            // Healthy and fast, but only 7 of 100 permits are in use: the limit
+            // is not what is holding anything back, so raising it buys nothing
+            // and leaves less admission control for the next surge.
+            ControlAction action = controller(0.9, 0.0)
+                    .decide(traffic(50, 0, 0, 100.0, 7.0), List.of(limiter));
+
+            assertThat(action.isEmpty()).isTrue();
+        }
+
+        @Test
+        @DisplayName("grows the limit once it is the binding constraint")
+        void growsWhenSaturated() {
+            TestActuator limiter = new TestActuator(CONCURRENCY, 100, 1, 500);
+
+            ControlAction action = controller(0.9, 0.0)
+                    .decide(traffic(50, 0, 0, 100.0, 95.0), List.of(limiter));
+
+            assertThat(action.getOrDefault(CONCURRENCY, -1)).isEqualTo(105);
+        }
+
+        @Test
+        @DisplayName("a healthy service does not ratchet its limit to the ceiling")
+        void noDriftOverASustainedHealthyRun() {
+            BaselineController controller = controller(0.9, 0.0);
+            TestActuator limiter = new TestActuator(CONCURRENCY, 100, 1, 500);
+
+            // Sixty ticks of comfortable traffic at a steady 7 concurrent requests.
+            for (int i = 0; i < 60; i++) {
+                ControlAction action = controller.decide(
+                        traffic(50, 0, 0, 100.0, 7.0), List.of(limiter));
+                action.desiredValues().forEach((name, value) -> limiter.apply(value));
+            }
+
+            assertThat(limiter.currentValue())
+                    .as("the limit must still protect the service when the surge arrives")
+                    .isEqualTo(100);
+        }
+
+        @Test
+        @DisplayName("the gate can be switched off to restore the old behaviour")
+        void gateIsOptional() {
+            TestActuator limiter = new TestActuator(CONCURRENCY, 100, 1, 500);
+
+            ControlAction action = controller(0.0, 0.0)
+                    .decide(traffic(50, 0, 0, 100.0, 7.0), List.of(limiter));
+
+            assertThat(action.getOrDefault(CONCURRENCY, -1)).isEqualTo(105);
+        }
+    }
+
+    @Nested
+    @DisplayName("Little's law target")
+    class SloTarget {
+
+        @Test
+        @DisplayName("descends straight to the target instead of decaying towards it")
+        void decreaseJumpsToTarget() {
+            TestActuator limiter = new TestActuator(CONCURRENCY, 190, 1, 500);
+
+            // Serving 240 rps against a 200 ms SLO: L = 240 x 0.2 = 48.
+            // Geometric decay alone would only reach 161 on this tick.
+            ControlAction action = controller(0.0, 1.0)
+                    .decide(traffic(500, 0, 0, 240.0, 190.0), List.of(limiter));
+
+            assertThat(action.getOrDefault(CONCURRENCY, -1)).isEqualTo(48);
+        }
+
+        @Test
+        @DisplayName("keeps the geometric step when it is already the more aggressive one")
+        void keepsGeometricWhenItIsLower() {
+            TestActuator limiter = new TestActuator(CONCURRENCY, 20, 1, 500);
+
+            // Target is 48, geometric gives 17 — take the smaller.
+            ControlAction action = controller(0.0, 1.0)
+                    .decide(traffic(500, 0, 0, 240.0, 20.0), List.of(limiter));
+
+            assertThat(action.getOrDefault(CONCURRENCY, -1)).isEqualTo(17);
+        }
+
+        @Test
+        @DisplayName("does not grow the limit beyond what the SLO needs")
+        void increaseStopsAtTarget() {
+            TestActuator limiter = new TestActuator(CONCURRENCY, 46, 1, 500);
+
+            // Saturated and comfortable, so AIMD wants +5 -> 51, but Little's
+            // law says 48 is all the SLO requires at this throughput.
+            ControlAction action = controller(0.9, 1.0)
+                    .decide(traffic(50, 0, 0, 240.0, 46.0), List.of(limiter));
+
+            assertThat(action.isEmpty()).isTrue();
+        }
+
+        @Test
+        @DisplayName("is ignored when throughput is too low to estimate from")
+        void noTargetWithoutTraffic() {
+            TestActuator limiter = new TestActuator(CONCURRENCY, 100, 1, 500);
+
+            // Errors present, so this is not the idle path, but goodput is far
+            // too low for the estimate to mean anything.
+            ControlAction action = controller(0.0, 1.0)
+                    .decide(traffic(500, 0.5, 0, 0.5, 100.0), List.of(limiter));
+
+            assertThat(action.getOrDefault(CONCURRENCY, -1))
+                    .as("falls back to plain geometric decrease")
+                    .isEqualTo(85);
+        }
+
+        @Test
+        @DisplayName("headroom scales the target")
+        void headroomScalesTarget() {
+            TestActuator limiter = new TestActuator(CONCURRENCY, 190, 1, 500);
+
+            // Half the headroom, half the target: 0.5 x 240 x 0.2 = 24.
+            ControlAction action = controller(0.0, 0.5)
+                    .decide(traffic(500, 0, 0, 240.0, 190.0), List.of(limiter));
+
+            assertThat(action.getOrDefault(CONCURRENCY, -1)).isEqualTo(24);
         }
     }
 

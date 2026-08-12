@@ -149,6 +149,16 @@ public class IasrAutoConfiguration {
             return new com.iasr.core.actuator.HikariPoolActuator(
                     dataSource, h.getMinPoolSize(), h.getMaxPoolSize());
         }
+
+        /**
+         * Publish the live pool name so the metrics provider tags its lookups
+         * correctly instead of guessing {@code HikariPool-1}.
+         */
+        @Bean
+        @ConditionalOnMissingBean
+        public HikariPoolName iasrHikariPoolName(com.zaxxer.hikari.HikariDataSource dataSource) {
+            return new HikariPoolName(dataSource::getPoolName);
+        }
     }
 
     // ── MetricsProvider ──────────────────────────────────────────────────
@@ -157,8 +167,16 @@ public class IasrAutoConfiguration {
     @ConditionalOnMissingBean
     public MicrometerMetricsProvider iasrMetricsProvider(
             MeterRegistry registry,
-            WindowedLatencyTracker latencyTracker) {
-        return new MicrometerMetricsProvider(registry, null, latencyTracker);
+            WindowedLatencyTracker latencyTracker,
+            ObjectProvider<HikariPoolName> hikariPoolName) {
+
+        // Absent when there is no HikariDataSource; the provider then falls back
+        // to its default name and simply finds no hikaricp.* meters, which is
+        // correct because there is no pool to read.
+        HikariPoolName poolName = hikariPoolName.getIfAvailable();
+        java.util.function.Supplier<String> resolver =
+                poolName != null ? poolName.resolver() : () -> null;
+        return MicrometerMetricsProvider.withPoolNameSupplier(registry, resolver, latencyTracker);
     }
 
     // ── ControlEngine ────────────────────────────────────────────────────
@@ -184,7 +202,9 @@ public class IasrAutoConfiguration {
                 cp.getTimeoutRateThreshold(),
                 cp.getHikariStep(),
                 cp.getHikariPendingThreshold(),
-                cp.getHikariAcquireTimeThresholdMs()
+                cp.getHikariAcquireTimeThresholdMs(),
+                cp.getUtilizationGate(),
+                cp.getSloTargetHeadroom()
         );
 
         ControlEngineConfig.Builder cfgBuilder = ControlEngineConfig.builder()
