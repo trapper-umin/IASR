@@ -54,7 +54,8 @@ public class BenchmarkRunner {
     public static void main(String[] args) throws Exception {
         Path outputDir = Path.of(System.getProperty("bench.out", "docs/benchmark"));
         List<Scenario> scenarios = selectScenarios();
-        List<String> modes = List.of("off", "fixed", "adaptive");
+        List<String> modes = selectModes();
+        int repeats = Integer.getInteger("bench.repeat", 1);
 
         quietenLogging();
 
@@ -62,12 +63,23 @@ public class BenchmarkRunner {
         for (Scenario scenario : scenarios) {
             for (String mode : modes) {
                 System.out.printf("%n=== %s / %s ===%n", scenario.name(), mode);
-                RunResult result = runOnce(mode, scenario);
-                results.add(result);
-                System.out.printf(
-                        "   goodput=%.1f rps  p95=%.1f ms  p99=%.1f ms  429=%.1f%%  hard-fail=%.1f%%%n",
-                        result.goodputRps(), result.p95Ms(), result.p99Ms(),
-                        result.rejectionRatePercent(), result.failureRatePercent());
+                List<RunResult> repetitions = new ArrayList<>();
+                for (int i = 0; i < repeats; i++) {
+                    RunResult result = runOnce(mode, scenario);
+                    repetitions.add(result);
+                    System.out.printf(
+                            "   [%d/%d] goodput=%.1f rps  p95=%.1f ms  p99=%.1f ms  429=%.1f%%  hard-fail=%.1f%%%n",
+                            i + 1, repeats, result.goodputRps(), result.p95Ms(), result.p99Ms(),
+                            result.rejectionRatePercent(), result.failureRatePercent());
+                }
+                RunResult representative = RunResult.medianOf(repetitions);
+                results.add(representative);
+                if (repeats > 1) {
+                    System.out.printf("   median: goodput=%.1f rps  p95=%.1f ms  (spread p95 %.1f–%.1f)%n",
+                            representative.goodputRps(), representative.p95Ms(),
+                            repetitions.stream().mapToDouble(RunResult::p95Ms).min().orElse(0),
+                            repetitions.stream().mapToDouble(RunResult::p95Ms).max().orElse(0));
+                }
             }
         }
 
@@ -82,6 +94,14 @@ public class BenchmarkRunner {
         }
         List<String> wanted = List.of(only.split(","));
         return Scenario.all().stream().filter(s -> wanted.contains(s.name())).toList();
+    }
+
+    private static List<String> selectModes() {
+        String only = System.getProperty("bench.modes");
+        if (only == null || only.isBlank()) {
+            return List.of("off", "fixed", "adaptive");
+        }
+        return List.of(only.split(","));
     }
 
     private static RunResult runOnce(String mode, Scenario scenario) throws Exception {
@@ -177,10 +197,13 @@ public class BenchmarkRunner {
         props.put("iasr.window-ms", 1000);
         props.put("iasr.dataset-logging-enabled", true);
 
-        props.put("iasr.concurrency.initial-limit", 100);
+        props.put("iasr.concurrency.initial-limit", Integer.getInteger("bench.initialLimit", 100));
         props.put("iasr.concurrency.min-limit", 5);
         props.put("iasr.concurrency.max-limit", 400);
         props.put("iasr.concurrency.max-step", 20);
+        override(props, "iasr.concurrency.max-step-down", "bench.maxStepDown");
+        override(props, "iasr.controller.min-gradient", "bench.minGradient");
+        override(props, "iasr.controller.hikari-idle-shrink-threshold", "bench.idleShrink");
         props.put("iasr.concurrency.cooldown-ticks", 1);
         props.put("iasr.concurrency.acquire-timeout-ms", 100);
 
@@ -198,14 +221,27 @@ public class BenchmarkRunner {
         props.put("iasr.controller.concurrency-increase-step",
                 Integer.getInteger("bench.increaseStep", 1));
 
-        // Controller rules under test, overridable so each can be attributed
-        // separately.  Bundling two changes into one measurement makes the
-        // result uninterpretable when it comes out mixed.
-        props.put("iasr.controller.utilization-gate",
-                Double.parseDouble(System.getProperty("bench.utilizationGate", "0.9")));
-        props.put("iasr.controller.slo-target-headroom",
-                Double.parseDouble(System.getProperty("bench.sloTargetHeadroom", "1.0")));
+        override(props, "iasr.controller.utilization-gate", "bench.utilizationGate");
+        override(props, "iasr.controller.slo-target-headroom", "bench.sloTargetHeadroom");
         return props;
+    }
+
+    /**
+     * Apply a controller setting only when the run explicitly asks for it, so
+     * that an unqualified run measures the library exactly as it ships.
+     * <p>
+     * Restating a library default here as a literal looks harmless and is not:
+     * the two drift apart the moment one of them changes, and the harness then
+     * silently measures a configuration nobody deploys. That happened — the
+     * benchmark pinned {@code slo-target-headroom} to 1.0 while the library had
+     * already moved its default to 0, so a rule documented as "off by default"
+     * was switched on in every published number.
+     */
+    private static void override(Map<String, Object> props, String property, String benchKey) {
+        String value = System.getProperty(benchKey);
+        if (value != null && !value.isBlank()) {
+            props.put(property, value);
+        }
     }
 
     // ── dataset capture ──────────────────────────────────────────────────

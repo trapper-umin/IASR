@@ -70,6 +70,24 @@ public record RunResult(
                 new ArrayList<>(datasetLines));
     }
 
+    /**
+     * Pick the run whose p95 is the median of the repetitions.
+     * <p>
+     * A whole run is chosen rather than each metric being averaged separately,
+     * so the reported goodput, latency and rejection rate all come from the
+     * same execution and stay mutually consistent — a per-metric mean can
+     * describe a run that never happened. p95 is the ordering key because it is
+     * the metric the SLO is written against.
+     */
+    public static RunResult medianOf(List<RunResult> repetitions) {
+        if (repetitions.size() == 1) {
+            return repetitions.get(0);
+        }
+        List<RunResult> sorted = new ArrayList<>(repetitions);
+        sorted.sort(java.util.Comparator.comparingDouble(RunResult::p95Ms));
+        return sorted.get(sorted.size() / 2);
+    }
+
     /** Share of dispatched requests that got neither a 200 nor a fast 429. */
     public double failureRatePercent() {
         long hardFailures = serverErrors + clientTimeouts + otherFailures;
