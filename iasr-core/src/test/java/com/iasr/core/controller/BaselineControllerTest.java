@@ -29,6 +29,11 @@ class BaselineControllerTest {
     }
 
     private static BaselineController controller(double utilizationGate, double sloTargetHeadroom) {
+        return controller(utilizationGate, sloTargetHeadroom, 0.0, 0.0);
+    }
+
+    private static BaselineController controller(double utilizationGate, double sloTargetHeadroom,
+                                                 double minGradient, double idleShrinkThreshold) {
         return new BaselineController(
                 SLO,
                 0.7,    // comfortFactor -> comfortable below 140 ms
@@ -40,7 +45,9 @@ class BaselineControllerTest {
                 0.0,    // hikariPendingThreshold
                 10.0,   // hikariAcquireTimeThresholdMs
                 utilizationGate,
-                sloTargetHeadroom);
+                sloTargetHeadroom,
+                minGradient,
+                idleShrinkThreshold);
     }
 
     /**
@@ -205,6 +212,113 @@ class BaselineControllerTest {
                     .decide(traffic(50, 0, 0, 100.0, 7.0), List.of(limiter));
 
             assertThat(action.getOrDefault(CONCURRENCY, -1)).isEqualTo(105);
+        }
+    }
+
+    @Nested
+    @DisplayName("gradient decrease")
+    class GradientDecrease {
+
+        @Test
+        @DisplayName("scales the cut to how far latency is past the target")
+        void cutIsProportionalToTheError() {
+            TestActuator limiter = new TestActuator(CONCURRENCY, 200, 1, 500);
+
+            // Latency 250 ms against a 200 ms SLO: gradient 0.8 -> 160.
+            ControlAction mild = controller(0.0, 0.0, 0.5, 0.0)
+                    .decide(traffic(250, 0, 0), List.of(limiter));
+            assertThat(mild.getOrDefault(CONCURRENCY, -1)).isEqualTo(160);
+
+            // Latency 400 ms: gradient 0.5 -> 100.  Twice the overshoot, twice the cut.
+            TestActuator other = new TestActuator(CONCURRENCY, 200, 1, 500);
+            ControlAction severe = controller(0.0, 0.0, 0.5, 0.0)
+                    .decide(traffic(400, 0, 0), List.of(other));
+            assertThat(severe.getOrDefault(CONCURRENCY, -1)).isEqualTo(100);
+        }
+
+        @Test
+        @DisplayName("never removes more than the floor allows in one tick")
+        void floorBoundsASingleTick() {
+            TestActuator limiter = new TestActuator(CONCURRENCY, 200, 1, 500);
+
+            // Latency 20x the SLO would give gradient 0.05; the floor holds it at 0.5.
+            ControlAction action = controller(0.0, 0.0, 0.5, 0.0)
+                    .decide(traffic(4000, 0, 0), List.of(limiter));
+
+            assertThat(action.getOrDefault(CONCURRENCY, -1)).isEqualTo(100);
+        }
+
+        @Test
+        @DisplayName("converges far faster than geometric decay")
+        void convergesFasterThanGeometric() {
+            TestActuator gradient = new TestActuator(CONCURRENCY, 200, 1, 500);
+            TestActuator geometric = new TestActuator(CONCURRENCY, 200, 1, 500);
+            BaselineController withGradient = controller(0.0, 0.0, 0.5, 0.0);
+            BaselineController withGeometric = controller(0.0, 0.0);
+
+            for (int i = 0; i < 5; i++) {
+                withGradient.decide(traffic(600, 0, 0), List.of(gradient))
+                        .desiredValues().forEach((n, v) -> gradient.apply(v));
+                withGeometric.decide(traffic(600, 0, 0), List.of(geometric))
+                        .desiredValues().forEach((n, v) -> geometric.apply(v));
+            }
+
+            assertThat(gradient.currentValue())
+                    .as("five ticks of a threefold overshoot should have made real progress")
+                    .isLessThan(geometric.currentValue() / 2);
+        }
+
+        @Test
+        @DisplayName("falls back to the fixed factor for error-driven cuts")
+        void errorsUseTheFixedFactor() {
+            TestActuator limiter = new TestActuator(CONCURRENCY, 100, 1, 500);
+
+            // Latency is fine, so there is no ratio to scale by — errors alone.
+            ControlAction action = controller(0.0, 0.0, 0.5, 0.0)
+                    .decide(traffic(50, 0.5, 0), List.of(limiter));
+
+            assertThat(action.getOrDefault(CONCURRENCY, -1)).isEqualTo(85);
+        }
+    }
+
+    @Nested
+    @DisplayName("queue length as the demand signal")
+    class QueueSignal {
+
+        private static MetricsSnapshot withQueue(double inflight, double queue) {
+            return MetricsSnapshot.builder()
+                    .put(MetricNames.LATENCY_P95_MS, 50.0)
+                    .put(MetricNames.GOODPUT_RPS, 100.0)
+                    .put(MetricNames.ERROR_RATE, 0.0)
+                    .put(MetricNames.TIMEOUT_RATE, 0.0)
+                    .put(MetricNames.INFLIGHT, inflight)
+                    .put(MetricNames.QUEUE_LENGTH, queue)
+                    .build();
+        }
+
+        @Test
+        @DisplayName("grows the limit when threads are waiting, whatever utilisation says")
+        void queueProvesTheLimitIsBinding() {
+            TestActuator limiter = new TestActuator(CONCURRENCY, 100, 1, 500);
+
+            // Utilisation is only 50%, so the heuristic alone would hold — but
+            // threads are demonstrably blocked on the limit right now.
+            ControlAction action = controller(0.9, 0.0)
+                    .decide(withQueue(50.0, 12.0), List.of(limiter));
+
+            assertThat(action.getOrDefault(CONCURRENCY, -1)).isEqualTo(105);
+        }
+
+        @Test
+        @DisplayName("an empty queue still lets utilisation decide")
+        void fallsBackToUtilisation() {
+            TestActuator saturated = new TestActuator(CONCURRENCY, 100, 1, 500);
+            assertThat(controller(0.9, 0.0).decide(withQueue(95.0, 0.0), List.of(saturated))
+                    .getOrDefault(CONCURRENCY, -1)).isEqualTo(105);
+
+            TestActuator idle = new TestActuator(CONCURRENCY, 100, 1, 500);
+            assertThat(controller(0.9, 0.0).decide(withQueue(7.0, 0.0), List.of(idle))
+                    .isEmpty()).isTrue();
         }
     }
 

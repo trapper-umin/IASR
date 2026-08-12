@@ -24,6 +24,16 @@ public final class MetricNames {
     // ── Concurrency ─────────────────────────────────────────────────────
     public static final String INFLIGHT             = "inflight";
 
+    /**
+     * Threads currently blocked waiting for a concurrency permit.
+     * <p>
+     * The most direct demand signal available: a non-zero queue means the limit
+     * is provably the binding constraint, whereas high in-flight counts only
+     * suggest it.  Reading utilisation instead forces a threshold ("is 90% of
+     * the limit in use?") that has to be guessed; a waiting thread is a fact.
+     */
+    public static final String QUEUE_LENGTH         = "queue_length";
+
     // ── JVM / System ────────────────────────────────────────────────────
     public static final String CPU_PROCESS          = "cpu_proc";
     public static final String GC_PAUSE_P95_MS      = "gc_pause_p95_ms";

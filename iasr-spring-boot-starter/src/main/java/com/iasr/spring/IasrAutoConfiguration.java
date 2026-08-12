@@ -204,7 +204,9 @@ public class IasrAutoConfiguration {
                 cp.getHikariPendingThreshold(),
                 cp.getHikariAcquireTimeThresholdMs(),
                 cp.getUtilizationGate(),
-                cp.getSloTargetHeadroom()
+                cp.getSloTargetHeadroom(),
+                cp.getMinGradient(),
+                cp.getHikariIdleShrinkThreshold()
         );
 
         ControlEngineConfig.Builder cfgBuilder = ControlEngineConfig.builder()
@@ -221,7 +223,8 @@ public class IasrAutoConfiguration {
                         props.getConcurrency().getMaxLimit(),
                         props.getConcurrency().getMaxStep(),
                         props.getConcurrency().getCooldownTicks(),
-                        props.getConcurrency().isBlockIncreaseOnSloViolation()
+                        props.getConcurrency().isBlockIncreaseOnSloViolation(),
+                        props.getConcurrency().getMaxStepDown()
                 ));
 
         // Discover HikariPoolActuator (or any other Actuator) if present

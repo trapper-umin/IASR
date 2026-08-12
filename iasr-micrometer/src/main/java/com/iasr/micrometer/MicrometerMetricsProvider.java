@@ -233,9 +233,12 @@ public class MicrometerMetricsProvider implements MetricsProvider {
             b.put(MetricNames.TIMEOUT_RATE, 0.0);
         }
 
-        // ── Inflight ────────────────────────────────────────────────────
+        // ── Inflight and permit queue ───────────────────────────────────
         Gauge inflight = findGauge("iasr.concurrency.inflight");
         b.put(MetricNames.INFLIGHT, inflight != null ? inflight.value() : 0.0);
+
+        Gauge queue = findGauge("iasr.concurrency.queue");
+        b.put(MetricNames.QUEUE_LENGTH, queue != null ? queue.value() : 0.0);
 
         // ── CPU ─────────────────────────────────────────────────────────
         Gauge cpuGauge = findGauge("process.cpu.usage");

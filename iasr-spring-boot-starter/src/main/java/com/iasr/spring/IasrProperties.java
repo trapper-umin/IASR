@@ -81,6 +81,18 @@ public class IasrProperties {
         private int minLimit = 10;
         private int maxLimit = 500;
         private int maxStep = 20;
+
+        /**
+         * Largest reduction allowed in one tick; {@code 0} means "same as
+         * {@link #maxStep}".
+         * <p>
+         * Deliberately larger than {@code maxStep} by default. Admitting more
+         * traffic too quickly can cause an incident, so growth is rate-limited;
+         * shedding is how the loop escapes one, and capping both at the same
+         * rate would throttle the emergency brake as hard as the accelerator.
+         */
+        private int maxStepDown = 50;
+
         private int cooldownTicks = 3;
         private long acquireTimeoutMs = 500;
 
@@ -151,5 +163,32 @@ public class IasrProperties {
          * latency-sensitive services, not as a general default.
          */
         private double sloTargetHeadroom = 0.0;
+
+        /**
+         * Floor on the latency gradient {@code SLO / observed} used to shrink
+         * the concurrency limit; {@code 0} falls back to the fixed
+         * {@link #concurrencyDecreaseFactor}.
+         * <p>
+         * Makes the correction proportional to the error instead of a fixed
+         * fraction: latency at three times the target divides the limit by
+         * three. The floor bounds how much a single tick may remove.
+         * <p>
+         * The default of 0.9 caps a single cut at 10%, gentler than the fixed
+         * factor it replaces — and it measured better than 0.8 and 0.5 on the
+         * benchmark. Proportionality, not aggression, is what helps: the cut
+         * shrinks as latency approaches the SLO, so the loop stops instead of
+         * overshooting, whereas an aggressive floor turns the loop into a
+         * ratchet downwards and sheds traffic it did not need to.
+         */
+        private double minGradient = 0.9;
+
+        /**
+         * Idle connections that must be sitting spare before the pool is
+         * eligible to shrink.
+         * <p>
+         * Without this, a pool sized exactly right — no queue, no spare
+         * connections — is shrunk anyway until it becomes the bottleneck.
+         */
+        private double hikariIdleShrinkThreshold = 2.0;
     }
 }

@@ -104,9 +104,16 @@ public class Guardrails {
                 continue;
             }
 
-            // 3. Clamp step size
-            if (Math.abs(delta) > rule.maxStep()) {
-                delta = delta > 0 ? rule.maxStep() : -rule.maxStep();
+            // 3. Clamp step size — asymmetrically, because growing a resource
+            //    too fast can cause an incident while shrinking it is the way
+            //    out of one.  A single limit on both directions would throttle
+            //    the controller's emergency brake as hard as its accelerator.
+            int maxUp = rule.maxStep();
+            int maxDown = rule.effectiveMaxStepDown();
+            if (delta > maxUp) {
+                delta = maxUp;
+            } else if (delta < -maxDown) {
+                delta = -maxDown;
             }
 
             // 4. Clamp absolute value

@@ -203,6 +203,36 @@ class GuardrailsTest {
         }
 
         @Test
+        @DisplayName("allows a larger reduction than increase when configured asymmetrically")
+        void allowsFasterShrinkThanGrowth() {
+            TestActuator actuator = new TestActuator(NAME, 200, 1, 500);
+            Guardrails guardrails = new Guardrails(
+                    List.of(new ActuatorGuardrail(NAME, 1, 500, 20, 0, true, 100)), SLO);
+
+            // Growing is rate-limited: +20 of the requested +200.
+            assertThat(guardrails.enforce(want(400), List.of(actuator), healthy())
+                    .getOrDefault(NAME, -1)).isEqualTo(220);
+
+            // Shedding is not throttled to the same rate: -100 of the requested -190.
+            actuator.setSilently(200);
+            assertThat(guardrails.enforce(want(10), List.of(actuator), healthy())
+                    .getOrDefault(NAME, -1))
+                    .as("the guardrail must not throttle the emergency brake like the accelerator")
+                    .isEqualTo(100);
+        }
+
+        @Test
+        @DisplayName("falls back to a symmetric step when no down-step is configured")
+        void symmetricByDefault() {
+            TestActuator actuator = new TestActuator(NAME, 200, 1, 500);
+            Guardrails guardrails = new Guardrails(
+                    List.of(new ActuatorGuardrail(NAME, 1, 500, 20, 0)), SLO);
+
+            assertThat(guardrails.enforce(want(10), List.of(actuator), healthy())
+                    .getOrDefault(NAME, -1)).isEqualTo(180);
+        }
+
+        @Test
         @DisplayName("clamps the result into [min, max]")
         void clampsAbsoluteBounds() {
             TestActuator actuator = new TestActuator(NAME, 15, 1, 500);
