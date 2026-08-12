@@ -1,0 +1,4 @@
+scenario,mode,dispatched,succeeded,rejected_429,server_errors,client_timeouts,goodput_rps,p50_ms,p95_ms,p99_ms,max_ms,slo_breach_pct,rejection_pct,hard_failure_pct
+spike,adaptive,10998,1554,9444,0,0,34.5,310.0,534.0,639.0,665.0,2.6,85.9,0.0
+ramp,adaptive,12599,1518,11081,0,0,33.7,309.0,470.0,532.0,547.0,0.0,88.0,0.0
+slow-dependency,adaptive,6751,1273,5478,0,0,28.3,329.0,591.0,653.0,658.0,20.3,81.1,0.0

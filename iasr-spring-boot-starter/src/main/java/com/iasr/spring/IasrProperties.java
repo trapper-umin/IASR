@@ -154,15 +154,16 @@ public class IasrProperties {
         /**
          * Multiplier on the Little's-law concurrency estimate
          * ({@code offered rate × SLO}) used as a growth ceiling and as the
-         * target to descend to when the SLO is violated; {@code 0} disables it.
+         * target to descend to when the SLO is violated.  <b>Off by default.</b>
          * <p>
-         * Cuts p95 by 37-44% in two of three benchmark scenarios at no
-         * measurable cost to throughput, and improves the share of responses
-         * meeting the SLO in all three. Under a slow ramp past capacity it
-         * trades about 7% of throughput for 40% of the tail — set to 0 where
-         * throughput matters more.
+         * Helps only where the SLO sits comfortably above what the dependency
+         * can deliver. Measured across regimes: with a 150 ms target against
+         * 55 ms of service time it cut p95 by 37-44% at no cost; with a 60 ms
+         * target against 53 ms it shed 10% of traffic that nothing required;
+         * under heavy overload it gave up 22-49% of throughput. The library
+         * cannot tell which regime it is in, so this stays opt-in.
          */
-        private double sloTargetHeadroom = 1.0;
+        private double sloTargetHeadroom = 0.0;
 
         /**
          * Floor on the latency gradient {@code SLO / observed} used to shrink
