@@ -130,8 +130,8 @@ public class ConcurrencyLimiter implements Actuator {
      * repays part of the debt rather than making a permit available.
      */
     public void release() {
-        int prev = inflight.decrementAndGet();
-        if (prev < 0) {
+        int remaining = inflight.decrementAndGet();
+        if (remaining < 0) {
             inflight.incrementAndGet();
             log.warn("release() called without matching acquire() — ignoring. " +
                     "Check integration code for asymmetric acquire/release.");

@@ -16,16 +16,23 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Applies safety guardrails on top of controller decisions.
  * <p>
- * Enforced constraints:
+ * Enforced constraints, in order:
  * <ol>
- *   <li>Value clamped to {@code [min, max]}</li>
- *   <li>Step size limited to {@code maxStep}</li>
  *   <li>Cooldown — change suppressed if not enough ticks have elapsed</li>
- *   <li>No increase while SLO is violated (latency p95 &gt; SLO target)</li>
+ *   <li>No increase while SLO is violated, for actuators whose guardrail sets
+ *       {@link ActuatorGuardrail#blockIncreaseOnSloViolation()}</li>
+ *   <li>Step size limited to {@code maxStep}</li>
+ *   <li>Value clamped to {@code [min, max]}</li>
  * </ol>
  */
 @Slf4j
 public class Guardrails {
+
+    /**
+     * Cooldown counter value meaning "this actuator has never been changed",
+     * so the first change is always allowed regardless of {@code cooldownTicks}.
+     */
+    static final int NEVER_CHANGED = Integer.MAX_VALUE;
 
     private final Map<String, ActuatorGuardrail> rules;
     private final double sloLatencyMs;
@@ -82,15 +89,16 @@ public class Guardrails {
             int delta = desired - current;
 
             // 1. Cooldown check
-            int elapsed = ticksSinceChange.getOrDefault(name, Integer.MAX_VALUE);
+            int elapsed = ticksSinceChange.getOrDefault(name, NEVER_CHANGED);
             if (delta != 0 && elapsed < rule.cooldownTicks()) {
                 log.debug("Guardrail [{}]: change suppressed, cooldown ({}/{} ticks)",
                         name, elapsed, rule.cooldownTicks());
                 continue;
             }
 
-            // 2. No increase during SLO violation
-            if (delta > 0 && sloViolated) {
+            // 2. No increase during SLO violation — unless this actuator is
+            //    explicitly exempt (see ActuatorGuardrail#blockIncreaseOnSloViolation)
+            if (delta > 0 && sloViolated && rule.blockIncreaseOnSloViolation()) {
                 log.debug("Guardrail [{}]: increase suppressed, SLO violated (p95={} > {})",
                         name, snapshot.get(MetricNames.LATENCY_P95_MS), sloLatencyMs);
                 continue;
@@ -118,13 +126,18 @@ public class Guardrails {
      * Advance cooldown counters: reset to 0 for actuators that changed this tick,
      * increment by 1 for all others.  This avoids the off-by-one where a reset-then-
      * increment would shorten the effective cooldown by 1 tick.
+     * <p>
+     * Actuators that have never been changed stay pinned at {@link #NEVER_CHANGED}
+     * so that startup ticks do not accumulate into an artificial cooldown window
+     * that blocks the very first change.  The increment saturates for the same reason.
      */
     private void advanceCooldowns(Set<String> changedThisTick) {
         for (String name : rules.keySet()) {
             if (changedThisTick.contains(name)) {
                 ticksSinceChange.put(name, 0);
             } else {
-                ticksSinceChange.merge(name, 1, Integer::sum);
+                ticksSinceChange.compute(name, (k, v) ->
+                        (v == null || v >= NEVER_CHANGED - 1) ? NEVER_CHANGED : v + 1);
             }
         }
     }

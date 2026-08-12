@@ -225,6 +225,14 @@ public class BaselineController implements Controller {
         double acquireP95 = snapshot.get(MetricNames.HIKARI_ACQUIRE_P95_MS, 0.0);
         boolean sloViolated = latencyP95 > sloLatencyMs;
 
+        // Detect "the pool grew since the previous tick" and record the current
+        // value up front, before any of the early returns below.  Updating this
+        // field only on the fall-through path would leave it pinned to an
+        // arbitrarily old tick, making the degradation check compare against
+        // stale history.
+        boolean poolWasIncreased = prevHikariPool >= 0 && currentPool > prevHikariPool;
+        prevHikariPool = currentPool;
+
         boolean hasPendingDeficit = pending > hikariPendingThreshold;
         boolean acquireTimeHigh = acquireP95 > hikariAcquireTimeThresholdMs;
 
@@ -260,11 +268,9 @@ public class BaselineController implements Controller {
         }
 
         // ── Decrease: latency degradation after pool increase ──
-        // Only fires if pool was actually increased on a recent tick.
+        // Only fires if the pool was actually increased on the previous tick.
         // Without this guard, any idle→load transition (latency spike)
         // would falsely trigger a pool decrease.
-        boolean poolWasIncreased = prevHikariPool >= 0 && currentPool > prevHikariPool;
-        prevHikariPool = currentPool;
         if (poolWasIncreased && sloViolated
                 && !Double.isNaN(prevLatencyP95) && latencyP95 > prevLatencyP95 * 1.1) {
             return Math.max(1, currentPool - hikariStep);

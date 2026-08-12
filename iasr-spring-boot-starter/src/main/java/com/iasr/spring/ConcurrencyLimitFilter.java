@@ -21,10 +21,14 @@ import java.util.concurrent.TimeUnit;
  * If a permit cannot be acquired within the configured timeout the filter
  * responds with <b>429 Too Many Requests</b> and increments the timeout counter.
  * <p>
- * Request duration is recorded in {@link WindowedLatencyTracker} only for
- * "business" endpoints.  Infrastructure paths (actuator, health, prometheus)
- * are excluded from latency tracking to prevent health-check traffic from
- * polluting the control loop's latency signal.
+ * Infrastructure paths (actuator, health, prometheus, liveness/readiness) are
+ * skipped entirely: they neither consume a permit nor contribute to the
+ * latency signal.  Both halves matter.  Excluding them from latency tracking
+ * keeps cheap health-check traffic from diluting the control loop's view of
+ * real request latency, and exempting them from the limit keeps the
+ * orchestrator's probes answerable while the application is saturated — a
+ * 429 on {@code /health} would get the instance killed exactly when IASR is
+ * shedding load to save it.
  */
 @Slf4j
 public class ConcurrencyLimitFilter extends OncePerRequestFilter {
@@ -87,8 +91,7 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
             return;
         }
 
-        boolean trackLatency = shouldTrackLatency(request);
-        long startNs = trackLatency ? System.nanoTime() : 0;
+        long startNs = System.nanoTime();
         try {
             chain.doFilter(request, response);
 
@@ -104,20 +107,60 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
             throw new ServletException(e);
         } finally {
             limiter.release();
-            if (trackLatency && latencyTracker != null) {
+            if (latencyTracker != null) {
                 double durationMs = (System.nanoTime() - startNs) / 1_000_000.0;
                 latencyTracker.record(durationMs);
             }
         }
     }
 
-    private boolean shouldTrackLatency(HttpServletRequest request) {
+    /**
+     * Infrastructure endpoints bypass the filter completely — no permit, no
+     * latency sample.  Returning {@code true} here is what keeps probes
+     * answerable under saturation.
+     */
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return isInfrastructurePath(pathWithinApplication(request));
+    }
+
+    /**
+     * The request path relative to the application, with the servlet context
+     * path removed.
+     * <p>
+     * Matching must not be done against {@code getRequestURI()} directly: it
+     * carries the context path, so an application deployed under
+     * {@code server.servlet.context-path=/myapp} would see
+     * {@code /myapp/actuator/health} and silently fail every prefix check.
+     * The exclusions would stop applying exactly where they matter most —
+     * health probes would start consuming permits and could be answered with
+     * 429 while the application is saturated.
+     * <p>
+     * Visible for testing.
+     */
+    static String pathWithinApplication(HttpServletRequest request) {
         String uri = request.getRequestURI();
+        if (uri == null) {
+            return null;
+        }
+        String contextPath = request.getContextPath();
+        if (contextPath == null || contextPath.isEmpty() || !uri.startsWith(contextPath)) {
+            return uri;
+        }
+        String withinApp = uri.substring(contextPath.length());
+        return withinApp.isEmpty() ? "/" : withinApp;
+    }
+
+    /** Visible for testing. */
+    boolean isInfrastructurePath(String path) {
+        if (path == null) {
+            return false;
+        }
         for (String prefix : excludedPrefixes) {
-            if (uri.startsWith(prefix)) {
-                return false;
+            if (path.startsWith(prefix)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 }

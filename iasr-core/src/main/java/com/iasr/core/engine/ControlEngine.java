@@ -74,7 +74,7 @@ public class ControlEngine {
             tickFuture = scheduler.scheduleAtFixedRate(
                     this::tick, 0, windowMs, TimeUnit.MILLISECONDS);
 
-            String mode = config.enabled() ? "active" : "observe-only (metrics + dataset, no actuator changes)";
+            String mode = config.applyActions() ? "active" : "observe-only (metrics + dataset, no actuator changes)";
             log.info("ControlEngine started [{}]: window={}ms, SLO={}ms, actuators={}",
                     mode, windowMs, config.sloLatencyMs(), actuators.size());
         }
@@ -120,7 +120,7 @@ public class ControlEngine {
 
             ControlAction action = ControlAction.NONE;
 
-            if (config.enabled()) {
+            if (config.applyActions()) {
                 // 2. Controller decision
                 ControlAction rawAction = controller.decide(snapshot, actuators);
 

@@ -6,9 +6,13 @@ import com.iasr.core.metrics.MetricsSnapshot;
 import com.iasr.core.metrics.WindowedLatencyTracker;
 import com.iasr.core.metrics.WindowedLatencyTracker.WindowStats;
 import io.micrometer.core.instrument.*;
+import io.micrometer.core.instrument.distribution.HistogramSnapshot;
+import io.micrometer.core.instrument.distribution.ValueAtPercentile;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,9 +50,15 @@ public class MicrometerMetricsProvider implements MetricsProvider {
      */
     private static final int MIN_REQUESTS_PER_WINDOW = 5;
 
+    /** How close a published percentile must be to the requested one to be used. */
+    private static final double PERCENTILE_TOLERANCE = 1e-6;
+
     private final MeterRegistry registry;
     private final String hikariPoolName;
     private final WindowedLatencyTracker latencyTracker;
+
+    /** Meter names already reported as missing percentile config (warn once each). */
+    private final Set<String> missingPercentilesWarned = ConcurrentHashMap.newKeySet();
 
     private long prevTotalRequests = 0;
     private double prevTotalTimeMs = 0;
@@ -56,6 +66,7 @@ public class MicrometerMetricsProvider implements MetricsProvider {
     private long prevTimeoutCount = 0;
     private long prevSnapshotTimeNs = 0;
     private long prevAcquireCount = 0;
+    private double prevAcquireTotalTimeMs = 0;
 
     /**
      * Full constructor.
@@ -176,12 +187,7 @@ public class MicrometerMetricsProvider implements MetricsProvider {
 
         // ── GC pause ────────────────────────────────────────────────────
         Collection<Timer> gcTimers = registry.find("jvm.gc.pause").timers();
-        double gcP95 = 0;
-        for (Timer t : gcTimers) {
-            double max = t.takeSnapshot().max(TimeUnit.MILLISECONDS);
-            gcP95 = Math.max(gcP95, max > 0 ? round3(max) : 0.0);
-        }
-        b.put(MetricNames.GC_PAUSE_P95_MS, gcP95);
+        b.put(MetricNames.GC_PAUSE_P95_MS, percentileMs(gcTimers, 0.95, "jvm.gc.pause"));
 
         // ── Hikari metrics ──────────────────────────────────────────────
         Gauge hActive  = findHikariGauge("hikaricp.connections.active");
@@ -194,23 +200,95 @@ public class MicrometerMetricsProvider implements MetricsProvider {
 
         Collection<Timer> acquireTimers = registry.find("hikaricp.connections.acquire")
                 .tag("pool", hikariPoolName).timers();
-        double acquireP95 = 0;
         long acquireCountNow = 0;
+        double acquireTotalTimeNowMs = 0;
         for (Timer t : acquireTimers) {
             acquireCountNow += t.count();
+            acquireTotalTimeNowMs += t.totalTime(TimeUnit.MILLISECONDS);
         }
         long acquireDelta = acquireCountNow - prevAcquireCount;
+        double acquireTimeDeltaMs = acquireTotalTimeNowMs - prevAcquireTotalTimeMs;
+
+        double acquireP95 = 0;
+        double acquireMean = 0;
         if (acquireDelta >= MIN_REQUESTS_PER_WINDOW) {
-            for (Timer t : acquireTimers) {
-                double max = t.takeSnapshot().max(TimeUnit.MILLISECONDS);
-                acquireP95 = Math.max(acquireP95, max > 0 ? round3(max) : 0.0);
-            }
+            acquireP95 = percentileMs(acquireTimers, 0.95, "hikaricp.connections.acquire");
+            acquireMean = round3(Math.max(0, acquireTimeDeltaMs) / acquireDelta);
         }
         prevAcquireCount = acquireCountNow;
+        prevAcquireTotalTimeMs = acquireTotalTimeNowMs;
         b.put(MetricNames.HIKARI_ACQUIRE_P95_MS, acquireP95);
+        b.put(MetricNames.HIKARI_ACQUIRE_MEAN_MS, acquireMean);
 
         prevSnapshotTimeNs = now;
         return b.build();
+    }
+
+    // ── Percentile extraction ────────────────────────────────────────────
+
+    /**
+     * Reads the value at percentile {@code p} from the given timers'
+     * histogram snapshots.
+     * <p>
+     * Percentile values are only published when the registry is configured
+     * with a percentile histogram for the meter — that is what
+     * {@link IasrMeterFilterConfigurer} does.  If no matching percentile is
+     * published, this falls back to the snapshot {@code max} (an
+     * over-estimate) and warns once per meter name, rather than silently
+     * reporting zero.
+     * <p>
+     * When several timers match (one per tag combination), their percentiles
+     * are combined by taking the maximum.  Histograms cannot be merged
+     * correctly after the fact, so this is a deliberate worst-case
+     * approximation.
+     * <p>
+     * Note that Micrometer computes these percentiles over its own decaying
+     * window (~2 min by default), not over the IASR control window Δt.  For
+     * HTTP latency this is solved by {@link WindowedLatencyTracker}; for GC
+     * and connection-acquire timings the decaying value is the best available
+     * signal without instrumenting those call sites directly.
+     *
+     * @return the percentile in milliseconds, rounded; {@code 0.0} if no timers matched
+     */
+    private double percentileMs(Collection<Timer> timers, double p, String meterName) {
+        if (timers.isEmpty()) {
+            return 0.0;
+        }
+
+        double fromPercentiles = 0;
+        double fromMax = 0;
+        boolean percentilePublished = false;
+
+        for (Timer t : timers) {
+            HistogramSnapshot snap = t.takeSnapshot();
+
+            double max = snap.max(TimeUnit.MILLISECONDS);
+            if (max > 0) {
+                fromMax = Math.max(fromMax, max);
+            }
+
+            for (ValueAtPercentile vp : snap.percentileValues()) {
+                if (Math.abs(vp.percentile() - p) <= PERCENTILE_TOLERANCE) {
+                    percentilePublished = true;
+                    double v = vp.value(TimeUnit.MILLISECONDS);
+                    if (v > 0) {
+                        fromPercentiles = Math.max(fromPercentiles, v);
+                    }
+                }
+            }
+        }
+
+        if (percentilePublished) {
+            return round3(fromPercentiles);
+        }
+
+        if (missingPercentilesWarned.add(meterName)) {
+            log.warn("Meter [{}] publishes no p{} value — falling back to max, which over-estimates. "
+                            + "Register IasrMeterFilterConfigurer.createFilter() on the MeterRegistry "
+                            + "to enable percentile histograms.",
+                    meterName, Math.round(p * 100));
+        }
+        return round3(fromMax);
     }
 
     // ── Meter lookup helpers ─────────────────────────────────────────────

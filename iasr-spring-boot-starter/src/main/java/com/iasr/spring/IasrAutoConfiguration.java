@@ -17,7 +17,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +31,13 @@ import java.util.List;
  * Activated when {@code iasr.enabled=true} (default) and a
  * {@link MeterRegistry} bean is present in the context.
  * <p>
+ * <b>Observe-only mode</b> is controlled by the separate
+ * {@code iasr.apply-actions} property, <i>not</i> by {@code iasr.enabled}.
+ * {@code iasr.enabled=false} makes this auto-configuration back off entirely,
+ * so no engine is created and no dataset is written — which is the opposite
+ * of what observe-only mode is for.  Set {@code iasr.apply-actions=false} to
+ * keep collecting metrics and the dataset while leaving actuators untouched.
+ * <p>
  * <b>Important</b>: no direct {@code .class} references to HikariCP or
  * {@code HikariPoolActuator} exist in this outer class.  All Hikari-related
  * code lives in the inner {@code HikariActuatorConfiguration}, guarded by
@@ -38,17 +45,19 @@ import java.util.List;
  * {@code NoClassDefFoundError} when HikariCP is not on the classpath.
  */
 @Slf4j
-@AutoConfiguration(after = DataSourceAutoConfiguration.class)
+@AutoConfiguration(
+        after = DataSourceAutoConfiguration.class,
+        // Referenced by name: spring-boot-starter-actuator is an optional
+        // dependency, so these classes may be absent at runtime.
+        afterName = {
+                "org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration",
+                "org.springframework.boot.actuate.autoconfigure.metrics.CompositeMeterRegistryAutoConfiguration"
+        })
 @ConditionalOnClass(MeterRegistry.class)
+@ConditionalOnBean(MeterRegistry.class)
 @ConditionalOnProperty(prefix = "iasr", name = "enabled", havingValue = "true", matchIfMissing = true)
+@EnableConfigurationProperties(IasrProperties.class)
 public class IasrAutoConfiguration {
-
-    @Bean
-    @ConfigurationProperties(prefix = "iasr")
-    @ConditionalOnMissingBean
-    public IasrProperties iasrProperties() {
-        return new IasrProperties();
-    }
 
     // ── Percentile histogram filter ─────────────────────────────────────
 
@@ -181,7 +190,7 @@ public class IasrAutoConfiguration {
         ControlEngineConfig.Builder cfgBuilder = ControlEngineConfig.builder()
                 .windowMs(props.getWindowMs())
                 .sloLatencyMs(props.getSloLatencyMs())
-                .enabled(props.isEnabled())
+                .applyActions(props.isApplyActions())
                 .datasetLoggingEnabled(props.isDatasetLoggingEnabled())
                 .metricsProvider(metricsProvider)
                 .controller(controller)
@@ -191,7 +200,8 @@ public class IasrAutoConfiguration {
                         props.getConcurrency().getMinLimit(),
                         props.getConcurrency().getMaxLimit(),
                         props.getConcurrency().getMaxStep(),
-                        props.getConcurrency().getCooldownTicks()
+                        props.getConcurrency().getCooldownTicks(),
+                        props.getConcurrency().isBlockIncreaseOnSloViolation()
                 ));
 
         // Discover HikariPoolActuator (or any other Actuator) if present
@@ -208,14 +218,16 @@ public class IasrAutoConfiguration {
                             props.getHikari().getMinPoolSize(),
                             props.getHikari().getMaxPoolSize(),
                             props.getHikari().getMaxStep(),
-                            props.getHikari().getCooldownTicks()
+                            props.getHikari().getCooldownTicks(),
+                            props.getHikari().isBlockIncreaseOnSloViolation()
                     ));
                 }
             }
         }
 
         ControlEngine engine = new ControlEngine(cfgBuilder.build());
-        log.info("IASR ControlEngine created: SLO={}ms, window={}ms, actuators={}",
+        log.info("IASR ControlEngine created: mode={}, SLO={}ms, window={}ms, actuators={}",
+                props.isApplyActions() ? "active" : "observe-only",
                 props.getSloLatencyMs(), props.getWindowMs(),
                 hasHikari ? "concurrency+hikari" : "concurrency");
 

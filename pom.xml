@@ -6,7 +6,7 @@
 
     <groupId>com.iasr</groupId>
     <artifactId>iasr-parent</artifactId>
-    <version>1.0.12</version>
+    <version>1.0.13</version>
     <packaging>pom</packaging>
 
     <name>IASR :: Parent</name>
@@ -92,8 +92,40 @@
         </dependencies>
     </dependencyManagement>
 
+    <!--
+        Test stack shared by every module.  Versions come from the imported
+        spring-boot-dependencies BOM above.
+    -->
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

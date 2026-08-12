@@ -19,7 +19,7 @@ public final class ControlEngineConfig {
 
     private final long windowMs;
     private final double sloLatencyMs;
-    private final boolean enabled;
+    private final boolean applyActions;
     private final boolean datasetLoggingEnabled;
     private final MetricsProvider metricsProvider;
     private final Controller controller;
@@ -29,7 +29,7 @@ public final class ControlEngineConfig {
     private ControlEngineConfig(Builder b) {
         this.windowMs = b.windowMs;
         this.sloLatencyMs = b.sloLatencyMs;
-        this.enabled = b.enabled;
+        this.applyActions = b.applyActions;
         this.datasetLoggingEnabled = b.datasetLoggingEnabled;
         this.metricsProvider = b.metricsProvider;
         this.controller = b.controller;
@@ -40,7 +40,17 @@ public final class ControlEngineConfig {
     public long windowMs()               { return windowMs; }
     public double windowSec()             { return windowMs / 1000.0; }
     public double sloLatencyMs()          { return sloLatencyMs; }
-    public boolean enabled()              { return enabled; }
+    /**
+     * When {@code false}, the engine runs in <b>observe-only</b> mode: it
+     * collects metrics and writes the dataset, but never calls
+     * {@link com.iasr.core.actuator.Actuator#apply(int)}.
+     */
+    public boolean applyActions()         { return applyActions; }
+
+    /** @deprecated renamed to {@link #applyActions()} for clarity. */
+    @Deprecated(since = "1.0.13", forRemoval = true)
+    public boolean enabled()              { return applyActions; }
+
     public boolean datasetLoggingEnabled(){ return datasetLoggingEnabled; }
     public MetricsProvider metricsProvider(){ return metricsProvider; }
     public Controller controller()        { return controller; }
@@ -56,7 +66,7 @@ public final class ControlEngineConfig {
     public static final class Builder {
         private long windowMs = 5_000;
         private double sloLatencyMs = 200.0;
-        private boolean enabled = true;
+        private boolean applyActions = true;
         private boolean datasetLoggingEnabled = true;
         private MetricsProvider metricsProvider;
         private Controller controller;
@@ -77,10 +87,20 @@ public final class ControlEngineConfig {
             return this;
         }
 
-        /** If {@code false}, engine collects metrics and logs dataset but does NOT apply actions. */
-        public Builder enabled(boolean enabled) {
-            this.enabled = enabled;
+        /**
+         * If {@code false}, the engine collects metrics and logs the dataset
+         * but does NOT apply actions to actuators (observe-only mode).
+         * Default {@code true}.
+         */
+        public Builder applyActions(boolean applyActions) {
+            this.applyActions = applyActions;
             return this;
+        }
+
+        /** @deprecated renamed to {@link #applyActions(boolean)} for clarity. */
+        @Deprecated(since = "1.0.13", forRemoval = true)
+        public Builder enabled(boolean enabled) {
+            return applyActions(enabled);
         }
 
         /** Enable or disable JSONL dataset logging (default true). */

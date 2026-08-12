@@ -33,4 +33,12 @@ public final class MetricNames {
     public static final String HIKARI_IDLE          = "hikari_idle";
     public static final String HIKARI_PENDING       = "hikari_pending";
     public static final String HIKARI_ACQUIRE_P95_MS = "hikari_acquire_p95_ms";
+
+    /**
+     * Mean connection-acquire time over the current control window, derived
+     * from the per-window deltas of the Micrometer timer's count and total
+     * time.  Unlike {@link #HIKARI_ACQUIRE_P95_MS}, which comes from a
+     * decaying histogram, this value covers exactly one Δt window.
+     */
+    public static final String HIKARI_ACQUIRE_MEAN_MS = "hikari_acquire_mean_ms";
 }
