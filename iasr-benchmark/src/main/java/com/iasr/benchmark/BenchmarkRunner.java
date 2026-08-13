@@ -107,7 +107,7 @@ public class BenchmarkRunner {
     private static List<String> selectModes() {
         String only = System.getProperty("bench.modes");
         if (only == null || only.isBlank()) {
-            return List.of("off", "fixed", "adaptive", "gradient");
+            return List.of("off", "fixed", "adaptive", "gradient", "bottleneck");
         }
         return List.of(only.split(","));
     }
@@ -189,9 +189,14 @@ public class BenchmarkRunner {
 
         props.putAll(iasrProperties(mode));
 
-        SpringApplicationBuilder builder = "gradient".equals(mode)
-                ? new SpringApplicationBuilder(BenchmarkApplication.class, GradientBaselineConfig.class)
-                : new SpringApplicationBuilder(BenchmarkApplication.class);
+        SpringApplicationBuilder builder;
+        if ("gradient".equals(mode)) {
+            builder = new SpringApplicationBuilder(BenchmarkApplication.class, GradientBaselineConfig.class);
+        } else if ("bottleneck".equals(mode)) {
+            builder = new SpringApplicationBuilder(BenchmarkApplication.class, BottleneckConfig.class);
+        } else {
+            builder = new SpringApplicationBuilder(BenchmarkApplication.class);
+        }
         return builder
                 .properties(props)
                 .web(WebApplicationType.SERVLET)
@@ -211,6 +216,20 @@ public class BenchmarkRunner {
             return new GradientController(
                     props.getConcurrency().getMinLimit(),
                     props.getConcurrency().getMaxLimit());
+        }
+    }
+
+    /** Supplies the bottleneck-directed controller through the same SPI. */
+    @org.springframework.context.annotation.Configuration(proxyBeanMethods = false)
+    static class BottleneckConfig {
+        @org.springframework.context.annotation.Bean
+        public com.iasr.core.controller.Controller bottleneckController(
+                com.iasr.spring.IasrProperties props) {
+            return new com.iasr.core.controller.BottleneckController(
+                    props.getSloLatencyMs(),
+                    props.getController().getConcurrencyIncreaseStep(),
+                    props.getController().getHikariStep(),
+                    props.getController().getMinGradient());
         }
     }
 
