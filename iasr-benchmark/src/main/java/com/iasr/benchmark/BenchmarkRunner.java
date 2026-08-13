@@ -170,8 +170,15 @@ public class BenchmarkRunner {
         props.put("spring.datasource.url",
                 "jdbc:h2:mem:bench" + DB_COUNTER.incrementAndGet() + ";DB_CLOSE_DELAY=-1");
         props.put("spring.datasource.hikari.pool-name", POOL_NAME);
-        props.put("spring.datasource.hikari.maximum-pool-size", 10);
-        props.put("spring.datasource.hikari.minimum-idle", 10);
+        // Starting pool size.  Raising it above the dependency's worker count
+        // removes the connection shortage entirely, which is how the claim
+        // "coordinating a second resource pays" gets its boundary: where the
+        // second resource is not a constraint, coordinating it should buy
+        // nothing, and a benchmark that only ever shows the favourable case is
+        // indistinguishable from one arranged to.
+        int poolSize = Integer.getInteger("bench.poolSize", 10);
+        props.put("spring.datasource.hikari.maximum-pool-size", poolSize);
+        props.put("spring.datasource.hikari.minimum-idle", poolSize);
         props.put("spring.datasource.hikari.connection-timeout", 3000);
         props.put("management.endpoints.enabled-by-default", false);
         // Each SpringApplication boot reinitialises the logging system, so levels

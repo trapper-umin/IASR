@@ -24,7 +24,8 @@ public class BenchmarkApplication {
         return new BackendModel(
                 Integer.getInteger("bench.db.workers", 12),
                 Long.getLong("bench.db.serviceMs", 50L),
-                Long.getLong("bench.app.workMs", 5L));
+                Long.getLong("bench.app.workMs", 5L),
+                Double.parseDouble(System.getProperty("bench.db.thrash", "0.3")));
     }
 
     @Bean

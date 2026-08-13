@@ -1,7 +1,7 @@
 package com.iasr.benchmark.app;
 
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The synthetic downstream dependency the benchmark application talks to.
@@ -13,36 +13,63 @@ import java.util.concurrent.TimeUnit;
  * stable enough for that.
  *
  * <h3>The model</h3>
- * A fixed number of {@link #workers} serve requests, each taking
- * {@link #serviceTimeMs} milliseconds.  Requests beyond that count queue.
- * Capacity is therefore {@code workers / serviceTimeMs} requests per second,
- * and it is a property of the dependency — <b>not</b> of the connection pool.
+ * The dependency serves best at {@link #workerCount} concurrent requests. Below
+ * that, service time is constant. Above it, service time grows <em>faster than
+ * linearly</em>, so throughput does not merely plateau — it declines:
+ * <pre>
+ *   load    = concurrent / workers
+ *   service = base × load × (1 + thrash × (load − 1))     for load &gt; 1
+ *   throughput(load) = peak / (1 + thrash × (load − 1))
+ * </pre>
+ *
+ * <h3>Why the decline matters</h3>
+ * An earlier version of this model capped concurrency with a semaphore, so
+ * excess requests queued and throughput stayed flat past the optimum. Under
+ * those rules over-provisioning is free, the optimal pool policy is trivially
+ * "take the maximum", and no coordination algorithm can demonstrate value —
+ * which is exactly what the measurements showed: a static pool of 20 beat
+ * adaptive control of a pool of 10 in every scenario.
  * <p>
- * That distinction is the whole point.  A naive model where sleeping while
- * holding a connection is the only constraint would make the pool size the sole
- * determinant of throughput, so growing the pool would always help and the
- * controller's pool logic would look better than it deserves.  Here, growing
- * the pool past {@code workers} only moves the queue from HikariCP into the
- * dependency: throughput stops improving while latency keeps rising — exactly
- * the trap a real database sets.
+ * That was a property of the model, not of databases. Connections cost memory
+ * on the server, a shared database cannot grant every client its maximum, and
+ * throughput genuinely falls once concurrency passes the point where context
+ * switching and lock contention dominate — the well-known result behind every
+ * "size your pool small" recommendation, HikariCP's own included. With the
+ * decline modelled, over-provisioning has a price and sizing the pool becomes
+ * a real decision rather than a formality.
+ * <p>
+ * Setting {@code thrash} to zero restores the previous flat-throughput
+ * behaviour, so results measured under both models can be compared.
  */
 public class BackendModel {
 
-    private volatile Semaphore workers;
     private volatile int workerCount;
     private volatile long serviceTimeMs;
     private volatile long appTimeMs;
+    private volatile double thrashFactor;
+
+    /** Requests currently inside the dependency. */
+    private final AtomicInteger active = new AtomicInteger();
 
     public BackendModel(int workers, long serviceTimeMs, long appTimeMs) {
-        this.workerCount = workers;
-        this.workers = new Semaphore(workers, true);
-        this.serviceTimeMs = serviceTimeMs;
-        this.appTimeMs = appTimeMs;
+        this(workers, serviceTimeMs, appTimeMs, 0.0);
     }
 
-    /** Requests per second the dependency can sustain at the current settings. */
+    public BackendModel(int workers, long serviceTimeMs, long appTimeMs, double thrashFactor) {
+        this.workerCount = workers;
+        this.serviceTimeMs = serviceTimeMs;
+        this.appTimeMs = appTimeMs;
+        this.thrashFactor = thrashFactor;
+    }
+
+    /** Peak throughput, reached at exactly {@link #workerCount} concurrent requests. */
     public double capacityRps() {
         return workerCount * 1000.0 / serviceTimeMs;
+    }
+
+    /** Concurrency at which the dependency is fastest; more than this costs throughput. */
+    public int optimalConcurrency() {
+        return workerCount;
     }
 
     public int workerCount() {
@@ -57,6 +84,10 @@ public class BackendModel {
         return appTimeMs;
     }
 
+    public double thrashFactor() {
+        return thrashFactor;
+    }
+
     /** Change dependency latency mid-run (the "slow dependency" scenario). */
     public void setServiceTimeMs(long serviceTimeMs) {
         this.serviceTimeMs = serviceTimeMs;
@@ -67,16 +98,34 @@ public class BackendModel {
     }
 
     /**
-     * Execute one dependency call: queue for a worker, then occupy it for the
-     * current service time.
+     * Service time for a request entering while {@code concurrent} requests are
+     * in the dependency.
+     * <p>
+     * Evaluated once on entry rather than continuously. A request that arrives
+     * during a burst pays the burst's price for its whole stay, which overstates
+     * the penalty slightly and understates it for one that arrives early — the
+     * simplification is symmetric and keeps the model analytically tractable.
      */
+    long serviceTimeFor(int concurrent) {
+        double load = (double) concurrent / workerCount;
+        if (load <= 1.0) {
+            return serviceTimeMs;
+        }
+        return Math.round(serviceTimeMs * load * (1.0 + thrashFactor * (load - 1.0)));
+    }
+
+    /** Throughput the dependency sustains at the given concurrency, for reference. */
+    public double throughputAt(int concurrent) {
+        return concurrent * 1000.0 / serviceTimeFor(concurrent);
+    }
+
+    /** Execute one dependency call, paying whatever the current crowding costs. */
     public void call() throws InterruptedException {
-        Semaphore s = workers;
-        s.acquire();
+        int concurrent = active.incrementAndGet();
         try {
-            sleep(serviceTimeMs);
+            sleep(serviceTimeFor(concurrent));
         } finally {
-            s.release();
+            active.decrementAndGet();
         }
     }
 
