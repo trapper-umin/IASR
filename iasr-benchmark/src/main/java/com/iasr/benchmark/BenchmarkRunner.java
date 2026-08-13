@@ -233,8 +233,14 @@ public class BenchmarkRunner {
         props.put("iasr.concurrency.cooldown-ticks", 1);
         props.put("iasr.concurrency.acquire-timeout-ms", 100);
 
-        props.put("iasr.hikari.min-pool-size", 5);
-        props.put("iasr.hikari.max-pool-size", 30);
+        // Pinning the pool isolates the concurrency rules from the pool ones.
+        // Gradient controls only concurrency, so any advantage IASR shows over
+        // it could come either from better concurrency decisions or from moving
+        // a second resource Gradient never touches — and those are different
+        // claims. Fixing min == max leaves the actuator registered but immovable.
+        boolean pinPool = Boolean.getBoolean("bench.pinPool");
+        props.put("iasr.hikari.min-pool-size", pinPool ? 10 : 5);
+        props.put("iasr.hikari.max-pool-size", pinPool ? 10 : 30);
         props.put("iasr.hikari.max-step", 2);
         props.put("iasr.hikari.cooldown-ticks", 2);
 
