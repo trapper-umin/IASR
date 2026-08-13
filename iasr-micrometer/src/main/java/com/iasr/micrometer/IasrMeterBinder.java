@@ -4,6 +4,7 @@ import com.iasr.core.actuator.ConcurrencyLimiter;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.binder.MeterBinder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,8 @@ public class IasrMeterBinder implements MeterBinder {
     private Counter timeoutCounter;
     @Getter
     private Counter errorCounter;
+    @Getter
+    private Timer admissionWaitTimer;
 
     @Override
     public void bindTo(MeterRegistry registry) {
@@ -52,12 +55,28 @@ public class IasrMeterBinder implements MeterBinder {
         errorCounter = Counter.builder("iasr.http.errors")
                 .description("Cumulative count of HTTP errors (5xx)")
                 .register(registry);
+
+        admissionWaitTimer = Timer.builder("iasr.concurrency.wait")
+                .description("Time a served request spent waiting for a concurrency permit")
+                .register(registry);
     }
 
     /** Increment the timeout counter (called by integration filter). */
     public void recordTimeout() {
         if (timeoutCounter != null) {
             timeoutCounter.increment();
+        }
+    }
+
+    /**
+     * Record how long a request waited for its permit.
+     * <p>
+     * Only for requests that got one: a rejected request's wait is the timeout
+     * by construction and would say nothing about how contended the limit is.
+     */
+    public void recordAdmissionWait(long nanos) {
+        if (admissionWaitTimer != null) {
+            admissionWaitTimer.record(nanos, java.util.concurrent.TimeUnit.NANOSECONDS);
         }
     }
 

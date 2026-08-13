@@ -34,6 +34,26 @@ public final class MetricNames {
      */
     public static final String QUEUE_LENGTH         = "queue_length";
 
+    /**
+     * Mean time a served request spent waiting for a concurrency permit.
+     * <p>
+     * Not the same as {@link #QUEUE_LENGTH}: the queue says how many are
+     * waiting, this says how long the wait cost. Latency measured from the
+     * moment a permit is granted excludes it entirely, so without this term the
+     * end-to-end time a client experiences cannot be accounted for.
+     */
+    public static final String ADMISSION_WAIT_MEAN_MS = "admission_wait_mean_ms";
+
+    /**
+     * Mean time inside the downstream dependency, with the connection wait
+     * removed: {@code latency_mean_ms - hikari_acquire_mean_ms}.
+     * <p>
+     * The residual of the latency decomposition, and the only component no
+     * actuator can shorten — when it dominates, the answer is to admit less,
+     * not to grow anything.
+     */
+    public static final String DEPENDENCY_MEAN_MS   = "dependency_mean_ms";
+
     // ── JVM / System ────────────────────────────────────────────────────
     public static final String CPU_PROCESS          = "cpu_proc";
     public static final String GC_PAUSE_P95_MS      = "gc_pause_p95_ms";

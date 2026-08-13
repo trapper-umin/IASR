@@ -272,6 +272,68 @@ class MicrometerMetricsProviderTest {
         }
     }
 
+    @Nested
+    @DisplayName("latency decomposition")
+    class Decomposition {
+
+        @Test
+        @DisplayName("reports the permit wait, which service latency excludes by construction")
+        void reportsAdmissionWait() {
+            SimpleMeterRegistry registry = registryWithPercentiles();
+            Timer wait = Timer.builder("iasr.concurrency.wait").register(registry);
+            for (int i = 0; i < 10; i++) {
+                wait.record(30, TimeUnit.MILLISECONDS);
+            }
+
+            MetricsSnapshot snapshot = new MicrometerMetricsProvider(registry).snapshot();
+
+            assertThat(snapshot.get(MetricNames.ADMISSION_WAIT_MEAN_MS))
+                    .isCloseTo(30.0, org.assertj.core.data.Offset.offset(1.0));
+        }
+
+        @Test
+        @DisplayName("dependency time is service time with the connection wait removed")
+        void dependencyIsTheResidual() {
+            SimpleMeterRegistry registry = registryWithPercentiles();
+            WindowedLatencyTracker tracker = new WindowedLatencyTracker();
+            for (int i = 0; i < 20; i++) {
+                tracker.record(80);
+            }
+            Timer acquire = Timer.builder("hikaricp.connections.acquire")
+                    .tag("pool", "HikariPool-1").register(registry);
+            for (int i = 0; i < 20; i++) {
+                acquire.record(20, TimeUnit.MILLISECONDS);
+            }
+
+            MetricsSnapshot snapshot =
+                    new MicrometerMetricsProvider(registry, null, tracker).snapshot();
+
+            assertThat(snapshot.get(MetricNames.DEPENDENCY_MEAN_MS))
+                    .as("80 ms of service with 20 ms of it spent waiting for a connection")
+                    .isCloseTo(60.0, org.assertj.core.data.Offset.offset(2.0));
+        }
+
+        @Test
+        @DisplayName("never reports a negative residual")
+        void residualIsClamped() {
+            SimpleMeterRegistry registry = registryWithPercentiles();
+            WindowedLatencyTracker tracker = new WindowedLatencyTracker();
+            for (int i = 0; i < 20; i++) {
+                tracker.record(10);
+            }
+            Timer acquire = Timer.builder("hikaricp.connections.acquire")
+                    .tag("pool", "HikariPool-1").register(registry);
+            for (int i = 0; i < 20; i++) {
+                acquire.record(50, TimeUnit.MILLISECONDS);
+            }
+
+            MetricsSnapshot snapshot =
+                    new MicrometerMetricsProvider(registry, null, tracker).snapshot();
+
+            assertThat(snapshot.get(MetricNames.DEPENDENCY_MEAN_MS)).isNotNegative();
+        }
+    }
+
     @Test
     @DisplayName("never returns a null snapshot, even against a completely empty registry")
     void emptyRegistryYieldsUsableSnapshot() {

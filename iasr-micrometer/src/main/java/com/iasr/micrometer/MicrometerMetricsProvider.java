@@ -72,6 +72,8 @@ public class MicrometerMetricsProvider implements MetricsProvider {
     private long prevSnapshotTimeNs = 0;
     private long prevAcquireCount = 0;
     private double prevAcquireTotalTimeMs = 0;
+    private long prevAdmissionWaitCount = 0;
+    private double prevAdmissionWaitTotalMs = 0;
 
     /**
      * Full constructor.
@@ -152,6 +154,7 @@ public class MicrometerMetricsProvider implements MetricsProvider {
     public MetricsSnapshot snapshot() {
         MetricsSnapshot.Builder b = MetricsSnapshot.builder();
         long now = System.nanoTime();
+        double serviceMeanMs = 0;
 
         // ── Read Micrometer cumulative counters (always, for throughput AND baseline sync) ──
         Collection<Timer> httpTimers = registry.find("http.server.requests").timers();
@@ -171,15 +174,16 @@ public class MicrometerMetricsProvider implements MetricsProvider {
         if (windowStats.hasData()) {
             b.put(MetricNames.LATENCY_P95_MS, round3(windowStats.p95Ms()));
             b.put(MetricNames.LATENCY_P99_MS, round3(windowStats.p99Ms()));
-            b.put(MetricNames.LATENCY_MEAN_MS, round3(windowStats.meanMs()));
+            serviceMeanMs = round3(windowStats.meanMs());
+            b.put(MetricNames.LATENCY_MEAN_MS, serviceMeanMs);
         } else if (requestsDelta >= MIN_REQUESTS_PER_WINDOW) {
             // Enough real traffic but tracker had no data (non-Spring usage).
             // Compute mean from Micrometer totalTime delta (per-window).
             double timeDeltaMs = totalTimeNowMs - prevTotalTimeMs;
-            double mean = round3(timeDeltaMs / requestsDelta);
+            serviceMeanMs = round3(timeDeltaMs / requestsDelta);
             b.put(MetricNames.LATENCY_P95_MS, 0.0);
             b.put(MetricNames.LATENCY_P99_MS, 0.0);
-            b.put(MetricNames.LATENCY_MEAN_MS, mean);
+            b.put(MetricNames.LATENCY_MEAN_MS, serviceMeanMs);
         } else {
             // No tracker data, and request count below noise threshold.
             // Noise traffic (health checks) — report zeros, not stale histogram.
@@ -240,6 +244,24 @@ public class MicrometerMetricsProvider implements MetricsProvider {
         Gauge queue = findGauge("iasr.concurrency.queue");
         b.put(MetricNames.QUEUE_LENGTH, queue != null ? queue.value() : 0.0);
 
+        // Per-window mean wait for a permit, from count and total-time deltas.
+        double admissionWaitMean = 0;
+        Collection<Timer> waitTimers = registry.find("iasr.concurrency.wait").timers();
+        long waitCountNow = 0;
+        double waitTotalNowMs = 0;
+        for (Timer t : waitTimers) {
+            waitCountNow += t.count();
+            waitTotalNowMs += t.totalTime(TimeUnit.MILLISECONDS);
+        }
+        long waitDelta = waitCountNow - prevAdmissionWaitCount;
+        double waitTimeDeltaMs = waitTotalNowMs - prevAdmissionWaitTotalMs;
+        if (waitDelta >= MIN_REQUESTS_PER_WINDOW) {
+            admissionWaitMean = round3(Math.max(0, waitTimeDeltaMs) / waitDelta);
+        }
+        prevAdmissionWaitCount = waitCountNow;
+        prevAdmissionWaitTotalMs = waitTotalNowMs;
+        b.put(MetricNames.ADMISSION_WAIT_MEAN_MS, admissionWaitMean);
+
         // ── CPU ─────────────────────────────────────────────────────────
         Gauge cpuGauge = findGauge("process.cpu.usage");
         b.put(MetricNames.CPU_PROCESS, cpuGauge != null ? round3(cpuGauge.value()) : 0.0);
@@ -278,6 +300,13 @@ public class MicrometerMetricsProvider implements MetricsProvider {
         prevAcquireTotalTimeMs = acquireTotalTimeNowMs;
         b.put(MetricNames.HIKARI_ACQUIRE_P95_MS, acquireP95);
         b.put(MetricNames.HIKARI_ACQUIRE_MEAN_MS, acquireMean);
+
+        // Residual of the decomposition: whatever the request spent that was
+        // neither waiting for a permit nor waiting for a connection.  Computed
+        // on means because percentiles are not additive — a p95 minus a p95 is
+        // not the p95 of the difference, and treating it as one would produce a
+        // number that describes nothing.
+        b.put(MetricNames.DEPENDENCY_MEAN_MS, round3(Math.max(0, serviceMeanMs - acquireMean)));
 
         prevSnapshotTimeNs = now;
         return b.build();

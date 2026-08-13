@@ -76,6 +76,7 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
                                     FilterChain chain)
             throws ServletException, IOException {
         boolean acquired = false;
+        long admissionStartNs = System.nanoTime();
         try {
             acquired = limiter.tryAcquire(acquireTimeoutMs, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
@@ -98,6 +99,13 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
         }
 
         long startNs = System.nanoTime();
+        if (meterBinder != null) {
+            // Recorded only for admitted requests, and only here — latency
+            // measured from this point onwards excludes the wait by
+            // construction, so without this the client-visible time cannot be
+            // accounted for at all.
+            meterBinder.recordAdmissionWait(startNs - admissionStartNs);
+        }
         try {
             chain.doFilter(request, response);
 
