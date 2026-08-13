@@ -112,24 +112,49 @@ public class BottleneckController implements Controller {
     private final int hikariStep;
     private final double minGradient;
 
+    /**
+     * Ticks between pool decisions, while the limit is decided every tick.
+     * <p>
+     * The two loops read the same latency signal and act on the same system, so
+     * running both at full rate makes them a coupled pair that can chase each
+     * other. Separating their timescales is the standard remedy, and the
+     * assignment is not arbitrary: admission is reversible within a tick and its
+     * effect on latency is immediate, whereas a pool change has to open
+     * connections and its effect appears over several windows. Acting on the
+     * pool faster than its own effect can be observed means reacting to the
+     * previous change's transient rather than to its result.
+     * <p>
+     * Until now the only thing keeping them apart was that their cooldowns
+     * happened to differ — protection by coincidence rather than by design.
+     */
+    private final int poolPeriodTicks;
+
     private double dependencyBaselineMs = Double.NaN;
     private int ticksUntilProbe = PROBE_INTERVAL_TICKS;
+    private long tick = 0;
 
     public BottleneckController(double sloLatencyMs) {
-        this(sloLatencyMs, 5, 1, 0.9);
+        this(sloLatencyMs, 5, 1, 0.9, 5);
     }
 
     public BottleneckController(double sloLatencyMs, int concurrencyStep,
                                 int hikariStep, double minGradient) {
+        this(sloLatencyMs, concurrencyStep, hikariStep, minGradient, 5);
+    }
+
+    public BottleneckController(double sloLatencyMs, int concurrencyStep,
+                                int hikariStep, double minGradient, int poolPeriodTicks) {
         this.sloLatencyMs = sloLatencyMs;
         this.concurrencyStep = concurrencyStep;
         this.hikariStep = hikariStep;
         this.minGradient = minGradient;
+        this.poolPeriodTicks = Math.max(1, poolPeriodTicks);
     }
 
     @Override
     public ControlAction decide(MetricsSnapshot snapshot, List<Actuator> actuators) {
         ControlAction.Builder action = ControlAction.builder();
+        tick++;
 
         Actuator limiter = find(actuators, ConcurrencyLimiter.ACTUATOR_NAME);
         Actuator pool = find(actuators, HikariPoolActuator.ACTUATOR_NAME);
@@ -179,7 +204,11 @@ public class BottleneckController implements Controller {
             shed(action, limiter, latencyP95, wDependency, baseline);
             hold(action, pool, "bottleneck_dependency_saturated");
         } else if (dominant == excessPool) {
-            grow(action, pool, hikariStep, "bottleneck_pool");
+            if (tick % poolPeriodTicks == 0) {
+                grow(action, pool, hikariStep, "bottleneck_pool");
+            } else {
+                hold(action, pool, "bottleneck_pool_off_cadence");
+            }
             hold(action, limiter, "bottleneck_pool");
         } else if (dominant == excessAdmission) {
             // The queue for permits is itself the delay: admitting more shortens

@@ -229,7 +229,8 @@ public class BenchmarkRunner {
                     props.getSloLatencyMs(),
                     props.getController().getConcurrencyIncreaseStep(),
                     props.getController().getHikariStep(),
-                    props.getController().getMinGradient());
+                    props.getController().getMinGradient(),
+                    Integer.getInteger("bench.poolPeriod", 5));
         }
     }
 

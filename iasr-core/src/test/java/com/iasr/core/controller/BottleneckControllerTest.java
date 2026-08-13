@@ -77,7 +77,8 @@ class BottleneckControllerTest {
     @Test
     @DisplayName("grows the pool when connections are the constraint")
     void growsPoolWhenPoolDominates() {
-        BottleneckController controller = new BottleneckController(SLO);
+        // Period of 1 so this exercises routing alone; the cadence has its own test.
+        BottleneckController controller = new BottleneckController(SLO, 5, 1, 0.9, 1);
         TestActuator limiter = new TestActuator(LIMIT, 100, 1, 500);
         TestActuator pool = new TestActuator(POOL, 10, 1, 50);
 
@@ -154,6 +155,53 @@ class BottleneckControllerTest {
         assertThat(limiter.currentValue())
                 .as("an SLO the dependency cannot meet must not drive the limit to the floor")
                 .isEqualTo(100);
+    }
+
+    @Test
+    @DisplayName("decides the pool on a slower cadence than the limit")
+    void poolMovesOnItsOwnTimescale() {
+        BottleneckController controller = new BottleneckController(SLO, 5, 1, 0.9, 5);
+        TestActuator limiter = new TestActuator(LIMIT, 100, 1, 500);
+        TestActuator pool = new TestActuator(POOL, 10, 1, 50);
+
+        controller.decide(where(0, 0, 50, 60), actuators(limiter, pool));
+
+        int poolDecisions = 0;
+        for (int i = 0; i < 20; i++) {
+            ControlAction a = controller.decide(where(3, 300, 50, 360), actuators(limiter, pool));
+            if (a.desiredValues().containsKey(POOL)) {
+                poolDecisions++;
+                pool.apply(a.getOrDefault(POOL, pool.currentValue()));
+            }
+        }
+
+        assertThat(poolDecisions)
+                .as("a pool change cannot be judged before its effect appears, "
+                        + "so it must not be repeated every tick")
+                .isBetween(3, 5);
+    }
+
+    @Test
+    @DisplayName("the limit still moves every tick")
+    void limitKeepsFullRate() {
+        BottleneckController controller = new BottleneckController(SLO, 5, 1, 0.9, 5);
+        TestActuator limiter = new TestActuator(LIMIT, 50, 1, 500);
+        TestActuator pool = new TestActuator(POOL, 10, 1, 50);
+
+        controller.decide(where(0, 0, 50, 60), actuators(limiter, pool));
+
+        int limitDecisions = 0;
+        for (int i = 0; i < 10; i++) {
+            ControlAction a = controller.decide(where(200, 2, 50, 260), actuators(limiter, pool));
+            if (a.desiredValues().containsKey(LIMIT)) {
+                limitDecisions++;
+                limiter.apply(a.getOrDefault(LIMIT, limiter.currentValue()));
+            }
+        }
+
+        assertThat(limitDecisions)
+                .as("admission is reversible and takes effect at once — no reason to slow it")
+                .isEqualTo(10);
     }
 
     @Test
