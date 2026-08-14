@@ -17,6 +17,13 @@
     <properties>
         <!-- Not a published artifact: it exists to produce evidence, not to be depended on. -->
         <maven.deploy.skip>true</maven.deploy.skip>
+        <!--
+            Overridable entry point.  A literal mainClass in the plugin block
+            cannot be overridden from the command line — explicit POM
+            configuration wins over -Dexec.mainClass — so the calibration tool
+            would silently launch the load harness instead.
+        -->
+        <bench.main>com.iasr.benchmark.BenchmarkRunner</bench.main>
     </properties>
 
     <dependencies>
@@ -43,6 +50,10 @@
             <artifactId>h2</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
@@ -67,7 +78,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <mainClass>com.iasr.benchmark.BenchmarkRunner</mainClass>
+                    <mainClass>${bench.main}</mainClass>
                     <classpathScope>runtime</classpathScope>
                 </configuration>
             </plugin>

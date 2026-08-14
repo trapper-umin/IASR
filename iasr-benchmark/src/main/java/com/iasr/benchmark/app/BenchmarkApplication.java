@@ -33,6 +33,17 @@ public class BenchmarkApplication {
         return new JdbcTemplate(dataSource);
     }
 
+    /** Point the dependency at the live pool when a real database is configured. */
+    @Bean
+    public org.springframework.boot.CommandLineRunner attachRealDependency(
+            BackendModel backend, DataSource dataSource) {
+        return args -> {
+            if (Boolean.getBoolean("bench.db.real")) {
+                backend.useRealDatabase(dataSource, Long.getLong("bench.db.rowsPerMs", 9_200L));
+            }
+        };
+    }
+
     @RestController
     public static class WorkloadController {
 
@@ -55,11 +66,18 @@ public class BenchmarkApplication {
          */
         @GetMapping("/api/work")
         public String work() throws Exception {
-            try (Connection connection = dataSource.getConnection()) {
-                try (Statement statement = connection.createStatement()) {
-                    statement.execute("SELECT 1");
-                }
+            if (backend.isReal()) {
+                // The query itself occupies a pooled connection for its whole
+                // duration, so pool size caps how many can be in the database
+                // at once — the same constraint the model imitated, but real.
                 backend.call();
+            } else {
+                try (Connection connection = dataSource.getConnection()) {
+                    try (Statement statement = connection.createStatement()) {
+                        statement.execute("SELECT 1");
+                    }
+                    backend.call();
+                }
             }
             backend.applicationWork();
             return "ok";

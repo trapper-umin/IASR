@@ -1,5 +1,9 @@
 package com.iasr.benchmark.app;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -47,6 +51,27 @@ public class BackendModel {
     private volatile long serviceTimeMs;
     private volatile long appTimeMs;
     private volatile double thrashFactor;
+
+    /**
+     * When set, dependency calls run a real CPU-bound query against this
+     * database instead of the analytic model.
+     * <p>
+     * The model exists so capacity is knowable; a real database exists so the
+     * evaluation is not open to "the dependency was invented by the author".
+     * Both are kept: the model reproduces earlier results, the database
+     * produces defensible ones. Calibration showed the two disagree in degree —
+     * the model's default penalty for over-provisioning was roughly an order of
+     * magnitude harsher than PostgreSQL's — which is precisely the sort of
+     * thing an assumed model gets wrong invisibly.
+     */
+    private volatile DataSource dataSource;
+
+    /**
+     * Rows of generated series per millisecond of query time, from calibration.
+     * Lets scenarios keep expressing dependency cost in milliseconds while the
+     * real backend needs a row count.
+     */
+    private volatile long rowsPerMs = 9_200;
 
     /** Requests currently inside the dependency. */
     private final AtomicInteger active = new AtomicInteger();
@@ -119,13 +144,40 @@ public class BackendModel {
         return concurrent * 1000.0 / serviceTimeFor(concurrent);
     }
 
-    /** Execute one dependency call, paying whatever the current crowding costs. */
-    public void call() throws InterruptedException {
-        int concurrent = active.incrementAndGet();
-        try {
-            sleep(serviceTimeFor(concurrent));
-        } finally {
-            active.decrementAndGet();
+    public void useRealDatabase(DataSource dataSource, long rowsPerMs) {
+        this.dataSource = dataSource;
+        this.rowsPerMs = rowsPerMs;
+    }
+
+    public boolean isReal() {
+        return dataSource != null;
+    }
+
+    /**
+     * Execute one dependency call.
+     * <p>
+     * Against a real database the crowding penalty is not simulated — it
+     * emerges, because concurrent queries genuinely contend for the same cores.
+     */
+    public void call() throws Exception {
+        DataSource ds = dataSource;
+        if (ds == null) {
+            int concurrent = active.incrementAndGet();
+            try {
+                sleep(serviceTimeFor(concurrent));
+            } finally {
+                active.decrementAndGet();
+            }
+            return;
+        }
+        long rows = Math.max(1, serviceTimeMs * rowsPerMs);
+        try (Connection c = ds.getConnection();
+             PreparedStatement st = c.prepareStatement(
+                     "select sum(i) from generate_series(1, ?) i")) {
+            st.setLong(1, rows);
+            try (ResultSet rs = st.executeQuery()) {
+                rs.next();
+            }
         }
     }
 

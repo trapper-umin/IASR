@@ -167,8 +167,16 @@ public class BenchmarkRunner {
         props.put("server.tomcat.threads.max", 400);
         props.put("server.tomcat.accept-count", 2000);
         props.put("spring.jmx.enabled", false);
-        props.put("spring.datasource.url",
-                "jdbc:h2:mem:bench" + DB_COUNTER.incrementAndGet() + ";DB_CLOSE_DELAY=-1");
+        if (Boolean.getBoolean("bench.db.real")) {
+            props.put("spring.datasource.url",
+                    System.getProperty("bench.db.url", "jdbc:postgresql://localhost:55432/iasr"));
+            props.put("spring.datasource.username", System.getProperty("bench.db.user", "iasr"));
+            props.put("spring.datasource.password", System.getProperty("bench.db.password", "iasr"));
+            DB_COUNTER.incrementAndGet();
+        } else {
+            props.put("spring.datasource.url",
+                    "jdbc:h2:mem:bench" + DB_COUNTER.incrementAndGet() + ";DB_CLOSE_DELAY=-1");
+        }
         props.put("spring.datasource.hikari.pool-name", POOL_NAME);
         // Starting pool size.  Raising it above the dependency's worker count
         // removes the connection shortage entirely, which is how the claim
