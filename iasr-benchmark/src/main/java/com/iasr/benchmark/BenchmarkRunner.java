@@ -273,9 +273,21 @@ public class BenchmarkRunner {
         // it could come either from better concurrency decisions or from moving
         // a second resource Gradient never touches — and those are different
         // claims. Fixing min == max leaves the actuator registered but immovable.
+        // The controller's pool range has to follow the starting pool rather
+        // than sit at literals: on the real database the dependency's optimum
+        // is its core count (6), so the run starts at 4 to make the pool the
+        // initial bottleneck, and a floor hardcoded at 5 would silently clamp
+        // the pool up on the first tick — the harness would then be measuring a
+        // starting point it never actually used.  Pinning likewise fixes the
+        // pool at wherever the run started, so the pinned and free arms differ
+        // only in whether the pool may move.  Defaults reproduce the previous
+        // literals exactly, so earlier results stay comparable.
         boolean pinPool = Boolean.getBoolean("bench.pinPool");
-        props.put("iasr.hikari.min-pool-size", pinPool ? 10 : 5);
-        props.put("iasr.hikari.max-pool-size", pinPool ? 10 : 30);
+        int controlledPool = Integer.getInteger("bench.poolSize", 10);
+        props.put("iasr.hikari.min-pool-size",
+                pinPool ? controlledPool : Integer.getInteger("bench.poolMin", 5));
+        props.put("iasr.hikari.max-pool-size",
+                pinPool ? controlledPool : Integer.getInteger("bench.poolMax", 30));
         props.put("iasr.hikari.max-step", 2);
         props.put("iasr.hikari.cooldown-ticks", 2);
 

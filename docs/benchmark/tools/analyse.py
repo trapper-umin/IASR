@@ -89,6 +89,8 @@ def main():
         base = data.get((sc, args.baseline), [])
         base_gp = [r[0] for r in base]
         base_ci = bootstrap_ci(base_gp) if base_gp else None
+        base_p95 = [r[1] for r in base]
+        base_p95_ci = bootstrap_ci(base_p95) if base_p95 else None
         for mode in modes:
             runs = data.get((sc, mode), [])
             if not runs:
@@ -97,13 +99,21 @@ def main():
             gp_ci = bootstrap_ci(cols['goodput'])
             p95_ci = bootstrap_ci(cols['p95'])
             mark = ''
+            p95_mark = ''
             if base_ci and mode != args.baseline:
                 mark = ' *' if separated(gp_ci, base_ci) else '  '
+            # The tail is marked on the same rule as throughput.  Claims about
+            # p95 need the same evidence as claims about goodput, and quoting
+            # an interval without saying whether it clears the baseline's
+            # invites the reader to eyeball overlap — which is precisely the
+            # judgement the interval was computed to remove.
+            if base_p95_ci and mode != args.baseline:
+                p95_mark = ' *' if separated(p95_ci, base_p95_ci) else '  '
             print(f"{mode:12}{len(runs):3d}"
                   f"{statistics.median(cols['goodput']):9.1f} "
                   f"[{gp_ci[0]:6.1f}–{gp_ci[1]:6.1f}]{mark:>2}"
                   f"{statistics.median(cols['p95']):9.0f} "
-                  f"[{p95_ci[0]:5.0f}–{p95_ci[1]:5.0f}]"
+                  f"[{p95_ci[0]:5.0f}–{p95_ci[1]:5.0f}]{p95_mark:>2}"
                   f"{statistics.median(cols['shed']):8.1f}")
             rows.append([sc, mode, len(runs),
                          statistics.median(cols['goodput']), gp_ci[0], gp_ci[1],
@@ -111,8 +121,15 @@ def main():
                          statistics.median(cols['p99']),
                          statistics.median(cols['shed']),
                          statistics.median(cols['hard_fail'])])
-    print(f"\n* goodput interval separated from '{args.baseline}' — a difference "
-          f"that can be reported as one")
+    # Only claim significance when there was something to compare against:
+    # printing the legend unconditionally suggests the marks were computed even
+    # for a log whose baseline mode is missing entirely.
+    if any(sc for sc in scenarios if data.get((sc, args.baseline))):
+        print(f"\n* interval separated from '{args.baseline}' — a difference "
+              f"that can be reported as one")
+    else:
+        print(f"\n(no runs for baseline mode '{args.baseline}'; "
+              f"no significance marks computed)")
 
     if args.csv:
         with open(args.csv, 'w') as fh:
