@@ -69,21 +69,47 @@ public class BenchmarkRunner {
 
         List<RunResult> results = new ArrayList<>();
         for (Scenario scenario : scenarios) {
+            // Repetitions are interleaved across modes rather than blocked by
+            // mode, and the reason is a measured one.  Running all seven
+            // repetitions of a mode before starting the next one puts each mode
+            // in its own stretch of wall-clock time, so anything that drifts —
+            // machine load, thermal state, the database's cache, the host going
+            // to sleep — lands on one mode and not the others, and the
+            // difference between modes becomes inseparable from the difference
+            // between the times they happened to be measured.
+            //
+            // This is not hypothetical here.  A blocked run measured the same
+            // Gradient configuration at 70.9 rps in one window and 114.7 rps in
+            // another, a 62% gap for a mode whose settings did not change,
+            // which is far larger than any effect this harness is trying to
+            // resolve.  Interleaving spreads every mode across the whole
+            // measurement window, so drift shifts all of them together and
+            // cancels in the comparison.
+            Map<String, List<RunResult>> byMode = new LinkedHashMap<>();
             for (String mode : modes) {
-                System.out.printf("%n=== %s / %s ===%n", scenario.name(), mode);
-                List<RunResult> repetitions = new ArrayList<>();
-                for (int i = 0; i < repeats; i++) {
+                byMode.put(mode, new ArrayList<>());
+            }
+            for (int i = 0; i < repeats; i++) {
+                for (String mode : modes) {
+                    // One header per run keeps the log parseable by
+                    // tools/analyse.py, which attributes each result line to the
+                    // most recent header rather than assuming contiguous blocks.
+                    System.out.printf("%n=== %s / %s ===%n", scenario.name(), mode);
                     RunResult result = runOnce(mode, scenario);
-                    repetitions.add(result);
+                    byMode.get(mode).add(result);
                     System.out.printf(
                             "   [%d/%d] goodput=%.1f rps  p95=%.1f ms  p99=%.1f ms  429=%.1f%%  hard-fail=%.1f%%%n",
                             i + 1, repeats, result.goodputRps(), result.p95Ms(), result.p99Ms(),
                             result.rejectionRatePercent(), result.failureRatePercent());
                 }
+            }
+            for (String mode : modes) {
+                List<RunResult> repetitions = byMode.get(mode);
                 RunResult representative = RunResult.medianOf(repetitions);
                 results.add(representative);
                 if (repeats > 1) {
-                    System.out.printf("   median: goodput=%.1f rps  p95=%.1f ms  (spread p95 %.1f–%.1f)%n",
+                    System.out.printf("%n   %s / %s median: goodput=%.1f rps  p95=%.1f ms  (spread p95 %.1f–%.1f)%n",
+                            scenario.name(), mode,
                             representative.goodputRps(), representative.p95Ms(),
                             repetitions.stream().mapToDouble(RunResult::p95Ms).min().orElse(0),
                             repetitions.stream().mapToDouble(RunResult::p95Ms).max().orElse(0));
@@ -197,10 +223,11 @@ public class BenchmarkRunner {
 
         props.putAll(iasrProperties(mode));
 
+        String base = baseMode(mode);
         SpringApplicationBuilder builder;
-        if ("gradient".equals(mode)) {
+        if ("gradient".equals(base)) {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, GradientBaselineConfig.class);
-        } else if ("bottleneck".equals(mode)) {
+        } else if ("bottleneck".equals(base)) {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, BottleneckConfig.class);
         } else {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class);
@@ -242,15 +269,36 @@ public class BenchmarkRunner {
         }
     }
 
+    /**
+     * A mode may carry a {@code -pinned} suffix, which fixes the connection
+     * pool for that run and changes nothing else.
+     * <p>
+     * The suffix exists so that the pinned and free arms of the decisive
+     * experiment can be interleaved inside a single run.  Selecting the arm
+     * with a global system property forced them into two separate runs, and two
+     * separate runs turned out to differ by more than the effect under test:
+     * the same Gradient configuration measured 70.9 rps in one and 114.7 rps in
+     * the other.  An experiment whose two arms cannot be measured alongside
+     * each other cannot answer the question it was built for.
+     */
+    private static String baseMode(String mode) {
+        return mode.endsWith(PINNED_SUFFIX)
+                ? mode.substring(0, mode.length() - PINNED_SUFFIX.length())
+                : mode;
+    }
+
+    private static final String PINNED_SUFFIX = "-pinned";
+
     private static Map<String, Object> iasrProperties(String mode) {
         Map<String, Object> props = new LinkedHashMap<>();
-        if ("off".equals(mode)) {
+        String base = baseMode(mode);
+        if ("off".equals(base)) {
             props.put("iasr.enabled", false);
             return props;
         }
 
         props.put("iasr.enabled", true);
-        props.put("iasr.apply-actions", !"fixed".equals(mode));
+        props.put("iasr.apply-actions", !"fixed".equals(base));
         props.put("iasr.slo-latency-ms", SLO_MS);
         // 1 s instead of the 5 s default: a 45 s scenario must contain enough
         // control ticks for the loop to converge, otherwise the benchmark
@@ -282,7 +330,7 @@ public class BenchmarkRunner {
         // pool at wherever the run started, so the pinned and free arms differ
         // only in whether the pool may move.  Defaults reproduce the previous
         // literals exactly, so earlier results stay comparable.
-        boolean pinPool = Boolean.getBoolean("bench.pinPool");
+        boolean pinPool = Boolean.getBoolean("bench.pinPool") || mode.endsWith(PINNED_SUFFIX);
         int controlledPool = Integer.getInteger("bench.poolSize", 10);
         props.put("iasr.hikari.min-pool-size",
                 pinPool ? controlledPool : Integer.getInteger("bench.poolMin", 5));
