@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { d, FONT, SZ, SZS, numberCitations, render, refPara, AlignmentType } = require('./lib');
+const { d, FONT, SZ, SZS, numberCitations, render, refPara, AlignmentType, renderHtml, HTML_HEAD, refHtml } = require('./lib');
 const { Document, Packer } = d;
 
 const F = '../figures/';
@@ -117,6 +117,15 @@ const doc = new Document({
     ],
   }],
 });
+
+// Print HTML from the very same blocks; tools/html2pdf.swift turns it into the PDF.
+const html = HTML_HEAD
+  + renderHtml(HEAD, (s) => s)
+  + renderHtml(BODY, resolve)
+  + renderHtml([gap, p('Список использованной литературы', { b: true, after: 60 })], (s) => s)
+  + order.map((k, i) => refHtml(`${i + 1}. ${REFS[k]}`)).join('\n')
+  + '</body></html>';
+fs.writeFileSync('Бобков_Сизова_вузовская.html', html);
 
 Packer.toBuffer(doc).then((b) => {
   fs.writeFileSync('Бобков_Сизова_вузовская.docx', b);

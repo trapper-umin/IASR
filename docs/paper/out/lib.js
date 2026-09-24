@@ -147,3 +147,65 @@ const refPara = (text, style) => new Paragraph({
 });
 
 module.exports = { d, FONT, SZ, SZS, numberCitations, render, refPara, run, AlignmentType };
+
+// ---------------------------------------------------------------- HTML/PDF
+// The same blocks rendered as print HTML, so a PDF made from it cannot drift
+// from the .docx in content. Page geometry mirrors the Word section: A4,
+// margins 2 / 2 / 3 / 1.5 cm, Times New Roman 12 pt, 1.15 line spacing.
+const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const sty = (o = {}) => [
+  o.b ? 'font-weight:bold' : '', o.i ? 'font-style:italic' : '',
+  o.size ? `font-size:${o.size / 2}pt` : '',
+].filter(Boolean).join(';');
+const alignCss = (a) => ({ [AlignmentType.LEFT]: 'left', [AlignmentType.RIGHT]: 'right',
+  [AlignmentType.CENTER]: 'center' }[a] || 'justify');
+
+function renderHtml(blocks, resolve) {
+  const out = [];
+  for (const b of blocks) {
+    const o = b.o || {};
+    const box = (inner) => `<p style="text-align:${alignCss(o.align)};${o.noIndent ? 'text-indent:0;' : ''}` +
+      `${o.before ? `margin-top:${o.before / 20}pt;` : ''}${o.after ? `margin-bottom:${o.after / 20}pt;` : ''}">${inner}</p>`;
+    switch (b.t) {
+      case 'p': out.push(box(`<span style="${sty(o)}">${esc(resolve(b.text))}</span>`)); break;
+      case 'rich': out.push(box(b.parts.map(([t, po]) => `<span style="${sty(po)}">${esc(resolve(t))}</span>`).join(''))); break;
+      case 'center': out.push(`<p class="c" style="${sty(o)};${o.before ? `margin-top:${o.before / 20}pt;` : ''}margin-bottom:${(o.after === undefined ? 100 : o.after) / 20}pt">${esc(resolve(b.text))}</p>`); break;
+      case 'gap': out.push('<p class="gap">&nbsp;</p>'); break;
+      case 'img': out.push(`<figure><img src="${b.file}" style="width:${b.w}px;height:${b.h}px">`); break;
+      case 'cap': out.push(b.lines.map(([t, co]) => `<figcaption style="${sty(Object.assign({ size: SZS }, co))}">${esc(t)}</figcaption>`).join('') + '</figure>'); break;
+      case 'table': {
+        const tot = b.widths.reduce((a, c) => a + c, 0);
+        const cols = b.widths.map((w) => `<col style="width:${(100 * w / tot).toFixed(2)}%">`).join('');
+        const rows = b.rows.map((r, ri) => '<tr>' + r.map((c, ci) =>
+          `<${ri ? 'td' : 'th'} style="text-align:${ci ? 'center' : 'left'}">${esc(c)}</${ri ? 'td' : 'th'}>`).join('') + '</tr>').join('');
+        out.push(`<table><colgroup>${cols}</colgroup>${rows}</table>`);
+        break;
+      }
+      default: throw new Error('unknown block ' + b.t);
+    }
+  }
+  return out.join('\n');
+}
+
+const HTML_HEAD = `<!doctype html><html lang="ru"><head><meta charset="utf-8"><style>
+@page { size: A4; margin: 2cm 1.5cm 2cm 3cm; }
+html, body { margin: 0; padding: 0; background: #fff; }
+body { font-family: "Times New Roman", Times, serif; font-size: 12pt; line-height: 1.15; color: #000;
+       hyphens: auto; -webkit-hyphens: auto; }
+p { margin: 0; text-indent: 1.25cm; text-align: justify; orphans: 2; widows: 2; }
+p.c { text-align: center; text-indent: 0; }
+p.gap { text-indent: 0; }
+figure { margin: 8pt 0 10pt; text-align: center; break-inside: avoid; }
+figure img { display: block; margin: 0 auto 3pt; }
+figcaption { text-align: center; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 10pt; break-inside: avoid; }
+th, td { border: 0.6pt solid #000; padding: 2pt 4pt; text-indent: 0; }
+th { background: #ededed; font-weight: bold; }
+.ref { text-indent: 1.25cm; text-align: left; font-size: 10pt; margin-bottom: 2pt; hyphens: manual; }
+</style></head><body>`;
+
+const refHtml = (text) => `<p class="ref">${esc(text)}</p>`;
+
+module.exports.renderHtml = renderHtml;
+module.exports.HTML_HEAD = HTML_HEAD;
+module.exports.refHtml = refHtml;
