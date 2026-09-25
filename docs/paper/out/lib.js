@@ -204,7 +204,11 @@ th { background: #ededed; font-weight: bold; }
 .ref { text-indent: 1.25cm; text-align: left; font-size: 10pt; margin-bottom: 2pt; hyphens: manual; }
 </style></head><body>`;
 
-const refHtml = (text) => `<p class="ref">${esc(text)}</p>`;
+// 'vak' mirrors the .docx hanging indent (number outdented); default mirrors
+// the university sample's first-line indent.
+const refHtml = (text, style) => style === 'vak'
+  ? `<p class="ref" style="text-indent:-0.6cm;padding-left:0.6cm">${esc(text)}</p>`
+  : `<p class="ref">${esc(text)}</p>`;
 
 module.exports.renderHtml = renderHtml;
 module.exports.HTML_HEAD = HTML_HEAD;
