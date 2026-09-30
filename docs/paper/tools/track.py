@@ -181,6 +181,34 @@ class Doc:
         for r in doomed:
             self._delete_run(r)
 
+    def insert_after(self, p, anchor, text):
+        """Tracked insertion of `text` right after the unique `anchor`."""
+        full = self.ptext(p)
+        i = full.find(anchor)
+        assert i >= 0 and full.find(anchor, i + 1) < 0, 'anchor not unique/found: %r' % anchor
+        k = i + len(anchor)
+        pos, before, after = 0, None, None
+        for r in list(self.runs(p)):
+            n = len(self.rtext(r))
+            if pos < k < pos + n:
+                after = self._split(r, k - pos)
+                before = r
+                break
+            if pos + n == k:
+                before = r
+            pos += n
+        if after is None and before is not None:
+            nxt = before.nextSibling
+            while nxt is not None and not (nxt.nodeType == 1 and nxt.localName in ('r', 'ins', 'del')):
+                nxt = nxt.nextSibling
+            after = nxt
+        ins = self.rev('ins')
+        ins.appendChild(self._new_run(text, self._plain_rpr(before)))
+        if after is not None:
+            p.insertBefore(ins, after)
+        else:
+            p.appendChild(ins)
+
     def _mark_paragraph(self, p, kind):
         ppr = self.kids(p, 'pPr')
         if not ppr:
