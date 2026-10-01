@@ -250,6 +250,33 @@ class Doc:
         assert full.startswith('%d.' % old_n), full[:20]
         self.replace(p, '%d.' % old_n, '%d.' % new_n, at=0)
 
+    # elements that must follow w:highlight inside w:rPr (ECMA-376 order)
+    _AFTER_HIGHLIGHT = ('u', 'effect', 'bdr', 'shd', 'fitText', 'vertAlign', 'rtl',
+                        'cs', 'em', 'lang', 'eastAsianLayout', 'specVanish', 'oMath')
+
+    def _highlight_run(self, r, color):
+        rpr = self.kids(r, 'rPr')
+        if rpr:
+            rpr = rpr[0]
+        else:
+            rpr = self.el('rPr')
+            r.insertBefore(rpr, r.firstChild)
+        for h in self.kids(rpr, 'highlight'):
+            rpr.removeChild(h)
+        h = self.el('highlight')
+        h.setAttributeNS(W, 'w:val', color)
+        nxt = [c for c in rpr.childNodes if c.nodeType == 1 and c.localName in self._AFTER_HIGHLIGHT]
+        rpr.insertBefore(h, nxt[0] if nxt else None)
+
+    def bake(self, color='cyan'):
+        """Apply all revisions as plain text; mark every inserted run with a
+        highlight instead of change-tracking underline/strike-through."""
+        for ins in list(self.dom.getElementsByTagNameNS(W, 'ins')):
+            if ins.parentNode is not None and ins.parentNode.localName != 'rPr':
+                for r in ins.getElementsByTagNameNS(W, 'r'):
+                    self._highlight_run(r, color)
+        self.accept_all()
+
     def accept_all(self):
         """Produce the clean copy: drop deletions, unwrap insertions."""
         for tag in ('del',):
