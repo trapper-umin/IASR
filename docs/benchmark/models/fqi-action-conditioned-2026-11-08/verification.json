@@ -1,0 +1,11 @@
+{
+  "trainingRepeatedByteIdentical": true,
+  "identicalInputSupportAndPreprocessing": true,
+  "pooledControlTreesUnchangedFromRetainedReference": true,
+  "jvmTestsPerModel": 13,
+  "jvmGoldenHistoriesPerModel": 74,
+  "goldenInputsPerModel": 16,
+  "perActionGoldensCoverAllTrainedActions": true,
+  "qTolerance": 1e-12,
+  "testEvaluated": false
+}

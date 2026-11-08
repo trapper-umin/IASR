@@ -39,3 +39,9 @@ python3 docs/benchmark/tools/train_fqi.py /tmp/iasr-retained-development \
 python3 docs/benchmark/tools/train_fqi.py /tmp/iasr-retained-development \
   --development-only --regressor per_action --out /tmp/iasr-action-study/per-action
 ```
+
+## Offline-проверка
+
+На чистом `3c64f21` обе модели обучены и повторены побайтово. Преобразования, поддержка и входы совпали; контрольный pooled сохранил деревья предыдущего reference. У per-action на validation появились 11 предложений увеличить пул, 8 совместных изменений и 2 увеличения лимита; pooled предлагает 6 увеличений пула. У нового варианта выше условная validation Bellman RMSE (1.464599 против 1.214411), поэтому улучшение по offline-диагностике не установлено. Победитель по этой метрике не выбирается.
+
+Оба варианта прошли по 13 JVM-тестов на 74 историях, включая проверку всех обученных действий нового формата. [Артефакты](../benchmark/models/fqi-action-conditioned-2026-11-08/README.md) и [план технических эпизодов](../benchmark/models/fqi-action-conditioned-2026-11-08/technical-check-plan.json) сохранены до запуска контура. Архитектурное разделение и большее число предложений ещё не подтверждают полезность действий.

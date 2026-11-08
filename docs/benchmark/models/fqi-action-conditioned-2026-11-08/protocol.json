@@ -1,0 +1,12 @@
+{
+  "protocolVersion": 1,
+  "selectionPolicy": "predeclared_method_comparison",
+  "arms": {
+    "experimental": "per-action",
+    "reference": "pooled"
+  },
+  "predeclaredSourceCommit": "3c64f2155a1813825caf6fafdd29fc6749ed05e2",
+  "dataPolicy": "identical_frozen_train_validation_no_test",
+  "noPosthocSelection": true,
+  "deploymentAllowed": false
+}

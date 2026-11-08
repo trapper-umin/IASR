@@ -14,6 +14,8 @@ JVM inference через `Controller`, бюджет времени и baseline f
 
 [Сохранение прежнего train и сравнение FQI](docs/dissertation/retained-train-iteration.md) фиксируют неизменяемый validation, защиту held-out групп, сравнение трёх кандидатов и технический контроль двух моделей.
 
+[Q-функция по совместным действиям](docs/dissertation/action-conditioned-fqi.md) описывает отдельные регрессоры для дискретных пар действий, переносимую JSON-модель версии 2 и совместимый JVM runtime.
+
 ## Архитектура
 
 ```

@@ -1,0 +1,92 @@
+{
+  "comparisonVersion": 1,
+  "models": {
+    "per-action": {
+      "counts": {
+        "train": {
+          "excluded": {
+            "unsupported_behavior_action": 28,
+            "unsupported_continuation": 12
+          },
+          "input": 455,
+          "scored": 415
+        },
+        "validation": {
+          "excluded": {
+            "unsupported_behavior_action": 10,
+            "unsupported_continuation": 4
+          },
+          "input": 120,
+          "scored": 106
+        }
+      },
+      "finalDiagnostics": {
+        "iteration": 8,
+        "train": {
+          "bellmanRmse": 0.8036124634522367,
+          "meanObservedBehaviorReward": -0.32115442532732164,
+          "scored": 415
+        },
+        "validation": {
+          "bellmanRmse": 1.4645988784043624,
+          "meanObservedBehaviorReward": -0.6232879159026798,
+          "scored": 106
+        }
+      },
+      "inputSha256": {
+        "manifest.json": "7f110ffac53c7d075a4f8e8c0380c31b0be22c0e048185ff0f6d85ead016d7c3",
+        "train.jsonl": "1a1db762695635c2d03b6067a13c0b0d7734063a2db23ba67a002d3f7ba82e56",
+        "validation.jsonl": "ea2c0aba7b70f995d716ba0c0961a1be56842e097d946922b2193deaa33e5603"
+      },
+      "modelSha256": "2f4e3907b48616caba5d94d9682a47c8e0a04c2fea922ad2e468398851910aff",
+      "storedNodes": 5444,
+      "storedTrees": 224,
+      "version": 2
+    },
+    "pooled": {
+      "counts": {
+        "train": {
+          "excluded": {
+            "unsupported_behavior_action": 28,
+            "unsupported_continuation": 12
+          },
+          "input": 455,
+          "scored": 415
+        },
+        "validation": {
+          "excluded": {
+            "unsupported_behavior_action": 10,
+            "unsupported_continuation": 4
+          },
+          "input": 120,
+          "scored": 106
+        }
+      },
+      "finalDiagnostics": {
+        "iteration": 8,
+        "train": {
+          "bellmanRmse": 0.6079473576614158,
+          "meanObservedBehaviorReward": -0.32115442532732164,
+          "scored": 415
+        },
+        "validation": {
+          "bellmanRmse": 1.214410607178085,
+          "meanObservedBehaviorReward": -0.6232879159026798,
+          "scored": 106
+        }
+      },
+      "inputSha256": {
+        "manifest.json": "7f110ffac53c7d075a4f8e8c0380c31b0be22c0e048185ff0f6d85ead016d7c3",
+        "train.jsonl": "1a1db762695635c2d03b6067a13c0b0d7734063a2db23ba67a002d3f7ba82e56",
+        "validation.jsonl": "ea2c0aba7b70f995d716ba0c0961a1be56842e097d946922b2193deaa33e5603"
+      },
+      "modelSha256": "68782f14bf638a1b58b8cd1b4a38adf40ac14521d7f681a4b0b0b9fcdc34184a",
+      "storedNodes": 2760,
+      "storedTrees": 32,
+      "version": 1
+    }
+  },
+  "performanceEstablished": false,
+  "selectionPolicy": "predeclared_method_comparison",
+  "testEvaluated": false
+}
