@@ -1,0 +1,2449 @@
+{
+  "auditVersion": 1,
+  "cases": [
+    {
+      "actionNodesOnLiveObservations": {
+        "nodes": [
+          {
+            "actionFeature": "action.limit",
+            "node": 87,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.latency_p99_ms",
+                "operator": "<=",
+                "threshold": 0.13537220023662644
+              },
+              {
+                "feature": "w2.hikari_pending",
+                "operator": ">",
+                "threshold": -0.38392368587353204
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.8710953418105476
+              },
+              {
+                "feature": "w3.pool_fraction",
+                "operator": ">",
+                "threshold": 0.6143970686485511
+              },
+              {
+                "feature": "w1.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.22233915772434298
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 0.13061299177357277
+              }
+            ],
+            "threshold": -0.52384186932996,
+            "tree": 0
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 169,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w0.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": 0.3746987773697976
+              },
+              {
+                "feature": "w1.latency_mean_ms",
+                "operator": ">",
+                "threshold": 0.3723521762589393
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 1.2010155829736284
+              },
+              {
+                "feature": "w3.gc_pause_p95_ms",
+                "operator": "<=",
+                "threshold": 0.22194778806184
+              },
+              {
+                "feature": "w2.queue_length",
+                "operator": "<=",
+                "threshold": 0.17432227255491706
+              },
+              {
+                "feature": "w3.latency_mean_ms",
+                "operator": "<=",
+                "threshold": 0.4627923838989675
+              },
+              {
+                "feature": "w3.pool_phase",
+                "operator": "<=",
+                "threshold": -0.08060936400695207
+              }
+            ],
+            "threshold": -0.9634051946752729,
+            "tree": 5
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 112,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w0.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.6081622220354392
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 0.03987031149847431
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 1.093902889322756
+              },
+              {
+                "feature": "w3.goodput_rps",
+                "operator": ">",
+                "threshold": -0.08222939495910941
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": ">",
+                "threshold": 0.40609886708677545
+              },
+              {
+                "feature": "w2.latency_p99_ms",
+                "operator": "<=",
+                "threshold": 0.2514057532244808
+              },
+              {
+                "feature": "w3.hikari_active",
+                "operator": "<=",
+                "threshold": 0.7625493596540709
+              }
+            ],
+            "threshold": -0.5359663332514308,
+            "tree": 7
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 44,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.42731416396671634
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.873015783563214
+              },
+              {
+                "feature": "w2.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": 0.3235185527966006
+              },
+              {
+                "feature": "w3.timeout_rate",
+                "operator": ">",
+                "threshold": 0.07760735347830941
+              },
+              {
+                "feature": "w1.latency_mean_ms",
+                "operator": ">",
+                "threshold": 0.384913672016591
+              }
+            ],
+            "threshold": -0.11553587676749377,
+            "tree": 10
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 158,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.pool_absolute",
+                "operator": ">",
+                "threshold": -0.42731416396671634
+              },
+              {
+                "feature": "w3.latency_p95_ms",
+                "operator": "<=",
+                "threshold": 0.03255864540024578
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": ">",
+                "threshold": -0.3382173499989171
+              },
+              {
+                "feature": "w1.latency_p99_ms",
+                "operator": ">",
+                "threshold": -0.0033231092950974928
+              },
+              {
+                "feature": "w3.queue_length",
+                "operator": ">",
+                "threshold": 0.6491470529294504
+              },
+              {
+                "feature": "w3.hikari_active",
+                "operator": "<=",
+                "threshold": 0.32360423830753876
+              },
+              {
+                "feature": "w0.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": -0.013088988814162685
+              }
+            ],
+            "threshold": -0.44456987243358503,
+            "tree": 10
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 64,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.7546060867228348
+              },
+              {
+                "feature": "w3.inflight",
+                "operator": ">",
+                "threshold": -0.4965028745746134
+              },
+              {
+                "feature": "w3.latency_p95_ms",
+                "operator": "<=",
+                "threshold": 0.105265486669751
+              },
+              {
+                "feature": "w3.goodput_rps",
+                "operator": "<=",
+                "threshold": 1.7036019740946684
+              },
+              {
+                "feature": "w1.pool_fraction",
+                "operator": ">",
+                "threshold": 0.6531071247181555
+              },
+              {
+                "feature": "w3.gc_pause_p95_ms",
+                "operator": "<=",
+                "threshold": 0.28026610818947373
+              },
+              {
+                "feature": "w2.gc_pause_p95_ms",
+                "operator": "<=",
+                "threshold": 0.033008451841529146
+              },
+              {
+                "feature": "w3.hikari_active",
+                "operator": "<=",
+                "threshold": 0.34566329028655907
+              }
+            ],
+            "threshold": -0.6821377108256043,
+            "tree": 12
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 94,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w1.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.38897597077230417
+              },
+              {
+                "feature": "w2.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": -0.038017043333286316
+              },
+              {
+                "feature": "w0.pool_fraction",
+                "operator": ">",
+                "threshold": 0.05538651236650294
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": 0.01728154960748396
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.4648636443953148
+              },
+              {
+                "feature": "w0.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.5402828165345629
+              },
+              {
+                "feature": "w0.limit_absolute",
+                "operator": ">",
+                "threshold": -0.07870224216504418
+              },
+              {
+                "feature": "w2.queue_length",
+                "operator": ">",
+                "threshold": 0.5355046423278824
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.14351552549911703
+              }
+            ],
+            "threshold": -0.7533340969836964,
+            "tree": 17
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 144,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w1.hikari_pending",
+                "operator": ">",
+                "threshold": 0.38897597077230417
+              },
+              {
+                "feature": "w2.latency_p95_ms",
+                "operator": ">",
+                "threshold": 0.37872160207855343
+              },
+              {
+                "feature": "w3.limit_absolute",
+                "operator": "<=",
+                "threshold": -0.2217277070623216
+              },
+              {
+                "feature": "w3.timeout_rate",
+                "operator": "<=",
+                "threshold": 0.666706034436469
+              },
+              {
+                "feature": "w3.gc_pause_p95_ms",
+                "operator": "<=",
+                "threshold": 0.1649138074800724
+              },
+              {
+                "feature": "w0.latency_p95_ms",
+                "operator": "<=",
+                "threshold": 0.613517053503326
+              },
+              {
+                "feature": "w0.hikari_active",
+                "operator": "<=",
+                "threshold": 0.720694149067671
+              },
+              {
+                "feature": "w2.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.8081161226198268
+              }
+            ],
+            "threshold": -0.5149821455194532,
+            "tree": 17
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 59,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.5863883883689324
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": -0.048053943283532574
+              },
+              {
+                "feature": "w3.timeout_rate",
+                "operator": "<=",
+                "threshold": 0.6672663665724721
+              },
+              {
+                "feature": "w3.latency_p99_ms",
+                "operator": ">",
+                "threshold": -0.3539294236418713
+              },
+              {
+                "feature": "w1.latency_mean_ms",
+                "operator": "<=",
+                "threshold": 0.004983046290990306
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": ">",
+                "threshold": 0.6571878033723625
+              },
+              {
+                "feature": "w1.hikari_active",
+                "operator": ">",
+                "threshold": 0.13847735577192036
+              },
+              {
+                "feature": "w3.admission_wait_mean_ms",
+                "operator": "<=",
+                "threshold": 0.030565617351824975
+              }
+            ],
+            "threshold": -0.10472928877208809,
+            "tree": 19
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 10,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": -0.03890717632950896
+              },
+              {
+                "feature": "w0.timeout_rate",
+                "operator": "<=",
+                "threshold": 0.7150484681801632
+              },
+              {
+                "feature": "w3.inflight",
+                "operator": "<=",
+                "threshold": -0.3711246845693301
+              },
+              {
+                "feature": "w0.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.07530573671793839
+              },
+              {
+                "feature": "w2.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.25573644368245096
+              },
+              {
+                "feature": "w1.admission_wait_mean_ms",
+                "operator": "<=",
+                "threshold": -0.9681043867851337
+              },
+              {
+                "feature": "w0.service_mean_ms",
+                "operator": ">",
+                "threshold": -0.4317857828154772
+              }
+            ],
+            "threshold": 0.14661531483131252,
+            "tree": 22
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 23,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w1.latency_p99_ms",
+                "operator": "<=",
+                "threshold": 0.14390936295805312
+              },
+              {
+                "feature": "w3.inflight",
+                "operator": "<=",
+                "threshold": -0.4262102838878018
+              },
+              {
+                "feature": "w1.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.3262357443643146
+              },
+              {
+                "feature": "w3.hikari_idle",
+                "operator": ">",
+                "threshold": 0.616170860623426
+              },
+              {
+                "feature": "w2.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.22268414205904763
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.4382765748017824
+              },
+              {
+                "feature": "w2.admission_wait_mean_ms",
+                "operator": ">",
+                "threshold": -0.9675269909528126
+              },
+              {
+                "feature": "w3.pool_cooldown",
+                "operator": ">",
+                "threshold": 8.173171639523083
+              }
+            ],
+            "threshold": -0.22133446634809228,
+            "tree": 23
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 124,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": -0.26816093785160755
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": 1.0857246094622364
+              },
+              {
+                "feature": "w3.pool_fraction",
+                "operator": ">",
+                "threshold": 0.37144289133555386
+              },
+              {
+                "feature": "w0.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.3020358844932589
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": -0.08018316798533184
+              },
+              {
+                "feature": "w3.limit_fraction",
+                "operator": "<=",
+                "threshold": 0.020668827615088203
+              },
+              {
+                "feature": "w2.queue_length",
+                "operator": "<=",
+                "threshold": 0.596216357374625
+              },
+              {
+                "feature": "w0.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.2050583443283467
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.009810308057912422
+              }
+            ],
+            "threshold": -0.76778017998104,
+            "tree": 26
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 74,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.3229431823648692
+              },
+              {
+                "feature": "w3.inflight",
+                "operator": ">",
+                "threshold": -0.7241303124607186
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.1366462457862898
+              },
+              {
+                "feature": "w0.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.39134223626057724
+              },
+              {
+                "feature": "w2.goodput_rps",
+                "operator": "<=",
+                "threshold": -0.2971638980548106
+              },
+              {
+                "feature": "w0.goodput_rps",
+                "operator": ">",
+                "threshold": -0.3564889817551866
+              },
+              {
+                "feature": "w1.hikari_active",
+                "operator": ">",
+                "threshold": 0.6061409938177751
+              }
+            ],
+            "threshold": -0.6189131297259187,
+            "tree": 30
+          }
+        ],
+        "thresholdSpace": "normalized_float32_features"
+      },
+      "arm": "selected",
+      "candidate": "subspace",
+      "episodePath": "selected/steady/episodes/13be41dc-1d6d-409a-a5ec-0feadde2df5d/steady/learned/repeat-0001",
+      "fallbackActions": {
+        "-2,0": 1,
+        "-2,1": 1,
+        "0,0": 3
+      },
+      "fallbackReasons": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 1,
+        "learned_fallback_short_history": 3
+      },
+      "inference": {
+        "decisions": 37,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 33,
+        "maxInferenceMs": 6.525583,
+        "meanInferenceMs": 0.6891389393939394,
+        "modelDecisions": 32
+      },
+      "modelActions": {
+        "0,0": 32
+      },
+      "modelDecisions": 32,
+      "modelLimitChanges": 0,
+      "modelOnLiveObservations": {
+        "decisions": {
+          "0,0": 32
+        },
+        "fallbacks": 1,
+        "histories": 33,
+        "limitSensitivityAtFixedPoolAction": {
+          "historiesWithComparableActions": 31,
+          "maxQSpread": 0.0,
+          "nonzeroQSpreadHistories": 0
+        },
+        "poolSensitivityAtFixedLimitAction": {
+          "historiesWithComparableActions": 7,
+          "maxQSpread": 0.0,
+          "nonzeroQSpreadHistories": 0
+        },
+        "supportedPoolOpportunities": 7,
+        "supportedSimultaneousOpportunities": 6
+      },
+      "modelPoolChanges": 0,
+      "modelSimultaneousChanges": 0,
+      "records": 37,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3601,
+        "durationMs": 30000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 90.7,
+        "maxMs": 418.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 273.0,
+        "p95Ms": 285.0,
+        "p99Ms": 290.0,
+        "rejected429": 880,
+        "rejectionRatePercent": 24.4,
+        "scenario": "steady",
+        "serverErrors": 0,
+        "sloBreachPercent": 98.5,
+        "succeeded": 2721
+      },
+      "scenario": "steady"
+    },
+    {
+      "actionNodesOnLiveObservations": {
+        "nodes": [
+          {
+            "actionFeature": "action.pool",
+            "node": 50,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_pending",
+                "operator": ">",
+                "threshold": 0.3520702427974244
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 1.1160182653148796
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.7836339225373667
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.21448936952021413
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.9987363984258307
+              }
+            ],
+            "threshold": 0.14336282347485563,
+            "tree": 1
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 8,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 4,
+                "historiesWithSupportedCandidatesOnBothBranches": 3
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.17266904001044758
+              },
+              {
+                "feature": "w2.latency_p99_ms",
+                "operator": "<=",
+                "threshold": -0.6166236028948031
+              },
+              {
+                "feature": "w2.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.2188897052129134
+              },
+              {
+                "feature": "w3.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.13935234614549175
+              },
+              {
+                "feature": "w2.cpu_proc",
+                "operator": ">",
+                "threshold": -0.11282123461244722
+              }
+            ],
+            "threshold": -0.7775030554167475,
+            "tree": 4
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 70,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.hikari_pending",
+                "operator": ">",
+                "threshold": 0.42788986096555126
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 1.3134912571113557
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 1.0086409564985004
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 1.1617056180636531
+              },
+              {
+                "feature": "w1.gc_pause_p95_ms",
+                "operator": "<=",
+                "threshold": 0.02336771003748392
+              }
+            ],
+            "threshold": -0.2035034555958134,
+            "tree": 8
+          },
+          {
+            "actionFeature": "action.pool",
+            "node": 50,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.latency_mean_ms",
+                "operator": ">",
+                "threshold": 0.13347296335754266
+              },
+              {
+                "feature": "w3.latency_p99_ms",
+                "operator": "<=",
+                "threshold": 0.43599244931162473
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.031709898161566774
+              },
+              {
+                "feature": "w3.latency_mean_ms",
+                "operator": ">",
+                "threshold": 0.27856127635520933
+              }
+            ],
+            "threshold": 0.16143315525792223,
+            "tree": 17
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 29,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.11566431677604017
+              },
+              {
+                "feature": "w2.timeout_rate",
+                "operator": ">",
+                "threshold": 0.40772051585503766
+              },
+              {
+                "feature": "w1.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.47558555727619006
+              },
+              {
+                "feature": "w2.goodput_rps",
+                "operator": ">",
+                "threshold": -0.19134835949291534
+              },
+              {
+                "feature": "w1.pool_phase",
+                "operator": "<=",
+                "threshold": 0.07352694453370145
+              }
+            ],
+            "threshold": -0.10809341636863234,
+            "tree": 18
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 24,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w0.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.17315714500060175
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.4497273053900318
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": ">",
+                "threshold": -0.46440068130120665
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 0.31043231285255024
+              }
+            ],
+            "threshold": -0.5415574752453516,
+            "tree": 23
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 12,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.30285740809182515
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 1.1442244183230053
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.3567502258325841
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 0.24029358498601683
+              },
+              {
+                "feature": "w2.timeout_rate",
+                "operator": "<=",
+                "threshold": 0.9524420564700564
+              }
+            ],
+            "threshold": -0.15771235439819864,
+            "tree": 25
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 15,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.latency_p99_ms",
+                "operator": "<=",
+                "threshold": -0.03224375646322153
+              },
+              {
+                "feature": "w2.pool_absolute",
+                "operator": ">",
+                "threshold": -0.3049404861195667
+              },
+              {
+                "feature": "w2.latency_p99_ms",
+                "operator": "<=",
+                "threshold": -0.5688818445463785
+              },
+              {
+                "feature": "w3.admission_wait_mean_ms",
+                "operator": ">",
+                "threshold": -0.9702538308813807
+              },
+              {
+                "feature": "w2.limit_fraction",
+                "operator": "<=",
+                "threshold": 0.1430777144126833
+              }
+            ],
+            "threshold": -0.8968782014664627,
+            "tree": 29
+          }
+        ],
+        "thresholdSpace": "normalized_float32_features"
+      },
+      "arm": "reference",
+      "candidate": "reference",
+      "episodePath": "reference/steady/episodes/09e99f9e-b562-47f3-95bc-1c469f0aa596/steady/learned/repeat-0001",
+      "fallbackActions": {
+        "-1,1": 1,
+        "-2,0": 1,
+        "0,0": 3
+      },
+      "fallbackReasons": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 1,
+        "learned_fallback_short_history": 3
+      },
+      "inference": {
+        "decisions": 38,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 34,
+        "maxInferenceMs": 7.436959,
+        "meanInferenceMs": 0.6985025294117647,
+        "modelDecisions": 33
+      },
+      "modelActions": {
+        "0,0": 33
+      },
+      "modelDecisions": 33,
+      "modelLimitChanges": 0,
+      "modelOnLiveObservations": {
+        "decisions": {
+          "0,0": 33
+        },
+        "fallbacks": 1,
+        "histories": 34,
+        "limitSensitivityAtFixedPoolAction": {
+          "historiesWithComparableActions": 33,
+          "maxQSpread": 0.004941982073410012,
+          "nonzeroQSpreadHistories": 3
+        },
+        "poolSensitivityAtFixedLimitAction": {
+          "historiesWithComparableActions": 7,
+          "maxQSpread": 0.0,
+          "nonzeroQSpreadHistories": 0
+        },
+        "supportedPoolOpportunities": 7,
+        "supportedSimultaneousOpportunities": 6
+      },
+      "modelPoolChanges": 0,
+      "modelSimultaneousChanges": 0,
+      "records": 38,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3601,
+        "durationMs": 30000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 90.9,
+        "maxMs": 474.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 305.0,
+        "p95Ms": 319.0,
+        "p99Ms": 323.0,
+        "rejected429": 874,
+        "rejectionRatePercent": 24.3,
+        "scenario": "steady",
+        "serverErrors": 0,
+        "sloBreachPercent": 98.4,
+        "succeeded": 2727
+      },
+      "scenario": "steady"
+    },
+    {
+      "actionNodesOnLiveObservations": {
+        "nodes": [
+          {
+            "actionFeature": "action.pool",
+            "node": 50,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_pending",
+                "operator": ">",
+                "threshold": 0.3520702427974244
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 1.1160182653148796
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.7836339225373667
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.21448936952021413
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.9987363984258307
+              }
+            ],
+            "threshold": 0.14336282347485563,
+            "tree": 1
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 8,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 4,
+                "historiesWithSupportedCandidatesOnBothBranches": 3
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.17266904001044758
+              },
+              {
+                "feature": "w2.latency_p99_ms",
+                "operator": "<=",
+                "threshold": -0.6166236028948031
+              },
+              {
+                "feature": "w2.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.2188897052129134
+              },
+              {
+                "feature": "w3.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.13935234614549175
+              },
+              {
+                "feature": "w2.cpu_proc",
+                "operator": ">",
+                "threshold": -0.11282123461244722
+              }
+            ],
+            "threshold": -0.7775030554167475,
+            "tree": 4
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 70,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.hikari_pending",
+                "operator": ">",
+                "threshold": 0.42788986096555126
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 1.3134912571113557
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 1.0086409564985004
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 1.1617056180636531
+              },
+              {
+                "feature": "w1.gc_pause_p95_ms",
+                "operator": "<=",
+                "threshold": 0.02336771003748392
+              }
+            ],
+            "threshold": -0.2035034555958134,
+            "tree": 8
+          },
+          {
+            "actionFeature": "action.pool",
+            "node": 50,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.latency_mean_ms",
+                "operator": ">",
+                "threshold": 0.13347296335754266
+              },
+              {
+                "feature": "w3.latency_p99_ms",
+                "operator": "<=",
+                "threshold": 0.43599244931162473
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.031709898161566774
+              },
+              {
+                "feature": "w3.latency_mean_ms",
+                "operator": ">",
+                "threshold": 0.27856127635520933
+              }
+            ],
+            "threshold": 0.16143315525792223,
+            "tree": 17
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 29,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.11566431677604017
+              },
+              {
+                "feature": "w2.timeout_rate",
+                "operator": ">",
+                "threshold": 0.40772051585503766
+              },
+              {
+                "feature": "w1.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.47558555727619006
+              },
+              {
+                "feature": "w2.goodput_rps",
+                "operator": ">",
+                "threshold": -0.19134835949291534
+              },
+              {
+                "feature": "w1.pool_phase",
+                "operator": "<=",
+                "threshold": 0.07352694453370145
+              }
+            ],
+            "threshold": -0.10809341636863234,
+            "tree": 18
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 24,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w0.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.17315714500060175
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.4497273053900318
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": ">",
+                "threshold": -0.46440068130120665
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 0.31043231285255024
+              }
+            ],
+            "threshold": -0.5415574752453516,
+            "tree": 23
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 12,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.30285740809182515
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 1.1442244183230053
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.3567502258325841
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 0.24029358498601683
+              },
+              {
+                "feature": "w2.timeout_rate",
+                "operator": "<=",
+                "threshold": 0.9524420564700564
+              }
+            ],
+            "threshold": -0.15771235439819864,
+            "tree": 25
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 15,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.latency_p99_ms",
+                "operator": "<=",
+                "threshold": -0.03224375646322153
+              },
+              {
+                "feature": "w2.pool_absolute",
+                "operator": ">",
+                "threshold": -0.3049404861195667
+              },
+              {
+                "feature": "w2.latency_p99_ms",
+                "operator": "<=",
+                "threshold": -0.5688818445463785
+              },
+              {
+                "feature": "w3.admission_wait_mean_ms",
+                "operator": ">",
+                "threshold": -0.9702538308813807
+              },
+              {
+                "feature": "w2.limit_fraction",
+                "operator": "<=",
+                "threshold": 0.1430777144126833
+              }
+            ],
+            "threshold": -0.8968782014664627,
+            "tree": 29
+          }
+        ],
+        "thresholdSpace": "normalized_float32_features"
+      },
+      "arm": "reference",
+      "candidate": "reference",
+      "episodePath": "reference/spike/episodes/84448199-44e7-4b4f-9bf1-9fa183059954/spike/learned/repeat-0001",
+      "fallbackActions": {
+        "0,0": 3,
+        "0,1": 1
+      },
+      "fallbackReasons": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3
+      },
+      "inference": {
+        "decisions": 52,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 48,
+        "maxInferenceMs": 7.429,
+        "meanInferenceMs": 0.62386725,
+        "modelDecisions": 48
+      },
+      "modelActions": {
+        "0,0": 48
+      },
+      "modelDecisions": 48,
+      "modelLimitChanges": 0,
+      "modelOnLiveObservations": {
+        "decisions": {
+          "0,0": 48
+        },
+        "fallbacks": 0,
+        "histories": 48,
+        "limitSensitivityAtFixedPoolAction": {
+          "historiesWithComparableActions": 48,
+          "maxQSpread": 0.004941982073410012,
+          "nonzeroQSpreadHistories": 3
+        },
+        "poolSensitivityAtFixedLimitAction": {
+          "historiesWithComparableActions": 10,
+          "maxQSpread": 0.0,
+          "nonzeroQSpreadHistories": 0
+        },
+        "supportedPoolOpportunities": 10,
+        "supportedSimultaneousOpportunities": 9
+      },
+      "modelPoolChanges": 0,
+      "modelSimultaneousChanges": 0,
+      "records": 52,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 10998,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 84.5,
+        "maxMs": 538.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 336.0,
+        "p95Ms": 352.0,
+        "p99Ms": 359.0,
+        "rejected429": 7196,
+        "rejectionRatePercent": 65.4,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 98.8,
+        "succeeded": 3802
+      },
+      "scenario": "spike"
+    },
+    {
+      "actionNodesOnLiveObservations": {
+        "nodes": [
+          {
+            "actionFeature": "action.limit",
+            "node": 87,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.latency_p99_ms",
+                "operator": "<=",
+                "threshold": 0.13537220023662644
+              },
+              {
+                "feature": "w2.hikari_pending",
+                "operator": ">",
+                "threshold": -0.38392368587353204
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.8710953418105476
+              },
+              {
+                "feature": "w3.pool_fraction",
+                "operator": ">",
+                "threshold": 0.6143970686485511
+              },
+              {
+                "feature": "w1.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.22233915772434298
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 0.13061299177357277
+              }
+            ],
+            "threshold": -0.52384186932996,
+            "tree": 0
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 169,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w0.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": 0.3746987773697976
+              },
+              {
+                "feature": "w1.latency_mean_ms",
+                "operator": ">",
+                "threshold": 0.3723521762589393
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 1.2010155829736284
+              },
+              {
+                "feature": "w3.gc_pause_p95_ms",
+                "operator": "<=",
+                "threshold": 0.22194778806184
+              },
+              {
+                "feature": "w2.queue_length",
+                "operator": "<=",
+                "threshold": 0.17432227255491706
+              },
+              {
+                "feature": "w3.latency_mean_ms",
+                "operator": "<=",
+                "threshold": 0.4627923838989675
+              },
+              {
+                "feature": "w3.pool_phase",
+                "operator": "<=",
+                "threshold": -0.08060936400695207
+              }
+            ],
+            "threshold": -0.9634051946752729,
+            "tree": 5
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 112,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w0.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.6081622220354392
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 0.03987031149847431
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 1.093902889322756
+              },
+              {
+                "feature": "w3.goodput_rps",
+                "operator": ">",
+                "threshold": -0.08222939495910941
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": ">",
+                "threshold": 0.40609886708677545
+              },
+              {
+                "feature": "w2.latency_p99_ms",
+                "operator": "<=",
+                "threshold": 0.2514057532244808
+              },
+              {
+                "feature": "w3.hikari_active",
+                "operator": "<=",
+                "threshold": 0.7625493596540709
+              }
+            ],
+            "threshold": -0.5359663332514308,
+            "tree": 7
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 44,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.42731416396671634
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.873015783563214
+              },
+              {
+                "feature": "w2.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": 0.3235185527966006
+              },
+              {
+                "feature": "w3.timeout_rate",
+                "operator": ">",
+                "threshold": 0.07760735347830941
+              },
+              {
+                "feature": "w1.latency_mean_ms",
+                "operator": ">",
+                "threshold": 0.384913672016591
+              }
+            ],
+            "threshold": -0.11553587676749377,
+            "tree": 10
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 158,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.pool_absolute",
+                "operator": ">",
+                "threshold": -0.42731416396671634
+              },
+              {
+                "feature": "w3.latency_p95_ms",
+                "operator": "<=",
+                "threshold": 0.03255864540024578
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": ">",
+                "threshold": -0.3382173499989171
+              },
+              {
+                "feature": "w1.latency_p99_ms",
+                "operator": ">",
+                "threshold": -0.0033231092950974928
+              },
+              {
+                "feature": "w3.queue_length",
+                "operator": ">",
+                "threshold": 0.6491470529294504
+              },
+              {
+                "feature": "w3.hikari_active",
+                "operator": "<=",
+                "threshold": 0.32360423830753876
+              },
+              {
+                "feature": "w0.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": -0.013088988814162685
+              }
+            ],
+            "threshold": -0.44456987243358503,
+            "tree": 10
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 64,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.7546060867228348
+              },
+              {
+                "feature": "w3.inflight",
+                "operator": ">",
+                "threshold": -0.4965028745746134
+              },
+              {
+                "feature": "w3.latency_p95_ms",
+                "operator": "<=",
+                "threshold": 0.105265486669751
+              },
+              {
+                "feature": "w3.goodput_rps",
+                "operator": "<=",
+                "threshold": 1.7036019740946684
+              },
+              {
+                "feature": "w1.pool_fraction",
+                "operator": ">",
+                "threshold": 0.6531071247181555
+              },
+              {
+                "feature": "w3.gc_pause_p95_ms",
+                "operator": "<=",
+                "threshold": 0.28026610818947373
+              },
+              {
+                "feature": "w2.gc_pause_p95_ms",
+                "operator": "<=",
+                "threshold": 0.033008451841529146
+              },
+              {
+                "feature": "w3.hikari_active",
+                "operator": "<=",
+                "threshold": 0.34566329028655907
+              }
+            ],
+            "threshold": -0.6821377108256043,
+            "tree": 12
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 94,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w1.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.38897597077230417
+              },
+              {
+                "feature": "w2.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": -0.038017043333286316
+              },
+              {
+                "feature": "w0.pool_fraction",
+                "operator": ">",
+                "threshold": 0.05538651236650294
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": 0.01728154960748396
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.4648636443953148
+              },
+              {
+                "feature": "w0.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.5402828165345629
+              },
+              {
+                "feature": "w0.limit_absolute",
+                "operator": ">",
+                "threshold": -0.07870224216504418
+              },
+              {
+                "feature": "w2.queue_length",
+                "operator": ">",
+                "threshold": 0.5355046423278824
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.14351552549911703
+              }
+            ],
+            "threshold": -0.7533340969836964,
+            "tree": 17
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 144,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w1.hikari_pending",
+                "operator": ">",
+                "threshold": 0.38897597077230417
+              },
+              {
+                "feature": "w2.latency_p95_ms",
+                "operator": ">",
+                "threshold": 0.37872160207855343
+              },
+              {
+                "feature": "w3.limit_absolute",
+                "operator": "<=",
+                "threshold": -0.2217277070623216
+              },
+              {
+                "feature": "w3.timeout_rate",
+                "operator": "<=",
+                "threshold": 0.666706034436469
+              },
+              {
+                "feature": "w3.gc_pause_p95_ms",
+                "operator": "<=",
+                "threshold": 0.1649138074800724
+              },
+              {
+                "feature": "w0.latency_p95_ms",
+                "operator": "<=",
+                "threshold": 0.613517053503326
+              },
+              {
+                "feature": "w0.hikari_active",
+                "operator": "<=",
+                "threshold": 0.720694149067671
+              },
+              {
+                "feature": "w2.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.8081161226198268
+              }
+            ],
+            "threshold": -0.5149821455194532,
+            "tree": 17
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 59,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.5863883883689324
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": -0.048053943283532574
+              },
+              {
+                "feature": "w3.timeout_rate",
+                "operator": "<=",
+                "threshold": 0.6672663665724721
+              },
+              {
+                "feature": "w3.latency_p99_ms",
+                "operator": ">",
+                "threshold": -0.3539294236418713
+              },
+              {
+                "feature": "w1.latency_mean_ms",
+                "operator": "<=",
+                "threshold": 0.004983046290990306
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": ">",
+                "threshold": 0.6571878033723625
+              },
+              {
+                "feature": "w1.hikari_active",
+                "operator": ">",
+                "threshold": 0.13847735577192036
+              },
+              {
+                "feature": "w3.admission_wait_mean_ms",
+                "operator": "<=",
+                "threshold": 0.030565617351824975
+              }
+            ],
+            "threshold": -0.10472928877208809,
+            "tree": 19
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 10,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": -0.03890717632950896
+              },
+              {
+                "feature": "w0.timeout_rate",
+                "operator": "<=",
+                "threshold": 0.7150484681801632
+              },
+              {
+                "feature": "w3.inflight",
+                "operator": "<=",
+                "threshold": -0.3711246845693301
+              },
+              {
+                "feature": "w0.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.07530573671793839
+              },
+              {
+                "feature": "w2.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.25573644368245096
+              },
+              {
+                "feature": "w1.admission_wait_mean_ms",
+                "operator": "<=",
+                "threshold": -0.9681043867851337
+              },
+              {
+                "feature": "w0.service_mean_ms",
+                "operator": ">",
+                "threshold": -0.4317857828154772
+              }
+            ],
+            "threshold": 0.14661531483131252,
+            "tree": 22
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 23,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w1.latency_p99_ms",
+                "operator": "<=",
+                "threshold": 0.14390936295805312
+              },
+              {
+                "feature": "w3.inflight",
+                "operator": "<=",
+                "threshold": -0.4262102838878018
+              },
+              {
+                "feature": "w1.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.3262357443643146
+              },
+              {
+                "feature": "w3.hikari_idle",
+                "operator": ">",
+                "threshold": 0.616170860623426
+              },
+              {
+                "feature": "w2.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.22268414205904763
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.4382765748017824
+              },
+              {
+                "feature": "w2.admission_wait_mean_ms",
+                "operator": ">",
+                "threshold": -0.9675269909528126
+              },
+              {
+                "feature": "w3.pool_cooldown",
+                "operator": ">",
+                "threshold": 8.173171639523083
+              }
+            ],
+            "threshold": -0.22133446634809228,
+            "tree": 23
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 124,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": -0.26816093785160755
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": 1.0857246094622364
+              },
+              {
+                "feature": "w3.pool_fraction",
+                "operator": ">",
+                "threshold": 0.37144289133555386
+              },
+              {
+                "feature": "w0.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.3020358844932589
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": ">",
+                "threshold": -0.08018316798533184
+              },
+              {
+                "feature": "w3.limit_fraction",
+                "operator": "<=",
+                "threshold": 0.020668827615088203
+              },
+              {
+                "feature": "w2.queue_length",
+                "operator": "<=",
+                "threshold": 0.596216357374625
+              },
+              {
+                "feature": "w0.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.2050583443283467
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.009810308057912422
+              }
+            ],
+            "threshold": -0.76778017998104,
+            "tree": 26
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 74,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.3229431823648692
+              },
+              {
+                "feature": "w3.inflight",
+                "operator": ">",
+                "threshold": -0.7241303124607186
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.1366462457862898
+              },
+              {
+                "feature": "w0.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.39134223626057724
+              },
+              {
+                "feature": "w2.goodput_rps",
+                "operator": "<=",
+                "threshold": -0.2971638980548106
+              },
+              {
+                "feature": "w0.goodput_rps",
+                "operator": ">",
+                "threshold": -0.3564889817551866
+              },
+              {
+                "feature": "w1.hikari_active",
+                "operator": ">",
+                "threshold": 0.6061409938177751
+              }
+            ],
+            "threshold": -0.6189131297259187,
+            "tree": 30
+          }
+        ],
+        "thresholdSpace": "normalized_float32_features"
+      },
+      "arm": "selected",
+      "candidate": "subspace",
+      "episodePath": "selected/spike/episodes/ebf3520d-c82a-4aa7-8bb0-f3099e37bf5b/spike/learned/repeat-0001",
+      "fallbackActions": {
+        "-2,0": 1,
+        "-2,1": 1,
+        "0,0": 3
+      },
+      "fallbackReasons": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 1,
+        "learned_fallback_short_history": 3
+      },
+      "inference": {
+        "decisions": 52,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 48,
+        "maxInferenceMs": 6.494209,
+        "meanInferenceMs": 0.6226562083333333,
+        "modelDecisions": 47
+      },
+      "modelActions": {
+        "0,0": 47
+      },
+      "modelDecisions": 47,
+      "modelLimitChanges": 0,
+      "modelOnLiveObservations": {
+        "decisions": {
+          "0,0": 47
+        },
+        "fallbacks": 1,
+        "histories": 48,
+        "limitSensitivityAtFixedPoolAction": {
+          "historiesWithComparableActions": 46,
+          "maxQSpread": 0.0,
+          "nonzeroQSpreadHistories": 0
+        },
+        "poolSensitivityAtFixedLimitAction": {
+          "historiesWithComparableActions": 10,
+          "maxQSpread": 0.0,
+          "nonzeroQSpreadHistories": 0
+        },
+        "supportedPoolOpportunities": 10,
+        "supportedSimultaneousOpportunities": 9
+      },
+      "modelPoolChanges": 0,
+      "modelSimultaneousChanges": 0,
+      "records": 52,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 10998,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 84.7,
+        "maxMs": 452.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 288.0,
+        "p95Ms": 304.0,
+        "p99Ms": 313.0,
+        "rejected429": 7185,
+        "rejectionRatePercent": 65.3,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 99.1,
+        "succeeded": 3813
+      },
+      "scenario": "spike"
+    }
+  ],
+  "integrity": {
+    "details": [
+      {
+        "distinctAppliedChanges": 1,
+        "episodeId": "spike/learned/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 1,
+        "episodeId": "steady/learned/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 28,
+        "records": 38,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 1,
+        "episodeId": "spike/learned/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 1,
+        "episodeId": "steady/learned/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 28,
+        "records": 37,
+        "sourceDirty": false
+      }
+    ],
+    "episodes": 4,
+    "measurementTransitions": 142,
+    "records": 179
+  },
+  "limitation": "one repeat per arm/profile, separate JVMs, known development conditions; no inferential performance comparison",
+  "performanceEstablished": false,
+  "planSha256": "a545937bdaea2e5ba3d97af1f5807b6c9aa9545ec43ac87b20d068211986e7a6",
+  "purpose": "diagnostic_control_of_predeclared_reference_and_metric_winner_not_a_new_selection",
+  "replay": {
+    "reference": {
+      "integrity": {
+        "details": [
+          {
+            "distinctAppliedChanges": 1,
+            "episodeId": "spike/learned/1",
+            "irregularTransitions": 0,
+            "measurementTransitions": 43,
+            "records": 52,
+            "sourceDirty": false
+          },
+          {
+            "distinctAppliedChanges": 1,
+            "episodeId": "steady/learned/1",
+            "irregularTransitions": 0,
+            "measurementTransitions": 28,
+            "records": 38,
+            "sourceDirty": false
+          }
+        ],
+        "episodes": 2,
+        "measurementTransitions": 71,
+        "records": 90
+      },
+      "modelSha256": "16076d5df73a5255550c1b56a36b9dae0e90a4a854c5e69c2db402715585be3f",
+      "performanceEstablished": false,
+      "replay": [
+        {
+          "counts": {
+            "learned_fallback_invalid_observation": 1,
+            "learned_fallback_short_history": 3,
+            "learned_policy": 48,
+            "matched_model_decisions": 48,
+            "unreplayable_initial_history": 3
+          },
+          "episodeId": "spike/learned/1",
+          "inference": {
+            "decisions": 52,
+            "fallbacks": {
+              "invalid_observation": 1,
+              "short_history": 3
+            },
+            "inferenceAttempts": 48,
+            "maxInferenceMs": 7.429,
+            "meanInferenceMs": 0.62386725,
+            "modelDecisions": 48
+          },
+          "scenario": "spike"
+        },
+        {
+          "counts": {
+            "learned_fallback_invalid_observation": 1,
+            "learned_fallback_no_empirical_support": 1,
+            "learned_fallback_short_history": 3,
+            "learned_policy": 33,
+            "matched_model_decisions": 33,
+            "matched_support_fallbacks": 1,
+            "unreplayable_initial_history": 3
+          },
+          "episodeId": "steady/learned/1",
+          "inference": {
+            "decisions": 38,
+            "fallbacks": {
+              "invalid_observation": 1,
+              "no_empirical_support": 1,
+              "short_history": 3
+            },
+            "inferenceAttempts": 34,
+            "maxInferenceMs": 7.436959,
+            "meanInferenceMs": 0.6985025294117647,
+            "modelDecisions": 33
+          },
+          "scenario": "steady"
+        }
+      ]
+    },
+    "selected": {
+      "integrity": {
+        "details": [
+          {
+            "distinctAppliedChanges": 1,
+            "episodeId": "spike/learned/1",
+            "irregularTransitions": 0,
+            "measurementTransitions": 43,
+            "records": 52,
+            "sourceDirty": false
+          },
+          {
+            "distinctAppliedChanges": 1,
+            "episodeId": "steady/learned/1",
+            "irregularTransitions": 0,
+            "measurementTransitions": 28,
+            "records": 37,
+            "sourceDirty": false
+          }
+        ],
+        "episodes": 2,
+        "measurementTransitions": 71,
+        "records": 89
+      },
+      "modelSha256": "834ce74ceeec8675aa77b5991f5be725a75a352fc8aad80d48c3d7be3408ed09",
+      "performanceEstablished": false,
+      "replay": [
+        {
+          "counts": {
+            "learned_fallback_invalid_observation": 1,
+            "learned_fallback_no_empirical_support": 1,
+            "learned_fallback_short_history": 3,
+            "learned_policy": 47,
+            "matched_model_decisions": 47,
+            "matched_support_fallbacks": 1,
+            "unreplayable_initial_history": 3
+          },
+          "episodeId": "spike/learned/1",
+          "inference": {
+            "decisions": 52,
+            "fallbacks": {
+              "invalid_observation": 1,
+              "no_empirical_support": 1,
+              "short_history": 3
+            },
+            "inferenceAttempts": 48,
+            "maxInferenceMs": 6.494209,
+            "meanInferenceMs": 0.6226562083333333,
+            "modelDecisions": 47
+          },
+          "scenario": "spike"
+        },
+        {
+          "counts": {
+            "learned_fallback_invalid_observation": 1,
+            "learned_fallback_no_empirical_support": 1,
+            "learned_fallback_short_history": 3,
+            "learned_policy": 32,
+            "matched_model_decisions": 32,
+            "matched_support_fallbacks": 1,
+            "unreplayable_initial_history": 3
+          },
+          "episodeId": "steady/learned/1",
+          "inference": {
+            "decisions": 37,
+            "fallbacks": {
+              "invalid_observation": 1,
+              "no_empirical_support": 1,
+              "short_history": 3
+            },
+            "inferenceAttempts": 33,
+            "maxInferenceMs": 6.525583,
+            "meanInferenceMs": 0.6891389393939394,
+            "modelDecisions": 32
+          },
+          "scenario": "steady"
+        }
+      ]
+    }
+  },
+  "selectionUnchanged": "subspace",
+  "sourceCommit": "2e0c63d0eecde9d65a1afda46af0b6884955fe40",
+  "testEvaluated": false
+}

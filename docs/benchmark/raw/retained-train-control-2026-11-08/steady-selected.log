@@ -1,0 +1,12 @@
+
+=== steady / learned ===
+2026-11-08T17:33:29.719+03:00  WARN 9049 --- [-auto-1-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=16, inflight=16, queue=12)
+2026-11-08T17:33:34.735+03:00  WARN 9049 --- [o-auto-1-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 151 request(s) rejected in the last 5000 ms (limit=16, inflight=16, queue=12)
+2026-11-08T17:33:39.750+03:00  WARN 9049 --- [-auto-1-exec-19] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 151 request(s) rejected in the last 5000 ms (limit=16, inflight=16, queue=12)
+2026-11-08T17:33:44.758+03:00  WARN 9049 --- [o-auto-1-exec-6] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 151 request(s) rejected in the last 5000 ms (limit=16, inflight=16, queue=12)
+2026-11-08T17:33:49.760+03:00  WARN 9049 --- [o-auto-1-exec-4] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 151 request(s) rejected in the last 5000 ms (limit=16, inflight=16, queue=12)
+2026-11-08T17:33:54.785+03:00  WARN 9049 --- [o-auto-1-exec-5] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 150 request(s) rejected in the last 5000 ms (limit=16, inflight=16, queue=12)
+   [1/1] goodput=90,7 rps  p95=285,0 ms  p99=290,0 ms  429=24,4%  hard-fail=0,0%
+
+Report written to /tmp/iasr-retained-control-20261108/selected/steady
+All repetitions saved to /tmp/iasr-retained-control-20261108/selected/steady/episodes/13be41dc-1d6d-409a-a5ec-0feadde2df5d

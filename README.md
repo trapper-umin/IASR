@@ -12,6 +12,8 @@ JVM inference через `Controller`, бюджет времени и baseline f
 
 [Диагностика совместного покрытия и новая итерация данных](docs/dissertation/joint-data-iteration.md) описывают `explore-balanced`, обучение без чтения test и ограничения второй модели.
 
+[Сохранение прежнего train и сравнение FQI](docs/dissertation/retained-train-iteration.md) фиксируют неизменяемый validation, защиту held-out групп, сравнение трёх кандидатов и технический контроль двух моделей.
+
 ## Архитектура
 
 ```
