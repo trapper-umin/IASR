@@ -1,0 +1,92 @@
+{
+  "modelSha256": "8d319019aa51a826825f94a6a7c9ff8c8a631e7658f49e7f5942f46d6d0559ef",
+  "integrity": {
+    "episodes": 4,
+    "records": 179,
+    "measurementTransitions": 142,
+    "details": [
+      {
+        "episodeId": "spike/adaptive/1",
+        "records": 53,
+        "measurementTransitions": 43,
+        "irregularTransitions": 0,
+        "distinctAppliedChanges": 8,
+        "sourceDirty": false
+      },
+      {
+        "episodeId": "spike/learned/1",
+        "records": 52,
+        "measurementTransitions": 43,
+        "irregularTransitions": 0,
+        "distinctAppliedChanges": 3,
+        "sourceDirty": false
+      },
+      {
+        "episodeId": "steady/adaptive/1",
+        "records": 37,
+        "measurementTransitions": 28,
+        "irregularTransitions": 0,
+        "distinctAppliedChanges": 2,
+        "sourceDirty": false
+      },
+      {
+        "episodeId": "steady/learned/1",
+        "records": 37,
+        "measurementTransitions": 28,
+        "irregularTransitions": 0,
+        "distinctAppliedChanges": 1,
+        "sourceDirty": false
+      }
+    ]
+  },
+  "replay": [
+    {
+      "scenario": "spike",
+      "episodeId": "spike/learned/1",
+      "counts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3,
+        "unreplayable_initial_history": 3,
+        "learned_policy": 47,
+        "matched_model_decisions": 47,
+        "learned_fallback_no_empirical_support": 1,
+        "matched_support_fallbacks": 1
+      },
+      "inference": {
+        "decisions": 52,
+        "modelDecisions": 47,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 48,
+        "meanInferenceMs": 0.4928395,
+        "maxInferenceMs": 0.832625
+      }
+    },
+    {
+      "scenario": "steady",
+      "episodeId": "steady/learned/1",
+      "counts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3,
+        "unreplayable_initial_history": 3,
+        "learned_policy": 33,
+        "matched_model_decisions": 33
+      },
+      "inference": {
+        "decisions": 37,
+        "modelDecisions": 33,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 33,
+        "meanInferenceMs": 0.6652511212121213,
+        "maxInferenceMs": 5.4275
+      }
+    }
+  ],
+  "performanceEstablished": false
+}

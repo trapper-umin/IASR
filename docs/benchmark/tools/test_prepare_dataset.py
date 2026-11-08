@@ -58,6 +58,9 @@ class PolicyDataTest(unittest.TestCase):
         self.assertEqual(observation(row)["elapsedSeconds"], 1)
         row["state"]["observation_elapsed_sec"] = 1.012345678
         self.assertEqual(observation(row)["elapsedSeconds"], 1.012345678)
+        rows[6]["state"]["observation_elapsed_sec"] = 0.987654321
+        prepared, _ = samples(meta, rows)
+        self.assertEqual(next(s for s in prepared if s["sequence"] == 5)["elapsedSeconds"], 0.987654321)
         row["state"]["observation_elapsed_sec"] = -1
         with self.assertRaises(ValueError):
             observation(row)

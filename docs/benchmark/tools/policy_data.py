@@ -119,7 +119,7 @@ def samples(metadata, rows):
         output.append({"sampleVersion": 1, "sequence": row["sequence"], "history": observations[:4],
                        "nextHistory": observations[1:], "action": applied, "candidateActions": legal,
                        "nextCandidateActions": next_legal, "context": control,
-                       "elapsedSeconds": (timestamp(row["outcomeTimestamp"]) - timestamp(row["timestamp"])).total_seconds()})
+                       "elapsedSeconds": observations[-1]["elapsedSeconds"]})
     return output, excluded
 
 

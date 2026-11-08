@@ -1,0 +1,28 @@
+Starting JVM integration smoke
+
+=== steady / learned ===
+   [1/1] goodput=120,0 rps  p95=42,0 ms  p99=43,0 ms  429=0,0%  hard-fail=0,0%
+
+=== steady / adaptive ===
+   [1/1] goodput=120,0 rps  p95=47,0 ms  p99=48,0 ms  429=0,0%  hard-fail=0,0%
+
+=== spike / learned ===
+2026-11-08T15:34:10.343+03:00  WARN 93127 --- [-auto-3-exec-41] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=22, inflight=22, queue=40)
+2026-11-08T15:34:15.346+03:00  WARN 93127 --- [-auto-3-exec-54] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1162 request(s) rejected in the last 5000 ms (limit=20, inflight=20, queue=40)
+2026-11-08T15:34:20.347+03:00  WARN 93127 --- [-auto-3-exec-61] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1159 request(s) rejected in the last 5000 ms (limit=19, inflight=19, queue=40)
+2026-11-08T15:34:25.351+03:00  WARN 93127 --- [-auto-3-exec-47] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1161 request(s) rejected in the last 5000 ms (limit=19, inflight=19, queue=40)
+   [1/1] goodput=142,0 rps  p95=229,0 ms  p99=237,0 ms  429=41,9%  hard-fail=0,0%
+
+=== spike / adaptive ===
+2026-11-08T15:35:01.583+03:00  WARN 93127 --- [-auto-4-exec-40] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=22, inflight=22, queue=40)
+2026-11-08T15:35:06.593+03:00  WARN 93127 --- [-auto-4-exec-30] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1070 request(s) rejected in the last 5000 ms (limit=15, inflight=15, queue=40)
+2026-11-08T15:35:11.604+03:00  WARN 93127 --- [-auto-4-exec-62] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 901 request(s) rejected in the last 5000 ms (limit=11, inflight=11, queue=40)
+2026-11-08T15:35:16.606+03:00  WARN 93127 --- [-auto-4-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 972 request(s) rejected in the last 5000 ms (limit=7, inflight=7, queue=40)
+2026-11-08T15:35:21.920+03:00  WARN 93127 --- [-auto-4-exec-32] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1298 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=12)
+2026-11-08T15:35:27.028+03:00  WARN 93127 --- [-auto-4-exec-55] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 23 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=12)
+2026-11-08T15:35:32.190+03:00  WARN 93127 --- [-auto-4-exec-59] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 21 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=12)
+2026-11-08T15:35:36.109+03:00  WARN 93127 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-4-Acceptor] did not stop cleanly
+   [1/1] goodput=149,0 rps  p95=201,0 ms  p99=231,0 ms  429=39,1%  hard-fail=0,0%
+
+Report written to /tmp/iasr-jvm-smoke-20261108
+All repetitions saved to /tmp/iasr-jvm-smoke-20261108/episodes/053c7c50-db5f-4567-b7cc-d5a2362ea0d7

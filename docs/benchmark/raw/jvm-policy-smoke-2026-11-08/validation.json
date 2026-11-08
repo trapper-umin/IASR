@@ -1,0 +1,39 @@
+{
+  "episodes": 4,
+  "records": 179,
+  "measurementTransitions": 142,
+  "details": [
+    {
+      "episodeId": "spike/adaptive/1",
+      "records": 53,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 8,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "spike/learned/1",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 3,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/adaptive/1",
+      "records": 37,
+      "measurementTransitions": 28,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 2,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/learned/1",
+      "records": 37,
+      "measurementTransitions": 28,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 1,
+      "sourceDirty": false
+    }
+  ]
+}
