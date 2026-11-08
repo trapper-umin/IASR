@@ -102,6 +102,22 @@ def cache_records(records, preprocessing, support):
     return usable, dict(excluded)
 
 
+def close_training_support(records, preprocessing, min_samples, min_episodes, max_distance):
+    """Support and Bellman rows must agree: excluded targets cannot certify an action."""
+    retained = records
+    for iteration in range(len(records) + 1):
+        support = build_support(retained, preprocessing, min_samples, min_episodes, max_distance)
+        cached, _ = cache_records(retained, preprocessing, support)
+        if len(cached) == len(retained):
+            support["fittedOn"] = "train_bellman_fixed_point"
+            support["closurePasses"] = iteration + 1
+            _, excluded = cache_records(records, preprocessing, support)
+            return support, cached, excluded
+        require(bool(cached), "support closure removed every transition; expand training coverage")
+        retained = [item["record"] for item in cached]
+    raise ValueError("support closure failed to stabilize")
+
+
 def bellman_targets(cached, previous, gamma):
     import numpy as np
     if previous is None:
@@ -163,9 +179,9 @@ def train(directory, output, iterations=8, trees=32, depth=6, leaf=3, seed=42,
             and any(r["action"][0] != 0 and r["action"][1] != 0 for r in train_rows),
             "train lacks observed pool growth/shrinkage and joint actions; collect more data")
     preprocessing = fit_preprocessor(train_rows)
-    support = build_support(train_rows, preprocessing, min_samples, min_episodes, max_distance)
+    support, train_cache, train_excluded = close_training_support(
+            train_rows, preprocessing, min_samples, min_episodes, max_distance)
     # Test is validated structurally above, but no test metrics/statistics enter fitting or iteration selection.
-    train_cache, train_excluded = cache_records(train_rows, preprocessing, support)
     validation_cache, validation_excluded = cache_records(partitions["validation"], preprocessing, support)
     require(len(train_cache) >= max(4, 2 * leaf), "too few supported Bellman transitions; expand coverage")
     x = np.asarray([item["x"] for item in train_cache], dtype=np.float32)

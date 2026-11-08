@@ -9,7 +9,7 @@ from prepare_dataset import prepare
 from policy_data import candidates, LIMIT, POOL
 from fqi_features import fit_preprocessor, transform, reward, FEATURE_NAMES
 from fqi_runtime import supported_actions, predict_forest, decide, load_model
-from train_fqi import train, load_partitions, build_support, cache_records, bellman_targets
+from train_fqi import train, load_partitions, build_support, cache_records, bellman_targets, close_training_support
 
 
 class FqiTest(unittest.TestCase):
@@ -113,6 +113,19 @@ class FqiTest(unittest.TestCase):
                 return np.full(len(x), 3.0)
         cached = [{"reward": 2, "record": {"elapsedSeconds": 2}, "nextOptions": [[0], [1]]}]
         self.assertAlmostEqual(bellman_targets(cached, ConstantQ(), 0.9)[0], 2 + 0.9 ** 2 * 3)
+
+    def test_excluded_transitions_cannot_certify_action_support(self):
+        directory = self.dataset()
+        _, parts = load_partitions(directory)
+        rows = copy.deepcopy(parts["train"])
+        preprocessing = fit_preprocessor(rows)
+        rows[0]["nextHistory"][-1]["state"]["goodput_rps"] = 1e9
+        support, cached, excluded = close_training_support(rows, preprocessing, 1, 1, 2)
+        self.assertLess(len(cached), len(rows))
+        self.assertGreater(excluded.get("unsupported_continuation", 0), 0)
+        self.assertEqual(sum(entry["samples"] for actions in support["bins"].values()
+                             for entry in actions.values()), len(cached))
+        self.assertEqual(support["fittedOn"], "train_bellman_fixed_point")
 
     def test_reward_excludes_shedding_from_goodput_and_penalizes_resource_changes(self):
         directory = self.dataset()
