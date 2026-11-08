@@ -106,7 +106,7 @@ class ControlEngineTest {
             List<String> lines = appender.list.stream().map(
                     ch.qos.logback.classic.spi.ILoggingEvent::getFormattedMessage).toList();
             assertThat(lines.get(0)).contains("\"resourcesBefore\":{\"concurrency_limit\":100}",
-                    "\"control_tick\":0", "\"control_window_sec\":0.03",
+                    "\"control_tick\":0", "\"control_window_sec\":0.03", "\"observation_elapsed_sec\":null",
                     "\"action\":{\"concurrency_limit\":120}",
                     "\"cooldownRemaining\":{\"concurrency_limit\":0}");
             assertThat(lines.get(1)).contains("\"resourcesBefore\":{\"concurrency_limit\":120}",

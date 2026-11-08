@@ -54,6 +54,7 @@ public class ControlEngine {
     private final AtomicBoolean running = new AtomicBoolean(false);
     private volatile ScheduledFuture<?> tickFuture;
     private long controlTick;
+    private long previousObservationNanos;
 
     public ControlEngine(ControlEngineConfig config) {
         this.config = config;
@@ -123,6 +124,9 @@ public class ControlEngine {
                 return;
             }
             Instant observedAt = Instant.now();
+            long nowNanos = System.nanoTime();
+            double elapsedSec = controlTick == 0 ? Double.NaN : (nowNanos - previousObservationNanos) / 1e9;
+            previousObservationNanos = nowNanos;
             Map<String, Integer> resourcesBefore = new LinkedHashMap<>();
             for (Actuator actuator : actuators) {
                 resourcesBefore.put(actuator.name(), actuator.currentValue());
@@ -130,7 +134,8 @@ public class ControlEngine {
             Map<String, Integer> cooldownRemaining = guardrails.remainingCooldowns();
             MetricsSnapshot.Builder observation = MetricsSnapshot.builder().putAll(snapshot.asMap())
                     .put(MetricNames.CONTROL_TICK, controlTick++)
-                    .put(MetricNames.CONTROL_WINDOW_SEC, config.windowSec());
+                    .put(MetricNames.CONTROL_WINDOW_SEC, config.windowSec())
+                    .put(MetricNames.OBSERVATION_ELAPSED_SEC, elapsedSec);
             cooldownRemaining.forEach((name, remaining) ->
                     observation.put(MetricNames.cooldownRemaining(name), remaining));
             snapshot = observation.build();

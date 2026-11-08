@@ -14,6 +14,8 @@ public final class MetricNames {
     /** Engine decision index, including warmup. Independent of wall-clock time. */
     public static final String CONTROL_TICK = "control_tick";
     public static final String CONTROL_WINDOW_SEC = "control_window_sec";
+    /** Monotonic interval between observations; NaN on the first observation. */
+    public static final String OBSERVATION_ELAPSED_SEC = "observation_elapsed_sec";
 
     public static String cooldownRemaining(String actuatorName) {
         return "cooldown_remaining." + actuatorName;

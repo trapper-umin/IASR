@@ -8,6 +8,8 @@ Runtime-контур управления (control loop) для динамиче
 
 Offline обучение Q-функции и экспорт переносимой JSON-модели — в [описании прототипа FQI](docs/dissertation/fqi-prototype.md).
 
+JVM inference через `Controller`, бюджет времени и baseline fallback реализованы в отдельном `iasr-policy`; запуск и ограничения — [в инструкции](docs/dissertation/jvm-policy.md).
+
 ## Архитектура
 
 ```

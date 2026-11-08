@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from collect_dataset import commands, collect
-from policy_data import candidates, context, samples, LIMIT, POOL
+from policy_data import candidates, context, samples, observation, LIMIT, POOL
 from prepare_dataset import prepare, group_id, partition_groups, coverage
 
 
@@ -51,6 +51,18 @@ class PolicyDataTest(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
+
+    def test_live_observation_uses_monotonic_interval_and_archives_keep_wall_time(self):
+        _, meta, rows = fixture(self.root)
+        row = rows[5]
+        self.assertEqual(observation(row)["elapsedSeconds"], 1)
+        row["state"]["observation_elapsed_sec"] = 1.012345678
+        self.assertEqual(observation(row)["elapsedSeconds"], 1.012345678)
+        row["state"]["observation_elapsed_sec"] = -1
+        with self.assertRaises(ValueError):
+            observation(row)
+        meta["configuration"]["learned"] = {"poolPeriodTicks": 7}
+        self.assertEqual(context(meta)["poolPeriodTicks"], 7)
 
     def test_masks_match_the_runtime_contract(self):
         _, meta, rows = fixture(self.root)

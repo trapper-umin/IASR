@@ -18,7 +18,7 @@ def context(metadata):
     require(math.isfinite(nominal) and nominal > 0, "invalid nominal window")
     slo = config["sloMs"]
     require(type(slo) in (int, float) and math.isfinite(slo) and slo > 0, "invalid SLO")
-    exploration = config.get("exploration", {})
+    exploration = config.get("exploration", config.get("learned", {}))
     require(exploration.get("actionSpaceVersion", 1) == 1, "unsupported action space")
     period = exploration.get("poolPeriodTicks", 5)
     require(type(period) is int and period >= 1, "invalid pool decision period")
@@ -71,7 +71,10 @@ def state_is_measured(row, metadata):
 
 
 def observation(row):
-    seconds = (timestamp(row["timestamp"]) - timestamp(row["stateWindowStartedAt"])).total_seconds()
+    seconds = row["state"].get("observation_elapsed_sec")
+    if seconds is None:
+        seconds = (timestamp(row["timestamp"]) - timestamp(row["stateWindowStartedAt"])).total_seconds()
+    require(type(seconds) in (int, float) and math.isfinite(seconds) and seconds > 0, "invalid observation interval")
     return {"state": {name: row["state"].get(name) for name in (*METRICS, TICK, WINDOW)},
             "resourcesBefore": row["resourcesBefore"], "cooldownRemaining": row["cooldownRemaining"],
             "elapsedSeconds": seconds}

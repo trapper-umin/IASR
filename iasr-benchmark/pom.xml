@@ -27,6 +27,7 @@
     </properties>
 
     <dependencies>
+        <dependency><groupId>com.iasr</groupId><artifactId>iasr-policy</artifactId><version>${project.version}</version></dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

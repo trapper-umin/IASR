@@ -75,7 +75,7 @@ public class BenchmarkRunner {
             throw new IllegalArgumentException("Select nonempty scenarios and unique modes");
         }
         for (String mode : modes) {
-            if (!Set.of("off", "fixed", "adaptive", "gradient", "bottleneck", "explore").contains(baseMode(mode))) {
+            if (!Set.of("off", "fixed", "adaptive", "gradient", "bottleneck", "explore", "learned").contains(baseMode(mode))) {
                 throw new IllegalArgumentException("Unknown mode: " + mode);
             }
         }
@@ -171,6 +171,8 @@ public class BenchmarkRunner {
     private static MeasuredRun runOnce(String mode, Scenario scenario, long policySeed) throws Exception {
         ConfigurableApplicationContext context = boot(mode, policySeed);
         ListAppender<ILoggingEvent> datasetAppender = captureDataset();
+        ControlEngine engine = context.getBeanProvider(ControlEngine.class).getIfAvailable();
+        var learned = engine != null && engine.getConfig().controller() instanceof com.iasr.policy.LearnedController p ? p : null;
         try {
             Map<String, Object> details = new LinkedHashMap<>();
             Map<String, String> timing = new LinkedHashMap<>();
@@ -204,6 +206,7 @@ public class BenchmarkRunner {
             } // Stop the engine and flush its terminal record while capture is still attached.
             timing.put("captureEndedAt", Instant.now().toString());
             details.put("timing", timing);
+            if (learned != null) details.put("inference", learned.statistics());
 
             List<String> datasetLines = datasetAppender.list.stream()
                     .map(ILoggingEvent::getFormattedMessage)
@@ -234,6 +237,9 @@ public class BenchmarkRunner {
             config.put("guardrails", engine.getConfig().guardrails());
             if (engine.getConfig().controller() instanceof ExplorationController exploring) {
                 config.put("exploration", exploring.parameters());
+            }
+            if (engine.getConfig().controller() instanceof com.iasr.policy.LearnedController learned) {
+                config.put("learned", learned.parameters());
             }
         }
         config.put("backend", Map.of("kind", backend.isReal() ? "postgres" : "synthetic",
@@ -331,6 +337,8 @@ public class BenchmarkRunner {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, GradientBaselineConfig.class);
         } else if ("bottleneck".equals(base)) {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, BottleneckConfig.class);
+        } else if ("learned".equals(base)) {
+            builder = new SpringApplicationBuilder(BenchmarkApplication.class, LearnedConfig.class);
         } else if ("explore".equals(base)) {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, ExplorationConfig.class);
         } else {
@@ -379,22 +387,50 @@ public class BenchmarkRunner {
         public com.iasr.core.controller.Controller explorationController(
                 IasrProperties props,
                 @org.springframework.beans.factory.annotation.Value("${bench.exploration.seed}") long seed) {
-            var c = props.getConcurrency();
-            var h = props.getHikari();
-            var cp = props.getController();
-            var rules = List.of(
-                    new com.iasr.core.guardrail.ActuatorGuardrail("concurrency_limit", c.getMinLimit(), c.getMaxLimit(),
-                            c.getMaxStep(), c.getCooldownTicks(), c.isBlockIncreaseOnSloViolation(), c.getMaxStepDown()),
-                    new com.iasr.core.guardrail.ActuatorGuardrail("hikari_max_pool", h.getMinPoolSize(), h.getMaxPoolSize(),
-                            h.getMaxStep(), h.getCooldownTicks(), h.isBlockIncreaseOnSloViolation()));
-            var baseline = new com.iasr.core.controller.BaselineController(props.getSloLatencyMs(),
-                    cp.getComfortFactor(), cp.getConcurrencyIncreaseStep(), cp.getConcurrencyDecreaseFactor(),
-                    cp.getErrorRateThreshold(), cp.getTimeoutRateThreshold(), cp.getHikariStep(),
-                    cp.getHikariPendingThreshold(), cp.getHikariAcquireTimeThresholdMs(), cp.getUtilizationGate(),
-                    cp.getSloTargetHeadroom(), cp.getMinGradient(), cp.getHikariIdleShrinkThreshold());
+            var rules = policyRules(props);
+            var baseline = policyBaseline(props);
             return new ExplorationController(new com.iasr.core.controller.JointActionSpace(rules,
                     props.getSloLatencyMs(), props.getWindowMs() / 1000.0, Integer.getInteger("bench.poolPeriod", 5)),
                     baseline, Double.parseDouble(System.getProperty("bench.epsilon", "0.5")), seed);
+        }
+    }
+
+    private static List<com.iasr.core.guardrail.ActuatorGuardrail> policyRules(IasrProperties props) {
+        var c = props.getConcurrency();
+        var h = props.getHikari();
+        return List.of(
+                new com.iasr.core.guardrail.ActuatorGuardrail("concurrency_limit", c.getMinLimit(), c.getMaxLimit(),
+                        c.getMaxStep(), c.getCooldownTicks(), c.isBlockIncreaseOnSloViolation(), c.getMaxStepDown()),
+                new com.iasr.core.guardrail.ActuatorGuardrail("hikari_max_pool", h.getMinPoolSize(), h.getMaxPoolSize(),
+                        h.getMaxStep(), h.getCooldownTicks(), h.isBlockIncreaseOnSloViolation()));
+    }
+
+    private static com.iasr.core.controller.Controller policyBaseline(IasrProperties props) {
+        var cp = props.getController();
+        return new com.iasr.core.controller.BaselineController(props.getSloLatencyMs(),
+                cp.getComfortFactor(), cp.getConcurrencyIncreaseStep(), cp.getConcurrencyDecreaseFactor(),
+                cp.getErrorRateThreshold(), cp.getTimeoutRateThreshold(), cp.getHikariStep(),
+                cp.getHikariPendingThreshold(), cp.getHikariAcquireTimeThresholdMs(), cp.getUtilizationGate(),
+                cp.getSloTargetHeadroom(), cp.getMinGradient(), cp.getHikariIdleShrinkThreshold());
+    }
+
+    @org.springframework.context.annotation.Configuration(proxyBeanMethods = false)
+    static class LearnedConfig {
+        @org.springframework.context.annotation.Bean
+        public com.iasr.core.controller.Controller learnedController(IasrProperties props) throws java.io.IOException {
+            if (!Boolean.getBoolean("bench.allowPrototype")) {
+                throw new IllegalArgumentException("learned requires -Dbench.allowPrototype=true; model is an experimental prototype");
+            }
+            String path = System.getProperty("bench.model");
+            if (path == null || path.isBlank()) throw new IllegalArgumentException("Missing -Dbench.model=<JSON model>");
+            double budgetMs = Double.parseDouble(System.getProperty("bench.inferenceBudgetMs", "20"));
+            if (!Double.isFinite(budgetMs) || budgetMs <= 0 || budgetMs > 1000) throw new IllegalArgumentException("Invalid inference budget");
+            var model = com.iasr.policy.FqiModel.loadPrototype(java.nio.file.Path.of(path));
+            var rules = new LinkedHashMap<String, com.iasr.core.guardrail.ActuatorGuardrail>();
+            policyRules(props).forEach(rule -> rules.put(rule.actuatorName(), rule));
+            return new com.iasr.policy.LearnedController(model,
+                    new com.iasr.policy.PolicyContext(props.getSloLatencyMs(), props.getWindowMs() / 1000.0,
+                            Integer.getInteger("bench.poolPeriod", 5), rules), policyBaseline(props), (long) (budgetMs * 1e6));
         }
     }
 
