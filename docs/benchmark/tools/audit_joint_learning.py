@@ -7,7 +7,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from fqi_features import fit_preprocessor, transform, action_features
-from fqi_runtime import load_model, supported_actions, predict_forest, decide, action_key
+from fqi_runtime import load_model, supported_actions, predict_model, decide, action_key, normalized_action_key
 from policy_data import state_bin, LIMIT, POOL
 from train_fqi import load_partitions, close_training_support, joint_readiness
 from validate_episodes import require
@@ -62,7 +62,7 @@ def sensitivity(records, model):
             continue
         chosen[action_key(decision["action"])] += 1
         features = transform(row["history"], row["context"], model["preprocessing"])
-        scored = [(a, predict_forest(model["forest"], action_features(features, a, row["context"]))) for a in options]
+        scored = [(a, predict_model(model, action_features(features, a, row["context"]))) for a in options]
         for fixed, destination in ((0, pool_spreads), (1, limit_spreads)):
             buckets = defaultdict(list)
             for action, q in scored:
@@ -81,6 +81,20 @@ def sensitivity(records, model):
 
 def action_node_coverage(partitions, model):
     """Where action-dependent splits can actually be reached by supported candidates."""
+    if model.get("modelVersion") == 2:
+        counts = {}
+        for split, records in partitions.items():
+            visited, compared = Counter(), Counter()
+            for row in records:
+                options = supported_actions(row["history"], row["context"], model["preprocessing"], model["support"])
+                keys = {normalized_action_key((a[0] / row["context"]["limitStep"], a[1])) for a in options}
+                for key in keys:
+                    visited[key] += 1
+                    compared[key] += int(len(keys) > 1)
+            counts[split] = {key: {"historiesWithSupportedAction": visited[key], "historiesWithOtherSupportedActions": compared[key]}
+                             for key in model["actionForests"]}
+        return {"routing": "per_normalized_joint_action", "nodes": [], "partitions": counts,
+                "note": "routing is architectural, not learned feature importance or proof of action quality"}
     targets = {}
     names = [*model["preprocessing"]["featureNames"], "action.limit", "action.pool"]
     for ti, tree in enumerate(model["forest"]):
@@ -160,8 +174,10 @@ def audit(directory, model_path=None, min_samples=3, min_episodes=2, max_distanc
         require(all(model["inputSha256"][name + ".jsonl"] == digest for name, digest in report["inputSha256"].items()),
                 "model was fitted/reported on different development data")
         report["modelSha256"] = hashlib.sha256(model_path.read_bytes()).hexdigest()
-        report["actionSplitNodes"] = {name: sum(f == index for tree in model["forest"] for f in tree["feature"])
-                                      for name, index in (("concurrency", 208), ("pool", 209))}
+        report["actionSplitNodes"] = ({name: sum(f == index for tree in model["forest"] for f in tree["feature"])
+                                       for name, index in (("concurrency", 208), ("pool", 209))}
+                                      if model["modelVersion"] == 1 else None)
+        report["actionRouting"] = "feature_splits" if model["modelVersion"] == 1 else "per_normalized_joint_action"
         report["modelDiagnostics"] = {name: sensitivity(rows, model) for name, rows in parts.items()}
         report["actionNodeCoverage"] = action_node_coverage(parts, model)
     return report

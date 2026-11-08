@@ -57,8 +57,15 @@ def audit(root, models, plan_path):
     execution, plan = read_json(root / "execution.json"), read_json(plan_path)
     require(execution["status"] == "complete" and execution["plan"] == plan, "executed plan differs or comparison incomplete")
     require([[c["scenario"], c["arm"]] for c in execution["completed"]] == plan["order"], "case order differs from registered plan")
-    selection = read_json(models / "selection.json")
-    require(plan["selectionUnchanged"] == selection["selected"] == plan["arms"]["selected"]["candidate"], "metric winner was replaced")
+    if plan.get("selectionPolicy") == "predeclared_method_comparison":
+        require(set(plan["arms"]) == {"experimental", "reference"}, "invalid method comparison roles")
+        protocol = read_json(models / "protocol.json")
+        require(protocol["selectionPolicy"] == plan["selectionPolicy"]
+                and protocol["arms"] == {arm: spec["candidate"] for arm, spec in plan["arms"].items()}, "method roles differ from protocol")
+        selection = {"selected": None}
+    else:
+        selection = read_json(models / "selection.json")
+        require(plan["selectionUnchanged"] == selection["selected"] == plan["arms"]["selected"]["candidate"], "metric winner was replaced")
     integrity, replays, cases, conditions, sources = validate_collection(root), {}, {}, {}, set()
     for arm, spec in plan["arms"].items():
         model_path = models / spec["candidate"] / "model.json"

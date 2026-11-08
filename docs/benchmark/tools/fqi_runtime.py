@@ -47,13 +47,35 @@ def predict_forest(forest, features):
     return result / len(forest)
 
 
+def normalized_action_key(action):
+    require(len(action) == 2, "action must have two coordinates")
+    values = [float32(v) for v in action]
+    require(all(v in (-1.0, 0.0, 1.0) for v in values), "action coordinates must be normalized discrete deltas")
+    return f"{int(values[0])},{int(values[1])}"
+
+
+def model_contract(model):
+    require((model.get("modelVersion"), model.get("algorithm")) in
+            ((1, "masked_fqi_extra_trees"), (2, "masked_fqi_action_forests")), "unsupported model")
+
+
+def predict_model(model, features):
+    model_contract(model)
+    require(len(features) == 210, "model input must have 210 features")
+    if model["modelVersion"] == 1:
+        return predict_forest(model["forest"], features)
+    key = normalized_action_key(features[-2:])
+    require(key in model["actionForests"], "action has no trained forest")
+    return predict_forest(model["actionForests"][key], features[:208])
+
+
 def decide(model, history, control):
-    require(model["modelVersion"] == 1 and model["algorithm"] == "masked_fqi_extra_trees", "unsupported model")
+    model_contract(model)
     options = supported_actions(history, control, model["preprocessing"], model["support"])
     if not options:
         return {"action": None, "fallback": True, "reason": "no_empirical_support"}
     features = transform(history, control, model["preprocessing"])
-    scored = [(predict_forest(model["forest"], action_features(features, a, control)), a) for a in options]
+    scored = [(predict_model(model, action_features(features, a, control)), a) for a in options]
     # Prefer smaller changes on ties; otherwise keep the deterministic action ordering.
     value, action = max(scored, key=lambda pair: (pair[0], -sum(abs(v) for v in pair[1])))
     return {"action": action, "qValue": value, "fallback": False, "supportedCandidates": len(options)}
@@ -61,8 +83,21 @@ def decide(model, history, control):
 
 def load_model(path):
     model = read_json(path)
-    require(model.get("modelVersion") == 1 and model.get("deploymentAllowed") is False,
+    model_contract(model)
+    require(model.get("deploymentAllowed") is False,
             "expected an explicitly non-deployable prototype model")
+    if model["modelVersion"] == 1:
+        require("actionForests" not in model, "ambiguous model representation")
+    if model["modelVersion"] == 2:
+        require(model.get("stateFeatureCount") == 208 and "forest" not in model, "invalid action forest schema")
+        forests = model.get("actionForests")
+        require(isinstance(forests, dict) and 0 < len(forests) <= 9, "invalid action forest count")
+        for key, trees in forests.items():
+            require(normalized_action_key([int(v) for v in key.split(",")]) == key and isinstance(trees, list) and bool(trees), "invalid action forest")
+        for bucket in model["support"]["bins"].values():
+            for key in bucket:
+                dl, dp = [int(v) for v in key.split(",")]
+                require(normalized_action_key(((dl > 0) - (dl < 0), dp)) in forests, "support references an untrained action")
     return model
 
 

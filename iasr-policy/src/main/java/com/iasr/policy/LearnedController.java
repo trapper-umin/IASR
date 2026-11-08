@@ -129,6 +129,7 @@ public final class LearnedController implements Controller {
 
     public Map<String, Object> parameters() {
         return Map.of("modelSha256", model.sha256(), "deploymentAllowed", false, "poolPeriodTicks", context.poolPeriodTicks(),
-                "inferenceBudgetMs", budgetNanos / 1e6, "featureVersion", 1, "treeCount", model.treeCount());
+                "inferenceBudgetMs", budgetNanos / 1e6, "featureVersion", 1, "treeCount", model.treeCount(),
+                "modelVersion", model.modelVersion(), "algorithm", model.algorithm());
     }
 }

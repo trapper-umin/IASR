@@ -37,6 +37,16 @@ class ControllerComparisonTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "metric winner was replaced"):
                 audit(root, self.MODELS, plan)
 
+    def test_method_comparison_roles_cannot_replace_the_registered_experiment(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            execution = json.loads((self.RAW / "execution.json").read_text())
+            execution["plan"]["selectionPolicy"] = "predeclared_method_comparison"
+            (root / "execution.json").write_text(json.dumps(execution))
+            plan = root / "plan.json"; plan.write_text(json.dumps(execution["plan"]))
+            with self.assertRaisesRegex(ValueError, "invalid method comparison roles"):
+                audit(root, self.MODELS, plan)
+
     def test_baseline_joint_change_is_not_a_model_action(self):
         path = next((self.RAW / "reference/steady").rglob("dataset.jsonl"))
         rows = [json.loads(line) for line in path.read_text().splitlines()]

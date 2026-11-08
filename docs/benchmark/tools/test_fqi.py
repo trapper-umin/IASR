@@ -263,6 +263,78 @@ class FqiTest(unittest.TestCase):
         result = action_node_coverage({"validation": [row]}, model)
         self.assertEqual(result["nodes"][0]["partitions"]["validation"]["historiesWithSupportedCandidatesOnBothBranches"], 0)
 
+    def test_action_conditioned_regression_distinguishes_actions_at_identical_state(self):
+        import numpy as np
+        from action_fqi import ActionForestsRegressor
+        x, y = [], []
+        for dl in (-1, 0, 1):
+            for dp in (-1, 0, 1):
+                for _ in range(3):
+                    x.append([0.] * 208 + [dl, dp])
+                    y.append(10 * dl + dp)
+        x, y = np.asarray(x, dtype=np.float32), np.asarray(y, dtype=np.float64)
+        fitted = ActionForestsRegressor(4, 3, 1, 7, 1.0).fit(x, y)
+        np.testing.assert_array_equal(fitted.predict(x[::-1]), y[::-1])
+        self.assertEqual(len(fitted.models), 9)
+        cached = [{"reward": 2, "record": {"elapsedSeconds": 2}, "nextOptions": [x[0].tolist(), x[-1].tolist()]}]
+        self.assertAlmostEqual(bellman_targets(cached, fitted, 0.9)[0], 2 + 0.9 ** 2 * 11)
+        fitted.fit(x[:3], y[:3])
+        with self.assertRaisesRegex(ValueError, "no trained forest"):
+            fitted.predict(x[-1:])
+        with self.assertRaisesRegex(ValueError, "normalized discrete"):
+            fitted.predict([[0.] * 208 + [0.1, 0]])
+
+    def test_per_action_export_preserves_support_and_covers_every_action_in_goldens(self):
+        from fqi_runtime import predict_model, normalized_action_key
+        directory = self.dataset()
+        pooled, _ = train(directory, self.root / "pooled", **self.options())
+        model, report = train(directory, self.root / "routed", regressor="per_action", **self.options())
+        self.assertEqual(model["modelVersion"], 2)
+        self.assertEqual(model["stateFeatureCount"], 208)
+        self.assertNotIn("forest", model)
+        self.assertEqual(model["preprocessing"], pooled["preprocessing"])
+        self.assertEqual(model["support"], pooled["support"])
+        self.assertEqual(sum(model["trainingConfig"]["actionTrainingCounts"].values()), report["counts"]["train"]["scored"])
+        golden = json.loads((self.root / "routed/prediction-fixtures.json").read_text())
+        self.assertEqual({normalized_action_key(r["features"][-2:]) for r in golden}, set(model["actionForests"]))
+        for row in golden:
+            self.assertAlmostEqual(predict_model(model, row["features"]), row["prediction"], places=12)
+        self.assertEqual(model, load_model(self.root / "routed/model.json"))
+        for forest in model["actionForests"].values():
+            self.assertTrue(all(f == -2 or 0 <= f < 208 for tree in forest for f in tree["feature"]))
+        self.assertLessEqual(report["portableExportMaxError"], 1e-10)
+
+    def test_per_action_development_fit_does_not_use_holdout_values(self):
+        from unittest.mock import patch
+        directory = self.dataset()
+        original = Path.read_text
+        def no_test(path, *args, **kwargs):
+            if path.name == "test.jsonl":
+                raise AssertionError("test outcomes must remain unopened")
+            return original(path, *args, **kwargs)
+        with patch.object(Path, "read_text", no_test):
+            first, _ = train(directory, self.root / "first-action", regressor="per_action", development_only=True, **self.options())
+            path = directory / "validation.jsonl"
+            records = [json.loads(line) for line in path.read_text().splitlines()]
+            for row in records:
+                for history in (row["history"], row["nextHistory"]):
+                    for observation in history:
+                        observation["state"]["goodput_rps"] = 1e6
+            path.write_text("".join(json.dumps(row) + "\n" for row in records))
+            second, _ = train(directory, self.root / "second-action", regressor="per_action", development_only=True, **self.options())
+        for key in ("preprocessing", "support", "actionForests"):
+            self.assertEqual(first[key], second[key])
+        self.assertNotIn("test.jsonl", first["inputSha256"])
+
+    def test_normalized_action_routing_handles_window_step_and_rejects_unknown_actions(self):
+        from fqi_features import action_features
+        from fqi_runtime import predict_model
+        model = {"modelVersion": 2, "algorithm": "masked_fqi_action_forests", "actionForests": {
+            "1,-1": [{"left": [-1], "right": [-1], "feature": [-2], "threshold": [-2], "value": [7]}]}}
+        self.assertEqual(predict_model(model, action_features([0] * 208, [2, -1], {"limitStep": 2})), 7)
+        with self.assertRaisesRegex(ValueError, "no trained forest"):
+            predict_model(model, [0] * 210)
+
     def test_tampered_partition_is_rejected(self):
         directory = self.dataset()
         path = directory / "test.jsonl"

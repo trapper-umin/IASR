@@ -20,10 +20,13 @@ import java.util.Map;
 /** Immutable, bounded, data-only model loader and scorer. No class deserialization or background inference. */
 public final class FqiModel {
     private static final int MAX_BYTES = 8 * 1024 * 1024;
+    private final int modelVersion;
+    private final String algorithm;
     private final double rref;
     private final double[] centers, scales;
     private final Map<String, Map<String, Support>> bins;
     private final List<Tree> forest;
+    private final Map<String, List<Tree>> actionForests;
     private final int minSamples, minEpisodes;
     private final double maxDistance;
     private final String sha256;
@@ -35,7 +38,10 @@ public final class FqiModel {
     }
 
     private FqiModel(JsonNode root, String digest) {
-        require(integer(root.get("modelVersion")) == 1 && "masked_fqi_extra_trees".equals(text(root.get("algorithm"))), "Unsupported model");
+        modelVersion = integer(root.get("modelVersion"));
+        algorithm = text(root.get("algorithm"));
+        require((modelVersion == 1 && "masked_fqi_extra_trees".equals(algorithm))
+                || (modelVersion == 2 && "masked_fqi_action_forests".equals(algorithm)), "Unsupported model");
         require(root.has("deploymentAllowed") && root.get("deploymentAllowed").isBoolean()
                 && !root.get("deploymentAllowed").booleanValue(), "Expected explicitly non-deployable prototype");
         JsonNode p = root.path("preprocessing");
@@ -76,20 +82,32 @@ public final class FqiModel {
             parsedBins.put(bin.getKey(), Map.copyOf(actions));
         }
         bins = Map.copyOf(parsedBins);
-        JsonNode trees = root.path("forest");
-        require(trees.isArray() && !trees.isEmpty() && trees.size() <= 256, "Invalid forest size");
-        List<Tree> parsed = new ArrayList<>();
-        int totalNodes = 0;
-        for (JsonNode tree : trees) {
-            int size = tree.path("left").size();
-            require(size > 0 && size <= 20_000, "Invalid tree size");
-            totalNodes += size; require(totalNodes <= 200_000, "Too many tree nodes");
-            Tree value = new Tree(ints(tree.get("left"), size), ints(tree.get("right"), size),
-                    ints(tree.get("feature"), size), doubles(tree.get("threshold"), size), doubles(tree.get("value"), size));
-            validateTree(value);
-            parsed.add(value);
+        int[] totalNodes = {0};
+        if (modelVersion == 1) {
+            require(!root.has("actionForests"), "Ambiguous model representation");
+            forest = readForest(root.path("forest"), 210, totalNodes);
+            actionForests = Map.of();
+        } else {
+            require(integer(root.get("stateFeatureCount")) == 208 && !root.has("forest"), "Invalid action forest schema");
+            JsonNode byAction = root.path("actionForests");
+            require(byAction.isObject() && !byAction.isEmpty() && byAction.size() <= 9, "Invalid action forest count");
+            Map<String, List<Tree>> parsed = new HashMap<>();
+            var actions = byAction.fields();
+            while (actions.hasNext()) {
+                var action = actions.next();
+                validateActionKey(action.getKey());
+                int dl = Integer.parseInt(action.getKey().split(",")[0]);
+                require(dl >= -1 && dl <= 1, "Action forests require normalized deltas");
+                parsed.put(action.getKey(), readForest(action.getValue(), 208, totalNodes));
+            }
+            for (var bucket : bins.values()) for (var key : bucket.keySet()) {
+                String[] parts = key.split(",");
+                String normalized = Integer.signum(Integer.parseInt(parts[0])) + "," + parts[1];
+                require(parsed.containsKey(normalized), "Support references an untrained action");
+            }
+            forest = List.of();
+            actionForests = Map.copyOf(parsed);
         }
-        forest = List.copyOf(parsed);
         sha256 = digest;
     }
 
@@ -108,7 +126,9 @@ public final class FqiModel {
     }
 
     public String sha256() { return sha256; }
-    public int treeCount() { return forest.size(); }
+    public int treeCount() { return forest.size() + actionForests.values().stream().mapToInt(List::size).sum(); }
+    public int modelVersion() { return modelVersion; }
+    public String algorithm() { return algorithm; }
 
     public double[] features(List<FqiFeatures.Observation> history, PolicyContext context, InferenceBudget budget) {
         return FqiFeatures.transform(history, context, rref, centers, scales, budget);
@@ -147,8 +167,16 @@ public final class FqiModel {
         require(features.length == 210, "Forest input must have 210 features");
         double[] values = new double[features.length];
         for (int i = 0; i < values.length; i++) values[i] = FqiFeatures.f32(features[i]);
+        List<Tree> evaluated = forest;
+        if (modelVersion == 2) {
+            double dl = values[208], dp = values[209];
+            require(dl >= -1 && dl <= 1 && dl == Math.floor(dl) && dp >= -1 && dp <= 1 && dp == Math.floor(dp),
+                    "Action coordinates must be normalized discrete deltas");
+            evaluated = actionForests.get((int) dl + "," + (int) dp);
+            require(evaluated != null, "Action has no trained forest");
+        }
         double sum = 0;
-        for (Tree tree : forest) {
+        for (Tree tree : evaluated) {
             int node = 0;
             while (tree.left[node] != -1) {
                 budget.check();
@@ -157,7 +185,7 @@ public final class FqiModel {
             sum += tree.value[node];
         }
         budget.check();
-        return FqiFeatures.finite(sum / forest.size());
+        return FqiFeatures.finite(sum / evaluated.size());
     }
 
     private static String bin(FqiFeatures.Observation observation, PolicyContext context) {
@@ -170,12 +198,28 @@ public final class FqiModel {
         return String.join("/", band, pool, busy, tick % context.poolPeriodTicks() == 0 ? "pool_tick" : "limit_tick");
     }
 
-    private static void validateTree(Tree tree) {
+    private static List<Tree> readForest(JsonNode trees, int featureCount, int[] totalNodes) {
+        require(trees.isArray() && !trees.isEmpty() && trees.size() <= 256, "Invalid forest size");
+        List<Tree> result = new ArrayList<>();
+        for (JsonNode tree : trees) {
+            int size = tree.path("left").size();
+            require(size > 0 && size <= 20_000, "Invalid tree size");
+            totalNodes[0] += size;
+            require(totalNodes[0] <= 200_000, "Too many tree nodes");
+            Tree value = new Tree(ints(tree.get("left"), size), ints(tree.get("right"), size),
+                    ints(tree.get("feature"), size), doubles(tree.get("threshold"), size), doubles(tree.get("value"), size));
+            validateTree(value, featureCount);
+            result.add(value);
+        }
+        return List.copyOf(result);
+    }
+
+    private static void validateTree(Tree tree, int featureCount) {
         int[] parents = new int[tree.left.length], depths = new int[tree.left.length];
         for (int i = 0; i < tree.left.length; i++) {
             if (tree.left[i] == -1) require(tree.right[i] == -1 && tree.feature[i] == -2, "Invalid leaf");
             else {
-                require(tree.feature[i] >= 0 && tree.feature[i] < 210, "Invalid split feature");
+                require(tree.feature[i] >= 0 && tree.feature[i] < featureCount, "Invalid split feature");
                 for (int child : new int[]{tree.left[i], tree.right[i]}) {
                     require(child > i && child < tree.left.length, "Cyclic or invalid tree edge");
                     require(++parents[child] == 1, "Shared tree child");

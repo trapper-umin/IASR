@@ -9,7 +9,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from fqi_features import (REWARD, fit_preprocessor, transform, action_features, reward, number)
-from fqi_runtime import supported_actions, action_key, bin_for, predict_forest
+from fqi_runtime import supported_actions, action_key, bin_for, predict_forest, predict_model
 from policy_data import candidates, LIMIT, POOL
 from validate_episodes import read_json, require
 
@@ -181,7 +181,7 @@ def source_version():
 
 
 def train(directory, output, iterations=8, trees=32, depth=6, leaf=3, seed=42,
-          gamma=0.95, min_samples=3, min_episodes=2, max_distance=2.0, allow_incomplete_joint_support=False, development_only=False, max_features=1.0):
+          gamma=0.95, min_samples=3, min_episodes=2, max_distance=2.0, allow_incomplete_joint_support=False, development_only=False, max_features=1.0, regressor="pooled"):
     import numpy as np
     import sklearn
     import scipy
@@ -193,6 +193,7 @@ def train(directory, output, iterations=8, trees=32, depth=6, leaf=3, seed=42,
             "iteration/tree/support counts must be positive integers")
     require(math.isfinite(gamma) and 0 < gamma < 1 and math.isfinite(max_distance) and max_distance > 0, "invalid discount/support radius")
     require(type(max_features) in (int, float) and math.isfinite(max_features) and 0 < max_features <= 1, "invalid max_features fraction")
+    require(regressor in ("pooled", "per_action"), "unknown regressor")
     max_features = float(max_features)
     directory, output = Path(directory), Path(output)
     require(not output.exists(), "model output already exists")
@@ -215,24 +216,34 @@ def train(directory, output, iterations=8, trees=32, depth=6, leaf=3, seed=42,
     model, trace = None, []
     for iteration in range(iterations):
         targets = bellman_targets(train_cache, model, gamma)
-        fitted = ExtraTreesRegressor(n_estimators=trees, max_depth=depth, min_samples_leaf=leaf,
-                                     random_state=seed + iteration, n_jobs=1, max_features=max_features)
+        if regressor == "pooled":
+            fitted = ExtraTreesRegressor(n_estimators=trees, max_depth=depth, min_samples_leaf=leaf,
+                                         random_state=seed + iteration, n_jobs=1, max_features=max_features)
+        else:
+            from action_fqi import ActionForestsRegressor
+            fitted = ActionForestsRegressor(trees, depth, leaf, seed + iteration, max_features)
         fitted.fit(x, np.asarray(targets, dtype=np.float64))
         model = fitted
         trace.append({"iteration": iteration + 1, "train": diagnostics(train_cache, model, gamma),
                       "validation": diagnostics(validation_cache, model, gamma)})
-    forest = export_forest(model)
+    scorer = ({"modelVersion": 1, "algorithm": "masked_fqi_extra_trees", "forest": export_forest(model)}
+              if regressor == "pooled" else
+              {"modelVersion": 2, "algorithm": "masked_fqi_action_forests", "stateFeatureCount": 208,
+               "actionForests": {key: export_forest(value) for key, value in model.models.items()}})
     expected = model.predict(x)
-    export_error = max(abs(predict_forest(forest, row.tolist()) - expected[i]) for i, row in enumerate(x))
+    export_error = max(abs(predict_model(scorer, row.tolist()) - expected[i]) for i, row in enumerate(x))
     require(export_error <= 1e-10, "portable export does not match sklearn")
     test_cache, test_excluded = cache_records(partitions["test"], preprocessing, support) if "test" in partitions else ([], {})
-    config = {"iterations": iterations, "trees": trees, "depth": depth, "minLeaf": leaf, "seed": seed, "maxFeatures": max_features,
+    config = {"iterations": iterations, "trees": trees, "depth": depth, "minLeaf": leaf, "seed": seed, "maxFeatures": max_features, "regressor": regressor,
               "gammaPerSecond": gamma, "jointSupport": joint_support,
               "allowsIncompleteJointSupport": allow_incomplete_joint_support, "testEvaluated": not development_only, "iterationSelection": "fixed_budget_no_test_selection", "nJobs": 1}
     digests = {name: hashlib.sha256((directory / name).read_bytes()).hexdigest()
                for name in ("manifest.json", *(split + ".jsonl" for split in partitions))}
-    artifact = {"modelVersion": 1, "algorithm": "masked_fqi_extra_trees", "deploymentAllowed": False,
-                "preprocessing": preprocessing, "support": support, "forest": forest,
+    if regressor == "per_action":
+        config["actionTrainingCounts"] = model.counts
+        config["actionsBelowTwoLeaves"] = sorted(key for key, count in model.counts.items() if count < 2 * leaf)
+    artifact = {**scorer, "deploymentAllowed": False,
+                "preprocessing": preprocessing, "support": support,
                 "rewardWeights": REWARD, "trainingConfig": config, "inputSha256": digests,
                 "trainingSource": source_version(), "versions": {"sklearn": sklearn.__version__, "numpy": np.__version__,
                     "scipy": scipy.__version__, "joblib": joblib.__version__, "threadpoolctl": threadpoolctl.__version__,
@@ -249,7 +260,15 @@ def train(directory, output, iterations=8, trees=32, depth=6, leaf=3, seed=42,
     output.mkdir(parents=True, exist_ok=False)
     (output / "model.json").write_text(json.dumps(artifact, sort_keys=True, separators=(",", ":"), allow_nan=False) + "\n")
     (output / "report.json").write_text(json.dumps(report, sort_keys=True, indent=2, allow_nan=False) + "\n")
-    golden = [{"features": row.tolist(), "prediction": float(value)} for row, value in zip(x[:16], expected[:16])]
+    golden_indices = list(range(min(16, len(x))))
+    if regressor == "per_action":
+        from fqi_runtime import normalized_action_key
+        first_per_action = {}
+        for i, row in enumerate(x):
+            first_per_action.setdefault(normalized_action_key(row[-2:].tolist()), i)
+        golden_indices = list(first_per_action.values())
+        golden_indices += [i for i in range(len(x)) if i not in golden_indices][:max(0, 16 - len(golden_indices))]
+    golden = [{"features": x[i].tolist(), "prediction": float(expected[i])} for i in golden_indices]
     (output / "prediction-fixtures.json").write_text(json.dumps(golden, sort_keys=True, allow_nan=False) + "\n")
     return artifact, report
 
@@ -263,13 +282,14 @@ def main():
     parser.add_argument("--depth", type=int, default=6)
     parser.add_argument("--leaf", type=int, default=3)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--regressor", choices=("pooled", "per_action"), default="pooled")
     parser.add_argument("--max-features", type=float, default=1.0)
     parser.add_argument("--development-only", action="store_true", help="fit and diagnose train/validation without opening test outcomes")
     parser.add_argument("--allow-incomplete-joint-support", action="store_true", help="diagnostic legacy export only; never establishes joint readiness")
     args = parser.parse_args()
     try:
         _, report = train(args.dataset, args.out, args.iterations, args.trees, args.depth, args.leaf, args.seed,
-                          allow_incomplete_joint_support=args.allow_incomplete_joint_support, development_only=args.development_only, max_features=args.max_features)
+                          allow_incomplete_joint_support=args.allow_incomplete_joint_support, development_only=args.development_only, max_features=args.max_features, regressor=args.regressor)
     except (ValueError, KeyError, TypeError, OSError, ImportError) as error:
         parser.exit(1, f"FQI training failed: {error}\n")
     print(json.dumps({"counts": report["counts"], "portableExportMaxError": report["portableExportMaxError"]}, indent=2))

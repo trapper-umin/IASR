@@ -87,8 +87,15 @@ class FqiModelTest {
             assertThat(model.predict(JSON.treeToValue(row.get("features"), double[].class), unlimited()))
                     .isCloseTo(row.get("prediction").asDouble(), within(1e-12));
         }
-        assertThat(model.treeCount()).isEqualTo(32);
+        JsonNode artifact = JSON.readTree(MODEL.toFile());
+        int count = artifact.has("forest") ? artifact.get("forest").size() : 0;
+        if (artifact.has("actionForests")) for (JsonNode forest : artifact.get("actionForests")) count += forest.size();
+        assertThat(model.treeCount()).isEqualTo(count);
         assertThat(model.sha256()).hasSize(64);
+    }
+
+    static JsonNode firstTree(JsonNode root) {
+        return root.has("forest") ? root.get("forest").get(0) : root.get("actionForests").elements().next().get(0);
     }
 
     @Test void rejectsMalformedOrIncompatibleModel() throws Exception {
@@ -98,8 +105,8 @@ class FqiModelTest {
                 case "version" -> root.put("modelVersion", 99);
                 case "scale" -> ((com.fasterxml.jackson.databind.node.ArrayNode) root.path("preprocessing").get("scales")).set(0, JSON.getNodeFactory().numberNode(0));
                 case "features" -> ((com.fasterxml.jackson.databind.node.ArrayNode) root.path("preprocessing").get("featureNames")).set(0, JSON.getNodeFactory().textNode("wrong"));
-                case "cycle" -> ((com.fasterxml.jackson.databind.node.ArrayNode) root.path("forest").get(0).get("left")).set(0, JSON.getNodeFactory().numberNode(0));
-                case "split" -> ((com.fasterxml.jackson.databind.node.ArrayNode) root.path("forest").get(0).get("feature")).set(0, JSON.getNodeFactory().numberNode(210));
+                case "cycle" -> ((com.fasterxml.jackson.databind.node.ArrayNode) firstTree(root).get("left")).set(0, JSON.getNodeFactory().numberNode(0));
+                case "split" -> ((com.fasterxml.jackson.databind.node.ArrayNode) firstTree(root).get("feature")).set(0, JSON.getNodeFactory().numberNode(210));
                 case "vector" -> {
                     JsonNode support = root.path("support").path("bins").elements().next().elements().next();
                     ((com.fasterxml.jackson.databind.node.ArrayNode) support.path("vectors").get(0)).remove(0);
@@ -122,6 +129,8 @@ class FqiModelTest {
 
     @Test void scoresPoolActionFeatureWithFloat32SplitSemantics() throws Exception {
         ObjectNode root = (ObjectNode) JSON.readTree(MODEL.toFile());
+        root.put("modelVersion", 1).put("algorithm", "masked_fqi_extra_trees");
+        root.remove("actionForests");
         root.set("forest", JSON.readTree("[{\"left\":[1,-1,-1],\"right\":[2,-1,-1],\"feature\":[209,-2,-2],"
                 + "\"threshold\":[0.1,-2,-2],\"value\":[0,5,7]}]"));
         Path path = temporary.resolve("pool-action.json"); JSON.writeValue(path.toFile(), root);
@@ -133,6 +142,60 @@ class FqiModelTest {
         assertThat(model.predict(input, unlimited())).isEqualTo(7);
         input[209] = 0.1; // float32(0.1) is greater than the double threshold.
         assertThat(model.predict(input, unlimited())).isEqualTo(7);
+    }
+
+    private ObjectNode routedPrototype() throws Exception {
+        ObjectNode root = (ObjectNode) JSON.readTree(MODEL.toFile());
+        root.put("modelVersion", 2).put("algorithm", "masked_fqi_action_forests").put("stateFeatureCount", 208);
+        root.remove("forest");
+        var actions = root.putObject("actionForests");
+        for (int dl = -1; dl <= 1; dl++) for (int dp = -1; dp <= 1; dp++) {
+            actions.set(dl + "," + dp, JSON.readTree("[{\"left\":[-1],\"right\":[-1],\"feature\":[-2],"
+                    + "\"threshold\":[-2],\"value\":[" + (10 * dl + dp) + "]}]"));
+        }
+        return root;
+    }
+
+    @Test void routesAllJointActionsAndRejectsUndefinedOrFractionalActions() throws Exception {
+        ObjectNode root = routedPrototype();
+        Path path = temporary.resolve("routed.json"); JSON.writeValue(path.toFile(), root);
+        FqiModel model = FqiModel.loadPrototype(path);
+        assertThat(model.modelVersion()).isEqualTo(2);
+        assertThat(model.treeCount()).isEqualTo(9);
+        double[] features = new double[210];
+        for (int dl = -1; dl <= 1; dl++) for (int dp = -1; dp <= 1; dp++) {
+            features[208] = dl; features[209] = dp;
+            assertThat(model.predict(features, unlimited())).isEqualTo(10 * dl + dp);
+        }
+        features[208] = 0.1;
+        assertThatThrownBy(() -> model.predict(features, unlimited())).isInstanceOf(IllegalArgumentException.class);
+        ((ObjectNode) root.get("actionForests")).remove("1,1");
+        root.path("support").path("bins").forEach(bucket -> ((ObjectNode) bucket).remove("1,1"));
+        JSON.writeValue(path.toFile(), root);
+        FqiModel sparse = FqiModel.loadPrototype(path);
+        features[208] = 1; features[209] = 1;
+        assertThatThrownBy(() -> sparse.predict(features, unlimited())).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test void rejectsMissingSupportForestActionFeaturesInStateTreesAndAmbiguousSchemas() throws Exception {
+        for (String corruption : List.of("missing", "state", "ambiguous", "key", "size")) {
+            ObjectNode root = routedPrototype();
+            ObjectNode actions = (ObjectNode) root.get("actionForests");
+            switch (corruption) {
+                case "missing" -> actions.remove("0,0");
+                case "state" -> actions.set("0,0", JSON.readTree("[{\"left\":[1,-1,-1],\"right\":[2,-1,-1],"
+                        + "\"feature\":[208,-2,-2],\"threshold\":[0,-2,-2],\"value\":[0,1,2]}]"));
+                case "ambiguous" -> root.set("forest", actions.get("0,0").deepCopy());
+                case "key" -> { actions.remove("1,1"); actions.set("2,0", actions.get("0,0").deepCopy()); }
+                case "size" -> {
+                    var trees = JSON.createArrayNode();
+                    for (int i = 0; i < 257; i++) trees.add(actions.get("0,0").get(0).deepCopy());
+                    actions.set("0,0", trees);
+                }
+            }
+            Path path = temporary.resolve(corruption + "-routed.json"); JSON.writeValue(path.toFile(), root);
+            assertThatThrownBy(() -> FqiModel.loadPrototype(path)).isInstanceOf(IllegalArgumentException.class);
+        }
     }
 
     @Test void cooperativeDeadlineStopsScoring() throws Exception {
