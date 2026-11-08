@@ -1,0 +1,275 @@
+{
+  "test": {
+    "actions": {
+      "[-1,0]": 5,
+      "[0,0]": 8,
+      "[1,0]": 1
+    },
+    "bins": {
+      "comfortable/no_pending/headroom/limit_tick": {
+        "[-1,0]": {
+          "episodes": 2,
+          "opportunities": 7,
+          "samples": 3,
+          "supported": true
+        },
+        "[0,0]": {
+          "episodes": 2,
+          "opportunities": 12,
+          "samples": 8,
+          "supported": true
+        },
+        "[1,0]": {
+          "episodes": 1,
+          "opportunities": 7,
+          "samples": 1,
+          "supported": false
+        }
+      },
+      "comfortable/no_pending/headroom/pool_tick": {
+        "[-1,-1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[-1,0]": {
+          "episodes": 2,
+          "opportunities": 2,
+          "samples": 2,
+          "supported": false
+        },
+        "[-1,1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,-1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,-1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,0]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        }
+      }
+    },
+    "minEpisodes": 2,
+    "minSamples": 3,
+    "missingLatestMetrics": {},
+    "readiness": "not_established",
+    "samples": 14,
+    "supportScope": "diagnostic_coarse_bins"
+  },
+  "train": {
+    "actions": {
+      "[-1,0]": 5,
+      "[0,0]": 8,
+      "[1,0]": 1
+    },
+    "bins": {
+      "comfortable/no_pending/headroom/limit_tick": {
+        "[-1,0]": {
+          "episodes": 2,
+          "opportunities": 7,
+          "samples": 3,
+          "supported": true
+        },
+        "[0,0]": {
+          "episodes": 2,
+          "opportunities": 12,
+          "samples": 8,
+          "supported": true
+        },
+        "[1,0]": {
+          "episodes": 1,
+          "opportunities": 7,
+          "samples": 1,
+          "supported": false
+        }
+      },
+      "comfortable/no_pending/headroom/pool_tick": {
+        "[-1,-1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[-1,0]": {
+          "episodes": 2,
+          "opportunities": 2,
+          "samples": 2,
+          "supported": false
+        },
+        "[-1,1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,-1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,-1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,0]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        }
+      }
+    },
+    "minEpisodes": 2,
+    "minSamples": 3,
+    "missingLatestMetrics": {},
+    "readiness": "not_established",
+    "samples": 14,
+    "supportScope": "diagnostic_coarse_bins"
+  },
+  "validation": {
+    "actions": {
+      "[-1,0]": 5,
+      "[0,0]": 8,
+      "[1,0]": 1
+    },
+    "bins": {
+      "comfortable/no_pending/headroom/limit_tick": {
+        "[-1,0]": {
+          "episodes": 2,
+          "opportunities": 7,
+          "samples": 3,
+          "supported": true
+        },
+        "[0,0]": {
+          "episodes": 2,
+          "opportunities": 12,
+          "samples": 8,
+          "supported": true
+        },
+        "[1,0]": {
+          "episodes": 1,
+          "opportunities": 7,
+          "samples": 1,
+          "supported": false
+        }
+      },
+      "comfortable/no_pending/headroom/pool_tick": {
+        "[-1,-1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[-1,0]": {
+          "episodes": 2,
+          "opportunities": 2,
+          "samples": 2,
+          "supported": false
+        },
+        "[-1,1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,-1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,-1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,0]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,1]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        }
+      }
+    },
+    "minEpisodes": 2,
+    "minSamples": 3,
+    "missingLatestMetrics": {},
+    "readiness": "not_established",
+    "samples": 14,
+    "supportScope": "diagnostic_coarse_bins"
+  }
+}

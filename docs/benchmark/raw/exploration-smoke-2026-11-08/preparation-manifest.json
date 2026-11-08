@@ -1,0 +1,281 @@
+{
+  "episodes": [
+    {
+      "episodeId": "steady/explore/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "30820c0cfb22a80d8efec5446abc998e9acd4cacda094a5a282784e56185314f",
+      "runId": "273dc26b-2d22-4f56-9431-3126733a67d2",
+      "samples": 7,
+      "source": {
+        "commit": "d053fdcdd78f877fe2d99cc70cbe626b6e82c9cd",
+        "dirty": false
+      },
+      "split": "validation"
+    },
+    {
+      "episodeId": "steady/explore/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 9,
+        "short_history": 3
+      },
+      "groupId": "30820c0cfb22a80d8efec5446abc998e9acd4cacda094a5a282784e56185314f",
+      "runId": "273dc26b-2d22-4f56-9431-3126733a67d2",
+      "samples": 7,
+      "source": {
+        "commit": "d053fdcdd78f877fe2d99cc70cbe626b6e82c9cd",
+        "dirty": false
+      },
+      "split": "validation"
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "50be56cb93910ee67ca65cb1fc0e9f2e1706444f57b7ac9070e474a1831c1f74",
+      "runId": "545180a4-7907-45f1-9c43-36b256f6fee7",
+      "samples": 7,
+      "source": {
+        "commit": "d053fdcdd78f877fe2d99cc70cbe626b6e82c9cd",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "steady/explore/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "50be56cb93910ee67ca65cb1fc0e9f2e1706444f57b7ac9070e474a1831c1f74",
+      "runId": "545180a4-7907-45f1-9c43-36b256f6fee7",
+      "samples": 7,
+      "source": {
+        "commit": "d053fdcdd78f877fe2d99cc70cbe626b6e82c9cd",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 9,
+        "short_history": 3
+      },
+      "groupId": "31dede08d121351376ed3d9c29ac942624752886eabc388597809232227d8afb",
+      "runId": "0ed77d73-98bc-44a1-9ed9-80d272913091",
+      "samples": 7,
+      "source": {
+        "commit": "d053fdcdd78f877fe2d99cc70cbe626b6e82c9cd",
+        "dirty": false
+      },
+      "split": "test"
+    },
+    {
+      "episodeId": "steady/explore/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "31dede08d121351376ed3d9c29ac942624752886eabc388597809232227d8afb",
+      "runId": "0ed77d73-98bc-44a1-9ed9-80d272913091",
+      "samples": 7,
+      "source": {
+        "commit": "d053fdcdd78f877fe2d99cc70cbe626b6e82c9cd",
+        "dirty": false
+      },
+      "split": "test"
+    }
+  ],
+  "groups": {
+    "30820c0cfb22a80d8efec5446abc998e9acd4cacda094a5a282784e56185314f": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 40,
+          "thrash": 0.3,
+          "workers": 12
+        },
+        "initialLimit": 30,
+        "initialPool": 18,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 12000,
+          "requestTimeoutMs": 3000,
+          "scenario": "steady",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 40,
+          "degradedFactor": 2.4,
+          "durationScale": 0.4,
+          "loadScale": 0.9,
+          "name": "steady",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "validation"
+    },
+    "31dede08d121351376ed3d9c29ac942624752886eabc388597809232227d8afb": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 30,
+          "thrash": 0.3,
+          "workers": 8
+        },
+        "initialLimit": 20,
+        "initialPool": 4,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 12000,
+          "requestTimeoutMs": 3000,
+          "scenario": "steady",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 30,
+          "degradedFactor": 2.4,
+          "durationScale": 0.4,
+          "loadScale": 0.8,
+          "name": "steady",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "test"
+    },
+    "50be56cb93910ee67ca65cb1fc0e9f2e1706444f57b7ac9070e474a1831c1f74": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 50,
+          "thrash": 0.3,
+          "workers": 12
+        },
+        "initialLimit": 60,
+        "initialPool": 10,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 12000,
+          "requestTimeoutMs": 3000,
+          "scenario": "steady",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 50,
+          "degradedFactor": 2.4,
+          "durationScale": 0.4,
+          "loadScale": 1.0,
+          "name": "steady",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "train"
+    }
+  },
+  "historyWindows": 4,
+  "preparationVersion": 1,
+  "prototypeAllowsDirtySource": false,
+  "sampleCounts": {
+    "test": 14,
+    "train": 14,
+    "validation": 14
+  },
+  "splitSeed": 42,
+  "testScenarios": [],
+  "validation": {
+    "details": [
+      {
+        "distinctAppliedChanges": 4,
+        "episodeId": "steady/explore/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 10,
+        "records": 19,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 4,
+        "episodeId": "steady/explore/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 10,
+        "records": 20,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 4,
+        "episodeId": "steady/explore/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 10,
+        "records": 19,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 4,
+        "episodeId": "steady/explore/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 10,
+        "records": 19,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 4,
+        "episodeId": "steady/explore/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 10,
+        "records": 20,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 4,
+        "episodeId": "steady/explore/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 10,
+        "records": 19,
+        "sourceDirty": false
+      }
+    ],
+    "episodes": 6,
+    "measurementTransitions": 60,
+    "records": 116
+  }
+}

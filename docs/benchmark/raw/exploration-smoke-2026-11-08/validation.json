@@ -1,0 +1,55 @@
+{
+  "episodes": 6,
+  "records": 116,
+  "measurementTransitions": 60,
+  "details": [
+    {
+      "episodeId": "steady/explore/1",
+      "records": 19,
+      "measurementTransitions": 10,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 4,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/explore/2",
+      "records": 20,
+      "measurementTransitions": 10,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 4,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "records": 19,
+      "measurementTransitions": 10,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 4,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/explore/2",
+      "records": 19,
+      "measurementTransitions": 10,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 4,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "records": 20,
+      "measurementTransitions": 10,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 4,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/explore/2",
+      "records": 19,
+      "measurementTransitions": 10,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 4,
+      "sourceDirty": false
+    }
+  ]
+}

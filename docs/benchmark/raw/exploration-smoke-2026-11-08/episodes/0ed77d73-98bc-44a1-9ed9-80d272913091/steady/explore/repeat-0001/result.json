@@ -1,0 +1,19 @@
+{
+  "mode" : "explore",
+  "scenario" : "steady",
+  "durationMs" : 12000,
+  "dispatched" : 1153,
+  "succeeded" : 1153,
+  "rejected429" : 0,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 96.1,
+  "p50Ms" : 45.0,
+  "p95Ms" : 49.0,
+  "p99Ms" : 50.0,
+  "maxMs" : 51.0,
+  "sloBreachPercent" : 0.0,
+  "rejectionRatePercent" : 0.0,
+  "failureRatePercent" : 0.0
+}
