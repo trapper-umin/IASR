@@ -1,0 +1,135 @@
+{
+  "candidates": [
+    {
+      "config": {
+        "allowsIncompleteJointSupport": false,
+        "depth": 6,
+        "gammaPerSecond": 0.95,
+        "iterationSelection": "fixed_budget_no_test_selection",
+        "iterations": 8,
+        "jointSupport": {
+          "actions": {
+            "-1,-1": 4,
+            "-1,0": 121,
+            "-1,1": 6,
+            "0,-1": 16,
+            "0,0": 218,
+            "0,1": 23,
+            "1,0": 27
+          },
+          "established": true,
+          "poolGrowth": 29,
+          "poolShrinkage": 20,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 10
+        },
+        "maxFeatures": 1.0,
+        "minLeaf": 3,
+        "nJobs": 1,
+        "seed": 42,
+        "testEvaluated": false,
+        "trees": 32
+      },
+      "eligible": true,
+      "id": "reference",
+      "inputSha256": {
+        "manifest.json": "7f110ffac53c7d075a4f8e8c0380c31b0be22c0e048185ff0f6d85ead016d7c3",
+        "train.jsonl": "1a1db762695635c2d03b6067a13c0b0d7734063a2db23ba67a002d3f7ba82e56",
+        "validation.jsonl": "ea2c0aba7b70f995d716ba0c0961a1be56842e097d946922b2193deaa33e5603"
+      },
+      "modelSha256": "16076d5df73a5255550c1b56a36b9dae0e90a4a854c5e69c2db402715585be3f",
+      "validationBellmanRmse": 1.214410607178085,
+      "validationScored": 106
+    },
+    {
+      "config": {
+        "allowsIncompleteJointSupport": false,
+        "depth": 10,
+        "gammaPerSecond": 0.95,
+        "iterationSelection": "fixed_budget_no_test_selection",
+        "iterations": 8,
+        "jointSupport": {
+          "actions": {
+            "-1,-1": 4,
+            "-1,0": 121,
+            "-1,1": 6,
+            "0,-1": 16,
+            "0,0": 218,
+            "0,1": 23,
+            "1,0": 27
+          },
+          "established": true,
+          "poolGrowth": 29,
+          "poolShrinkage": 20,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 10
+        },
+        "maxFeatures": 1.0,
+        "minLeaf": 3,
+        "nJobs": 1,
+        "seed": 42,
+        "testEvaluated": false,
+        "trees": 32
+      },
+      "eligible": true,
+      "id": "deeper",
+      "inputSha256": {
+        "manifest.json": "7f110ffac53c7d075a4f8e8c0380c31b0be22c0e048185ff0f6d85ead016d7c3",
+        "train.jsonl": "1a1db762695635c2d03b6067a13c0b0d7734063a2db23ba67a002d3f7ba82e56",
+        "validation.jsonl": "ea2c0aba7b70f995d716ba0c0961a1be56842e097d946922b2193deaa33e5603"
+      },
+      "modelSha256": "d21cdf2c25b111d25a00b97a0fc11ee07aad5ceb7341a15434997a401388f380",
+      "validationBellmanRmse": 1.2723979283006002,
+      "validationScored": 106
+    },
+    {
+      "config": {
+        "allowsIncompleteJointSupport": false,
+        "depth": 10,
+        "gammaPerSecond": 0.95,
+        "iterationSelection": "fixed_budget_no_test_selection",
+        "iterations": 8,
+        "jointSupport": {
+          "actions": {
+            "-1,-1": 4,
+            "-1,0": 121,
+            "-1,1": 6,
+            "0,-1": 16,
+            "0,0": 218,
+            "0,1": 23,
+            "1,0": 27
+          },
+          "established": true,
+          "poolGrowth": 29,
+          "poolShrinkage": 20,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 10
+        },
+        "maxFeatures": 0.25,
+        "minLeaf": 3,
+        "nJobs": 1,
+        "seed": 42,
+        "testEvaluated": false,
+        "trees": 32
+      },
+      "eligible": true,
+      "id": "subspace",
+      "inputSha256": {
+        "manifest.json": "7f110ffac53c7d075a4f8e8c0380c31b0be22c0e048185ff0f6d85ead016d7c3",
+        "train.jsonl": "1a1db762695635c2d03b6067a13c0b0d7734063a2db23ba67a002d3f7ba82e56",
+        "validation.jsonl": "ea2c0aba7b70f995d716ba0c0961a1be56842e097d946922b2193deaa33e5603"
+      },
+      "modelSha256": "834ce74ceeec8675aa77b5991f5be725a75a352fc8aad80d48c3d7be3408ed09",
+      "validationBellmanRmse": 1.2113238982639576,
+      "validationScored": 106
+    }
+  ],
+  "criterion": "minimum_final_conditional_validation_bellman_rmse",
+  "limitation": "Bellman residual is model-dependent and conditional on support; it is not a policy value estimate",
+  "policyPerformanceEstablished": false,
+  "purpose": "development_diagnostic_candidate_for_technical_checks_only",
+  "selected": "subspace",
+  "selectionVersion": 1,
+  "testEvaluated": false,
+  "tieBreak": "predeclared_grid_order"
+}

@@ -1,0 +1,47 @@
+{
+  "planVersion": 1,
+  "purpose": "diagnostic_control_of_predeclared_reference_and_metric_winner_not_a_new_selection",
+  "selectionUnchanged": "subspace",
+  "arms": {
+    "selected": {
+      "candidate": "subspace",
+      "modelSha256": "834ce74ceeec8675aa77b5991f5be725a75a352fc8aad80d48c3d7be3408ed09"
+    },
+    "reference": {
+      "candidate": "reference",
+      "modelSha256": "16076d5df73a5255550c1b56a36b9dae0e90a4a854c5e69c2db402715585be3f"
+    }
+  },
+  "order": [
+    [
+      "steady",
+      "selected"
+    ],
+    [
+      "steady",
+      "reference"
+    ],
+    [
+      "spike",
+      "reference"
+    ],
+    [
+      "spike",
+      "selected"
+    ]
+  ],
+  "repeats": 1,
+  "properties": {
+    "bench.db.workers": 8,
+    "bench.db.serviceMs": 30,
+    "bench.poolSize": 2,
+    "bench.poolMin": 2,
+    "bench.poolMax": 12,
+    "bench.initialLimit": 20,
+    "bench.sloMs": 150,
+    "bench.poolPeriod": 5,
+    "bench.inferenceBudgetMs": 20
+  },
+  "testEvaluated": false,
+  "performanceEstablished": false
+}

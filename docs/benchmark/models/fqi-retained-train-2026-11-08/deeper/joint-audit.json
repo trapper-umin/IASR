@@ -1,0 +1,2218 @@
+{
+  "actionNodeCoverage": {
+    "nodes": [
+      {
+        "actionFeature": "action.limit",
+        "node": 87,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 6,
+            "historiesWithSupportedCandidatesOnBothBranches": 3
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 0.3089256048523592
+          },
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": ">",
+            "threshold": -0.23224881459042312
+          },
+          {
+            "feature": "w2.pool_absolute",
+            "operator": ">",
+            "threshold": -0.40535203572611883
+          },
+          {
+            "feature": "w2.limit_fraction",
+            "operator": "<=",
+            "threshold": 0.014670050429009651
+          },
+          {
+            "feature": "w2.latency_p95_ms",
+            "operator": ">",
+            "threshold": -0.025417480472021137
+          },
+          {
+            "feature": "w2.queue_length",
+            "operator": ">",
+            "threshold": 0.6078870313968597
+          },
+          {
+            "feature": "w2.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.1302400541632623
+          },
+          {
+            "feature": "w1.hikari_pending",
+            "operator": "<=",
+            "threshold": -0.018442300054000216
+          },
+          {
+            "feature": "w1.cpu_proc",
+            "operator": "<=",
+            "threshold": 0.04143294122999972
+          }
+        ],
+        "threshold": -0.20037338426354034,
+        "tree": 0
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 102,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 10,
+            "historiesWithSupportedCandidatesOnBothBranches": 7
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 0.3089256048523592
+          },
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": ">",
+            "threshold": -0.23224881459042312
+          },
+          {
+            "feature": "w2.pool_absolute",
+            "operator": ">",
+            "threshold": -0.40535203572611883
+          },
+          {
+            "feature": "w2.limit_fraction",
+            "operator": ">",
+            "threshold": 0.014670050429009651
+          },
+          {
+            "feature": "w2.admission_wait_mean_ms",
+            "operator": ">",
+            "threshold": -0.8359390275833469
+          },
+          {
+            "feature": "w3.queue_length",
+            "operator": "<=",
+            "threshold": 0.4024501878966263
+          },
+          {
+            "feature": "w3.pool_fraction",
+            "operator": ">",
+            "threshold": 0.9031679828898832
+          },
+          {
+            "feature": "w0.hikari_active",
+            "operator": ">",
+            "threshold": 0.08279007153125303
+          }
+        ],
+        "threshold": -0.7949972785054693,
+        "tree": 0
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 59,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 12,
+            "historiesWithSupportedCandidatesOnBothBranches": 11
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.221994598972434
+          },
+          {
+            "feature": "w3.hikari_pending",
+            "operator": "<=",
+            "threshold": -0.24412530230357823
+          },
+          {
+            "feature": "w0.cpu_proc",
+            "operator": ">",
+            "threshold": -0.06237262292660023
+          },
+          {
+            "feature": "w2.timeout_rate",
+            "operator": "<=",
+            "threshold": -0.22086576171867744
+          },
+          {
+            "feature": "w0.pool_absolute",
+            "operator": ">",
+            "threshold": -0.08279887462630817
+          },
+          {
+            "feature": "w2.latency_p99_ms",
+            "operator": "<=",
+            "threshold": -0.7171038210821475
+          },
+          {
+            "feature": "w2.latency_mean_ms",
+            "operator": ">",
+            "threshold": -0.7602358786062784
+          },
+          {
+            "feature": "w1.service_mean_ms",
+            "operator": ">",
+            "threshold": -0.4547468021446832
+          },
+          {
+            "feature": "w1.goodput_rps",
+            "operator": "<=",
+            "threshold": -0.00483074362593214
+          }
+        ],
+        "threshold": 0.8946889619783913,
+        "tree": 3
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 109,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 14,
+            "historiesWithSupportedCandidatesOnBothBranches": 9
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.221994598972434
+          },
+          {
+            "feature": "w3.hikari_pending",
+            "operator": ">",
+            "threshold": -0.24412530230357823
+          },
+          {
+            "feature": "w3.pool_fraction",
+            "operator": ">",
+            "threshold": 0.3090699722799799
+          },
+          {
+            "feature": "w0.gc_pause_p95_ms",
+            "operator": ">",
+            "threshold": 0.019284132527421657
+          },
+          {
+            "feature": "w0.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.27927346150023025
+          },
+          {
+            "feature": "w2.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.0926768093237279
+          },
+          {
+            "feature": "w3.limit_fraction",
+            "operator": ">",
+            "threshold": -0.25829877038487237
+          },
+          {
+            "feature": "w1.queue_length",
+            "operator": ">",
+            "threshold": 0.06568216223517964
+          }
+        ],
+        "threshold": -0.3981048499225196,
+        "tree": 3
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 155,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 9,
+            "historiesWithSupportedCandidatesOnBothBranches": 5
+          },
+          "validation": {
+            "historiesReachingNode": 2,
+            "historiesWithSupportedCandidatesOnBothBranches": 1
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.hikari_pending",
+            "operator": ">",
+            "threshold": 0.17266904001044758
+          },
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": ">",
+            "threshold": 0.48320607199969645
+          },
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 1.5110894083809425
+          },
+          {
+            "feature": "w1.limit_absolute",
+            "operator": ">",
+            "threshold": -0.2623900957358799
+          },
+          {
+            "feature": "w2.gc_pause_p95_ms",
+            "operator": "<=",
+            "threshold": -0.004377442727815534
+          },
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": "<=",
+            "threshold": 0.6001246960894298
+          }
+        ],
+        "threshold": -0.1694813287674828,
+        "tree": 4
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 41,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 17,
+            "historiesWithSupportedCandidatesOnBothBranches": 11
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.43860878134559944
+          },
+          {
+            "feature": "w2.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.010899592785408974
+          },
+          {
+            "feature": "w0.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.44950859957510947
+          },
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 0.01199809395481316
+          },
+          {
+            "feature": "w1.cpu_proc",
+            "operator": ">",
+            "threshold": -0.06705971263487391
+          },
+          {
+            "feature": "w0.hikari_idle",
+            "operator": "<=",
+            "threshold": 0.592963956106903
+          },
+          {
+            "feature": "w2.pool_fraction",
+            "operator": "<=",
+            "threshold": 1.3975055753328223
+          },
+          {
+            "feature": "w2.limit_fraction",
+            "operator": ">",
+            "threshold": -0.3019517684193886
+          },
+          {
+            "feature": "w0.cpu_proc",
+            "operator": "<=",
+            "threshold": 0.1816775482705135
+          }
+        ],
+        "threshold": -0.5668978628548318,
+        "tree": 5
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 184,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 10,
+            "historiesWithSupportedCandidatesOnBothBranches": 7
+          },
+          "validation": {
+            "historiesReachingNode": 6,
+            "historiesWithSupportedCandidatesOnBothBranches": 3
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": ">",
+            "threshold": 0.43860878134559944
+          },
+          {
+            "feature": "w1.goodput_rps",
+            "operator": ">",
+            "threshold": 0.271146245183557
+          },
+          {
+            "feature": "w0.pool_fraction",
+            "operator": "<=",
+            "threshold": 0.21961409633493512
+          },
+          {
+            "feature": "w1.timeout_rate",
+            "operator": ">",
+            "threshold": -0.11153567159232192
+          },
+          {
+            "feature": "w3.limit_fraction",
+            "operator": "<=",
+            "threshold": 0.11101278353728958
+          }
+        ],
+        "threshold": -0.558982639833811,
+        "tree": 5
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 88,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 12,
+            "historiesWithSupportedCandidatesOnBothBranches": 7
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w1.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 0.24161198193836741
+          },
+          {
+            "feature": "w3.latency_p99_ms",
+            "operator": ">",
+            "threshold": -0.4082841599642118
+          },
+          {
+            "feature": "w3.pool_absolute",
+            "operator": ">",
+            "threshold": -0.3644921598557812
+          },
+          {
+            "feature": "w3.gc_pause_p95_ms",
+            "operator": ">",
+            "threshold": 0.061234726396332706
+          },
+          {
+            "feature": "w2.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.5139178787587104
+          },
+          {
+            "feature": "w1.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.09018533937659778
+          },
+          {
+            "feature": "w1.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.29293178758957394
+          },
+          {
+            "feature": "w1.limit_fraction",
+            "operator": ">",
+            "threshold": -0.23136375170820386
+          },
+          {
+            "feature": "w0.admission_wait_mean_ms",
+            "operator": ">",
+            "threshold": -0.05801608149026882
+          }
+        ],
+        "threshold": -0.9659980265265321,
+        "tree": 6
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 73,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 13,
+            "historiesWithSupportedCandidatesOnBothBranches": 9
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 0.3180867246971335
+          },
+          {
+            "feature": "w2.pool_absolute",
+            "operator": ">",
+            "threshold": -0.44730961960615107
+          },
+          {
+            "feature": "w3.inflight",
+            "operator": ">",
+            "threshold": -0.4725439874083782
+          },
+          {
+            "feature": "w1.limit_fraction",
+            "operator": "<=",
+            "threshold": 0.01424676313534523
+          },
+          {
+            "feature": "w3.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.33000955047877345
+          },
+          {
+            "feature": "w1.latency_p95_ms",
+            "operator": "<=",
+            "threshold": 0.04005575696348629
+          },
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": ">",
+            "threshold": -0.10595684469412145
+          },
+          {
+            "feature": "w2.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 0.008628997384886372
+          }
+        ],
+        "threshold": -0.05656950457793175,
+        "tree": 7
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 184,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 7,
+            "historiesWithSupportedCandidatesOnBothBranches": 4
+          },
+          "validation": {
+            "historiesReachingNode": 3,
+            "historiesWithSupportedCandidatesOnBothBranches": 2
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_pending",
+            "operator": ">",
+            "threshold": 0.2579098889581748
+          },
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": ">",
+            "threshold": 0.7886493179606769
+          },
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": "<=",
+            "threshold": 0.539873608998342
+          },
+          {
+            "feature": "w2.pool_absolute",
+            "operator": ">",
+            "threshold": -0.6428060042172699
+          },
+          {
+            "feature": "w2.pool_absolute",
+            "operator": "<=",
+            "threshold": -0.3998751177684754
+          },
+          {
+            "feature": "w3.gc_pause_p95_ms",
+            "operator": "<=",
+            "threshold": 0.17874560971260578
+          },
+          {
+            "feature": "w3.limit_fraction",
+            "operator": "<=",
+            "threshold": 0.1752510359593386
+          },
+          {
+            "feature": "w2.hikari_active",
+            "operator": "<=",
+            "threshold": 0.5644169307098565
+          },
+          {
+            "feature": "w0.hikari_pending",
+            "operator": "<=",
+            "threshold": 1.3853784172661432
+          }
+        ],
+        "threshold": -0.15981230240306454,
+        "tree": 9
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 170,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 9,
+            "historiesWithSupportedCandidatesOnBothBranches": 5
+          },
+          "validation": {
+            "historiesReachingNode": 2,
+            "historiesWithSupportedCandidatesOnBothBranches": 1
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.service_mean_ms",
+            "operator": ">",
+            "threshold": 0.23664055007533458
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": ">",
+            "threshold": 1.1119764358031923
+          },
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": "<=",
+            "threshold": 0.5939911196891647
+          },
+          {
+            "feature": "w0.queue_length",
+            "operator": "<=",
+            "threshold": 0.12443172835888394
+          },
+          {
+            "feature": "w1.limit_absolute",
+            "operator": ">",
+            "threshold": -0.21358655410964295
+          }
+        ],
+        "threshold": -0.1960144965890862,
+        "tree": 10
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 130,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 10,
+            "historiesWithSupportedCandidatesOnBothBranches": 6
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w0.pool_absolute",
+            "operator": ">",
+            "threshold": -0.2834275455835404
+          },
+          {
+            "feature": "w3.latency_mean_ms",
+            "operator": "<=",
+            "threshold": 0.005462326447685295
+          },
+          {
+            "feature": "w3.latency_p99_ms",
+            "operator": ">",
+            "threshold": -0.475527901000987
+          },
+          {
+            "feature": "w1.gc_pause_p95_ms",
+            "operator": ">",
+            "threshold": 0.062034189756810826
+          },
+          {
+            "feature": "w1.queue_length",
+            "operator": "<=",
+            "threshold": 0.9758833284493964
+          },
+          {
+            "feature": "w0.latency_mean_ms",
+            "operator": "<=",
+            "threshold": 0.039913033123952224
+          },
+          {
+            "feature": "w2.gc_pause_p95_ms",
+            "operator": "<=",
+            "threshold": 0.21751207642424233
+          },
+          {
+            "feature": "w1.service_mean_ms",
+            "operator": ">",
+            "threshold": -0.16046882641254712
+          }
+        ],
+        "threshold": -0.07417896207150954,
+        "tree": 11
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 57,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 7,
+            "historiesWithSupportedCandidatesOnBothBranches": 4
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.18068574872553889
+          },
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": ">",
+            "threshold": -0.23040971531548216
+          },
+          {
+            "feature": "w1.pool_fraction",
+            "operator": ">",
+            "threshold": 0.4603929298612388
+          },
+          {
+            "feature": "w2.gc_pause_p95_ms",
+            "operator": "<=",
+            "threshold": 0.07919467767893817
+          },
+          {
+            "feature": "w2.cpu_proc",
+            "operator": ">",
+            "threshold": 0.022702681951547343
+          },
+          {
+            "feature": "w2.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.025517670277330456
+          }
+        ],
+        "threshold": -0.13091765070842465,
+        "tree": 12
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 7,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 40,
+            "historiesWithSupportedCandidatesOnBothBranches": 20
+          },
+          "validation": {
+            "historiesReachingNode": 9,
+            "historiesWithSupportedCandidatesOnBothBranches": 2
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.14837005217385313
+          },
+          {
+            "feature": "w3.hikari_pending",
+            "operator": "<=",
+            "threshold": -0.2724946247470844
+          },
+          {
+            "feature": "w2.cpu_proc",
+            "operator": "<=",
+            "threshold": -0.06741509037627413
+          },
+          {
+            "feature": "w3.goodput_rps",
+            "operator": "<=",
+            "threshold": 0.4438713714223933
+          },
+          {
+            "feature": "w3.pool_fraction",
+            "operator": "<=",
+            "threshold": 0.4187925937498419
+          },
+          {
+            "feature": "w3.pool_fraction",
+            "operator": ">",
+            "threshold": -0.10792326696469601
+          }
+        ],
+        "threshold": -0.8653178130580661,
+        "tree": 13
+      },
+      {
+        "actionFeature": "action.pool",
+        "node": 9,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 40,
+            "historiesWithSupportedCandidatesOnBothBranches": 8
+          },
+          "validation": {
+            "historiesReachingNode": 9,
+            "historiesWithSupportedCandidatesOnBothBranches": 2
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.14837005217385313
+          },
+          {
+            "feature": "w3.hikari_pending",
+            "operator": "<=",
+            "threshold": -0.2724946247470844
+          },
+          {
+            "feature": "w2.cpu_proc",
+            "operator": "<=",
+            "threshold": -0.06741509037627413
+          },
+          {
+            "feature": "w3.goodput_rps",
+            "operator": "<=",
+            "threshold": 0.4438713714223933
+          },
+          {
+            "feature": "w3.pool_fraction",
+            "operator": "<=",
+            "threshold": 0.4187925937498419
+          },
+          {
+            "feature": "w3.pool_fraction",
+            "operator": ">",
+            "threshold": -0.10792326696469601
+          },
+          {
+            "feature": "action.limit",
+            "operator": ">",
+            "threshold": -0.8653178130580661
+          }
+        ],
+        "threshold": -0.8205886836259573,
+        "tree": 13
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 51,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 21,
+            "historiesWithSupportedCandidatesOnBothBranches": 15
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.14837005217385313
+          },
+          {
+            "feature": "w3.hikari_pending",
+            "operator": "<=",
+            "threshold": -0.2724946247470844
+          },
+          {
+            "feature": "w2.cpu_proc",
+            "operator": ">",
+            "threshold": -0.06741509037627413
+          },
+          {
+            "feature": "w3.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.0567262848739194
+          },
+          {
+            "feature": "w1.cpu_proc",
+            "operator": ">",
+            "threshold": -0.05629709967928918
+          },
+          {
+            "feature": "w1.pool_absolute",
+            "operator": ">",
+            "threshold": -0.1314822136803913
+          },
+          {
+            "feature": "w1.service_mean_ms",
+            "operator": "<=",
+            "threshold": -0.45288762697343593
+          },
+          {
+            "feature": "w1.pool_cooldown",
+            "operator": "<=",
+            "threshold": 1.3582435536003874
+          },
+          {
+            "feature": "w2.cpu_proc",
+            "operator": ">",
+            "threshold": -0.023748004205452172
+          }
+        ],
+        "threshold": 0.017981955324291254,
+        "tree": 13
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 134,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 10,
+            "historiesWithSupportedCandidatesOnBothBranches": 7
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": ">",
+            "threshold": 0.07359707100919266
+          },
+          {
+            "feature": "w2.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 1.0221622288326195
+          },
+          {
+            "feature": "w0.pool_absolute",
+            "operator": ">",
+            "threshold": 0.21569557742480916
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.5958313965313211
+          },
+          {
+            "feature": "w1.queue_length",
+            "operator": "<=",
+            "threshold": 0.3987857644710291
+          },
+          {
+            "feature": "w0.latency_p99_ms",
+            "operator": "<=",
+            "threshold": 0.18774918139013708
+          },
+          {
+            "feature": "w0.hikari_active",
+            "operator": ">",
+            "threshold": 0.09607070624045605
+          }
+        ],
+        "threshold": -0.5764987047652242,
+        "tree": 16
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 9,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 52,
+            "historiesWithSupportedCandidatesOnBothBranches": 27
+          },
+          "validation": {
+            "historiesReachingNode": 35,
+            "historiesWithSupportedCandidatesOnBothBranches": 12
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 0.11566431677604017
+          },
+          {
+            "feature": "w2.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.40772051585503766
+          },
+          {
+            "feature": "w2.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.09688958858769015
+          },
+          {
+            "feature": "w1.cpu_proc",
+            "operator": "<=",
+            "threshold": -0.0251137767633213
+          },
+          {
+            "feature": "w3.pool_absolute",
+            "operator": "<=",
+            "threshold": 0.44583719803292177
+          },
+          {
+            "feature": "w2.pool_fraction",
+            "operator": ">",
+            "threshold": -0.28320156112346173
+          }
+        ],
+        "threshold": -0.8629790637004091,
+        "tree": 18
+      },
+      {
+        "actionFeature": "action.pool",
+        "node": 13,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 49,
+            "historiesWithSupportedCandidatesOnBothBranches": 12
+          },
+          "validation": {
+            "historiesReachingNode": 35,
+            "historiesWithSupportedCandidatesOnBothBranches": 5
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 0.11566431677604017
+          },
+          {
+            "feature": "w2.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.40772051585503766
+          },
+          {
+            "feature": "w2.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.09688958858769015
+          },
+          {
+            "feature": "w1.cpu_proc",
+            "operator": "<=",
+            "threshold": -0.0251137767633213
+          },
+          {
+            "feature": "w3.pool_absolute",
+            "operator": "<=",
+            "threshold": 0.44583719803292177
+          },
+          {
+            "feature": "w2.pool_fraction",
+            "operator": ">",
+            "threshold": -0.28320156112346173
+          },
+          {
+            "feature": "action.limit",
+            "operator": ">",
+            "threshold": -0.8629790637004091
+          },
+          {
+            "feature": "w0.hikari_active",
+            "operator": ">",
+            "threshold": -0.7333747508139172
+          }
+        ],
+        "threshold": -0.016655643012679966,
+        "tree": 18
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 44,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 8,
+            "historiesWithSupportedCandidatesOnBothBranches": 5
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 0.11566431677604017
+          },
+          {
+            "feature": "w2.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.40772051585503766
+          },
+          {
+            "feature": "w2.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.09688958858769015
+          },
+          {
+            "feature": "w1.cpu_proc",
+            "operator": ">",
+            "threshold": -0.0251137767633213
+          },
+          {
+            "feature": "w2.latency_p95_ms",
+            "operator": "<=",
+            "threshold": -0.1769038642716475
+          },
+          {
+            "feature": "w0.latency_p99_ms",
+            "operator": "<=",
+            "threshold": -0.6335552926051693
+          },
+          {
+            "feature": "w0.pool_phase",
+            "operator": "<=",
+            "threshold": -0.9224908174585974
+          },
+          {
+            "feature": "w1.pool_absolute",
+            "operator": ">",
+            "threshold": 0.009629501849240385
+          }
+        ],
+        "threshold": -0.96167484017167,
+        "tree": 18
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 120,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 6,
+            "historiesWithSupportedCandidatesOnBothBranches": 4
+          },
+          "validation": {
+            "historiesReachingNode": 9,
+            "historiesWithSupportedCandidatesOnBothBranches": 4
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": ">",
+            "threshold": 0.11566431677604017
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.7716222266331776
+          },
+          {
+            "feature": "w1.goodput_rps",
+            "operator": "<=",
+            "threshold": 0.706077626060168
+          },
+          {
+            "feature": "w2.cpu_proc",
+            "operator": "<=",
+            "threshold": 0.0955067217516602
+          },
+          {
+            "feature": "w1.admission_wait_mean_ms",
+            "operator": ">",
+            "threshold": -0.47150829937231575
+          },
+          {
+            "feature": "w0.latency_mean_ms",
+            "operator": "<=",
+            "threshold": 0.36881612856631063
+          },
+          {
+            "feature": "w3.hikari_pending",
+            "operator": ">",
+            "threshold": 0.9193171920445862
+          },
+          {
+            "feature": "w2.admission_wait_mean_ms",
+            "operator": ">",
+            "threshold": 0.023768110878560875
+          }
+        ],
+        "threshold": -0.058258071568914715,
+        "tree": 18
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 165,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 7,
+            "historiesWithSupportedCandidatesOnBothBranches": 4
+          },
+          "validation": {
+            "historiesReachingNode": 2,
+            "historiesWithSupportedCandidatesOnBothBranches": 1
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": ">",
+            "threshold": 0.11566431677604017
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": ">",
+            "threshold": 0.7716222266331776
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": "<=",
+            "threshold": 1.3067478970361737
+          },
+          {
+            "feature": "w2.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.5261024378586947
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": ">",
+            "threshold": 1.0733631276129343
+          },
+          {
+            "feature": "w3.limit_fraction",
+            "operator": "<=",
+            "threshold": -0.08619747177973582
+          }
+        ],
+        "threshold": -0.029662955100491106,
+        "tree": 18
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 168,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 11,
+            "historiesWithSupportedCandidatesOnBothBranches": 6
+          },
+          "validation": {
+            "historiesReachingNode": 2,
+            "historiesWithSupportedCandidatesOnBothBranches": 1
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": ">",
+            "threshold": 0.11566431677604017
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": ">",
+            "threshold": 0.7716222266331776
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": "<=",
+            "threshold": 1.3067478970361737
+          },
+          {
+            "feature": "w2.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.5261024378586947
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": ">",
+            "threshold": 1.0733631276129343
+          },
+          {
+            "feature": "w3.limit_fraction",
+            "operator": ">",
+            "threshold": -0.08619747177973582
+          }
+        ],
+        "threshold": -0.24912313150666798,
+        "tree": 18
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 84,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 13,
+            "historiesWithSupportedCandidatesOnBothBranches": 7
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.15673441726652082
+          },
+          {
+            "feature": "w2.hikari_acquire_mean_ms",
+            "operator": ">",
+            "threshold": -0.39359988561023357
+          },
+          {
+            "feature": "w0.pool_absolute",
+            "operator": ">",
+            "threshold": -0.49197964707481656
+          },
+          {
+            "feature": "w0.gc_pause_p95_ms",
+            "operator": ">",
+            "threshold": 0.06397922572162171
+          },
+          {
+            "feature": "w2.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.4778520463305118
+          },
+          {
+            "feature": "w2.pool_fraction",
+            "operator": "<=",
+            "threshold": 1.1828345213297817
+          },
+          {
+            "feature": "w3.limit_absolute",
+            "operator": ">",
+            "threshold": -1.0420617868004616
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": "<=",
+            "threshold": -0.0105748653860199
+          }
+        ],
+        "threshold": -0.3682783056834146,
+        "tree": 19
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 161,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 7,
+            "historiesWithSupportedCandidatesOnBothBranches": 5
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.service_mean_ms",
+            "operator": ">",
+            "threshold": 0.15673441726652082
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.828393546996391
+          },
+          {
+            "feature": "w3.pool_absolute",
+            "operator": ">",
+            "threshold": 0.42263717189088323
+          },
+          {
+            "feature": "w3.goodput_rps",
+            "operator": ">",
+            "threshold": 1.25056200168293
+          },
+          {
+            "feature": "w3.queue_length",
+            "operator": "<=",
+            "threshold": 0.4555893950223824
+          },
+          {
+            "feature": "w3.hikari_active",
+            "operator": ">",
+            "threshold": 0.14970730255578177
+          },
+          {
+            "feature": "w2.pool_cooldown",
+            "operator": "<=",
+            "threshold": 2.3383645584519788
+          },
+          {
+            "feature": "w1.goodput_rps",
+            "operator": ">",
+            "threshold": 1.143375042176714
+          },
+          {
+            "feature": "w2.latency_p99_ms",
+            "operator": ">",
+            "threshold": 0.11206414087155858
+          }
+        ],
+        "threshold": -0.20635066936088287,
+        "tree": 19
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 177,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 7,
+            "historiesWithSupportedCandidatesOnBothBranches": 4
+          },
+          "validation": {
+            "historiesReachingNode": 2,
+            "historiesWithSupportedCandidatesOnBothBranches": 1
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.service_mean_ms",
+            "operator": ">",
+            "threshold": 0.15673441726652082
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": ">",
+            "threshold": 0.828393546996391
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": "<=",
+            "threshold": 1.527993173942766
+          },
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": "<=",
+            "threshold": 0.536713936747962
+          },
+          {
+            "feature": "w3.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.15721357210712028
+          },
+          {
+            "feature": "w2.elapsed_ratio",
+            "operator": "<=",
+            "threshold": 0.025131744224421416
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": ">",
+            "threshold": 1.036918195392402
+          },
+          {
+            "feature": "w3.goodput_rps",
+            "operator": "<=",
+            "threshold": -0.2763857269787443
+          }
+        ],
+        "threshold": -0.2098841784567964,
+        "tree": 19
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 28,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 52,
+            "historiesWithSupportedCandidatesOnBothBranches": 26
+          },
+          "validation": {
+            "historiesReachingNode": 13,
+            "historiesWithSupportedCandidatesOnBothBranches": 7
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": "<=",
+            "threshold": 0.16411873447138803
+          },
+          {
+            "feature": "w2.pool_absolute",
+            "operator": ">",
+            "threshold": -0.37120779679213084
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": "<=",
+            "threshold": -0.16660136899638256
+          },
+          {
+            "feature": "w2.cpu_proc",
+            "operator": "<=",
+            "threshold": -0.049910217028192885
+          },
+          {
+            "feature": "w2.pool_absolute",
+            "operator": "<=",
+            "threshold": 0.2670358382244761
+          },
+          {
+            "feature": "w1.pool_fraction",
+            "operator": ">",
+            "threshold": -0.23368349303610608
+          }
+        ],
+        "threshold": -0.6297213219244597,
+        "tree": 20
+      },
+      {
+        "actionFeature": "action.pool",
+        "node": 88,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 25,
+            "historiesWithSupportedCandidatesOnBothBranches": 4
+          },
+          "validation": {
+            "historiesReachingNode": 1,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_pending",
+            "operator": ">",
+            "threshold": -0.03890717632950896
+          },
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": "<=",
+            "threshold": 0.4429157758819946
+          },
+          {
+            "feature": "w1.pool_fraction",
+            "operator": "<=",
+            "threshold": 0.2442053483406239
+          },
+          {
+            "feature": "w0.hikari_pending",
+            "operator": ">",
+            "threshold": -0.32794013434139996
+          },
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": ">",
+            "threshold": 0.18647164873193445
+          },
+          {
+            "feature": "w0.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.8836791525054359
+          },
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": ">",
+            "threshold": 0.5999107804047339
+          },
+          {
+            "feature": "w2.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.41303598579206724
+          }
+        ],
+        "threshold": 0.5958197794835176,
+        "tree": 22
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 53,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 9,
+            "historiesWithSupportedCandidatesOnBothBranches": 5
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w1.latency_p99_ms",
+            "operator": "<=",
+            "threshold": 0.14390936295805312
+          },
+          {
+            "feature": "w2.pool_absolute",
+            "operator": ">",
+            "threshold": -0.4475520540483073
+          },
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": -0.039694972618760316
+          },
+          {
+            "feature": "w1.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.3331758103015985
+          },
+          {
+            "feature": "w1.latency_p95_ms",
+            "operator": ">",
+            "threshold": -0.444309277934285
+          },
+          {
+            "feature": "w3.pool_fraction",
+            "operator": ">",
+            "threshold": 0.8617864644559037
+          },
+          {
+            "feature": "w2.limit_fraction",
+            "operator": ">",
+            "threshold": -0.10080401612579104
+          }
+        ],
+        "threshold": -0.5225126186956245,
+        "tree": 23
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 68,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 7,
+            "historiesWithSupportedCandidatesOnBothBranches": 6
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w1.latency_p99_ms",
+            "operator": "<=",
+            "threshold": 0.14390936295805312
+          },
+          {
+            "feature": "w2.pool_absolute",
+            "operator": ">",
+            "threshold": -0.4475520540483073
+          },
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": ">",
+            "threshold": -0.039694972618760316
+          },
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 0.2881451912652682
+          },
+          {
+            "feature": "w1.timeout_rate",
+            "operator": "<=",
+            "threshold": -0.14619312187920463
+          },
+          {
+            "feature": "w2.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.06494287280770618
+          }
+        ],
+        "threshold": -0.9353260039050719,
+        "tree": 23
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 164,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 7,
+            "historiesWithSupportedCandidatesOnBothBranches": 6
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.pool_absolute",
+            "operator": ">",
+            "threshold": -0.30285740809182515
+          },
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": ">",
+            "threshold": -0.07356784717148152
+          },
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": "<=",
+            "threshold": 0.16500366673343186
+          },
+          {
+            "feature": "w2.pool_fraction",
+            "operator": ">",
+            "threshold": 0.5067258195258152
+          },
+          {
+            "feature": "w1.gc_pause_p95_ms",
+            "operator": ">",
+            "threshold": 0.024045701873724748
+          },
+          {
+            "feature": "w3.timeout_rate",
+            "operator": "<=",
+            "threshold": 0.0015622564741969436
+          },
+          {
+            "feature": "w2.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.09274460485129132
+          },
+          {
+            "feature": "w0.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.010461800467920168
+          }
+        ],
+        "threshold": -0.6564568451868635,
+        "tree": 25
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 102,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 11,
+            "historiesWithSupportedCandidatesOnBothBranches": 8
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.600030708574034
+          },
+          {
+            "feature": "w2.hikari_pending",
+            "operator": ">",
+            "threshold": 0.014937501589563917
+          },
+          {
+            "feature": "w3.pool_absolute",
+            "operator": ">",
+            "threshold": 0.24604602670112907
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.6187350089659618
+          },
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": ">",
+            "threshold": 0.21162645688022722
+          },
+          {
+            "feature": "w0.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 0.3527467409046723
+          },
+          {
+            "feature": "w2.pool_cooldown",
+            "operator": "<=",
+            "threshold": 2.73992062208239
+          }
+        ],
+        "threshold": -0.24677726265358613,
+        "tree": 26
+      },
+      {
+        "actionFeature": "action.pool",
+        "node": 12,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 95,
+            "historiesWithSupportedCandidatesOnBothBranches": 18
+          },
+          "validation": {
+            "historiesReachingNode": 18,
+            "historiesWithSupportedCandidatesOnBothBranches": 3
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.4260071132401556
+          },
+          {
+            "feature": "w3.inflight",
+            "operator": "<=",
+            "threshold": -0.5778154887257421
+          },
+          {
+            "feature": "w3.goodput_rps",
+            "operator": "<=",
+            "threshold": 0.1686855988350779
+          },
+          {
+            "feature": "w1.goodput_rps",
+            "operator": ">",
+            "threshold": -0.16776710160937075
+          },
+          {
+            "feature": "w2.latency_mean_ms",
+            "operator": "<=",
+            "threshold": -0.7383089229928117
+          }
+        ],
+        "threshold": -0.2927860362887318,
+        "tree": 27
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 97,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 7,
+            "historiesWithSupportedCandidatesOnBothBranches": 4
+          },
+          "validation": {
+            "historiesReachingNode": 0,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.latency_p99_ms",
+            "operator": ">",
+            "threshold": -0.03224375646322153
+          },
+          {
+            "feature": "w3.latency_p99_ms",
+            "operator": "<=",
+            "threshold": 0.39237479163886263
+          },
+          {
+            "feature": "w0.pool_fraction",
+            "operator": ">",
+            "threshold": 0.5462510674808545
+          },
+          {
+            "feature": "w3.hikari_pending",
+            "operator": "<=",
+            "threshold": 0.22119488224057793
+          },
+          {
+            "feature": "w2.gc_pause_p95_ms",
+            "operator": "<=",
+            "threshold": 0.04660251558157208
+          },
+          {
+            "feature": "w3.queue_length",
+            "operator": ">",
+            "threshold": 0.44867321809488603
+          },
+          {
+            "feature": "w3.limit_fraction",
+            "operator": "<=",
+            "threshold": 0.015226322840182285
+          },
+          {
+            "feature": "w2.queue_length",
+            "operator": "<=",
+            "threshold": 0.7626495833834097
+          }
+        ],
+        "threshold": -0.8140385536542342,
+        "tree": 29
+      }
+    ],
+    "thresholdSpace": "normalized_float32_features"
+  },
+  "actionSplitNodes": {
+    "concurrency": 30,
+    "pool": 4
+  },
+  "auditVersion": 1,
+  "inputSha256": {
+    "train": "1a1db762695635c2d03b6067a13c0b0d7734063a2db23ba67a002d3f7ba82e56",
+    "validation": "ea2c0aba7b70f995d716ba0c0961a1be56842e097d946922b2193deaa33e5603"
+  },
+  "modelDiagnostics": {
+    "train": {
+      "decisions": {
+        "-1,0": 47,
+        "0,-1": 20,
+        "0,0": 346,
+        "0,1": 4,
+        "1,0": 18
+      },
+      "fallbacks": 20,
+      "histories": 455,
+      "limitSensitivityAtFixedPoolAction": {
+        "historiesWithComparableActions": 258,
+        "maxQSpread": 0.04965760010197151,
+        "nonzeroQSpreadHistories": 105
+      },
+      "poolSensitivityAtFixedLimitAction": {
+        "historiesWithComparableActions": 83,
+        "maxQSpread": 0.07221326765549474,
+        "nonzeroQSpreadHistories": 24
+      },
+      "supportedPoolOpportunities": 83,
+      "supportedSimultaneousOpportunities": 22
+    },
+    "validation": {
+      "decisions": {
+        "-1,0": 4,
+        "0,-1": 6,
+        "0,0": 103
+      },
+      "fallbacks": 7,
+      "histories": 120,
+      "limitSensitivityAtFixedPoolAction": {
+        "historiesWithComparableActions": 52,
+        "maxQSpread": 0.06836979700387946,
+        "nonzeroQSpreadHistories": 20
+      },
+      "poolSensitivityAtFixedLimitAction": {
+        "historiesWithComparableActions": 22,
+        "maxQSpread": 0.00729814465462697,
+        "nonzeroQSpreadHistories": 6
+      },
+      "supportedPoolOpportunities": 22,
+      "supportedSimultaneousOpportunities": 9
+    }
+  },
+  "modelSha256": "d21cdf2c25b111d25a00b97a0fc11ee07aad5ceb7341a15434997a401388f380",
+  "necessaryJointCoverageEstablished": true,
+  "partitionsRead": [
+    "train",
+    "validation"
+  ],
+  "performanceEstablished": false,
+  "supportParameters": {
+    "maxRmsDistance": 2.0,
+    "minEpisodes": 2,
+    "minSamples": 3
+  },
+  "testEvaluated": false,
+  "train": {
+    "afterClosure": {
+      "actions": {
+        "-1,-1": 4,
+        "-1,0": 121,
+        "-1,1": 6,
+        "0,-1": 16,
+        "0,0": 218,
+        "0,1": 23,
+        "1,0": 27
+      },
+      "established": true,
+      "poolGrowth": 29,
+      "poolShrinkage": 20,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 10
+    },
+    "beforeClosure": {
+      "actions": {
+        "-1,-1": 7,
+        "-1,0": 127,
+        "-1,1": 6,
+        "0,-1": 18,
+        "0,0": 235,
+        "0,1": 26,
+        "1,-1": 1,
+        "1,0": 35
+      },
+      "established": true,
+      "poolGrowth": 32,
+      "poolShrinkage": 26,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 14
+    },
+    "closureFailure": null,
+    "closureTrace": [
+      {
+        "excluded": {
+          "unsupported_behavior_action": 25,
+          "unsupported_continuation": 8
+        },
+        "input": 455,
+        "pass": 1,
+        "retained": 422,
+        "retainedCoverage": {
+          "actions": {
+            "-1,-1": 4,
+            "-1,0": 121,
+            "-1,1": 6,
+            "0,-1": 17,
+            "0,0": 222,
+            "0,1": 23,
+            "1,0": 29
+          },
+          "established": true,
+          "poolGrowth": 29,
+          "poolShrinkage": 21,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 10
+        }
+      },
+      {
+        "excluded": {
+          "unsupported_behavior_action": 2,
+          "unsupported_continuation": 5
+        },
+        "input": 422,
+        "pass": 2,
+        "retained": 415,
+        "retainedCoverage": {
+          "actions": {
+            "-1,-1": 4,
+            "-1,0": 121,
+            "-1,1": 6,
+            "0,-1": 16,
+            "0,0": 218,
+            "0,1": 23,
+            "1,0": 27
+          },
+          "established": true,
+          "poolGrowth": 29,
+          "poolShrinkage": 20,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 10
+        }
+      },
+      {
+        "excluded": {},
+        "input": 415,
+        "pass": 3,
+        "retained": 415,
+        "retainedCoverage": {
+          "actions": {
+            "-1,-1": 4,
+            "-1,0": 121,
+            "-1,1": 6,
+            "0,-1": 16,
+            "0,0": 218,
+            "0,1": 23,
+            "1,0": 27
+          },
+          "established": true,
+          "poolGrowth": 29,
+          "poolShrinkage": 20,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 10
+        }
+      }
+    ],
+    "excluded": {
+      "unsupported_behavior_action": 28,
+      "unsupported_continuation": 12
+    },
+    "input": 455,
+    "lagDescriptions": {
+      "excluded": {
+        "h3:gap_or_episode_end": 10,
+        "h5:gap_or_episode_end": 10
+      },
+      "groups": {
+        "comfortable/no_pending/headroom/pool_tick/dp=-1/h=1": {
+          "count": 7,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 130.82857142857142,
+          "meanP95Ms": 49.58428571428571,
+          "simultaneousLimitChangeAtStart": 2
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=-1/h=3": {
+          "count": 5,
+          "limitChangedDuringFollowup": 3,
+          "meanGoodputRps": 134.8586,
+          "meanP95Ms": 84.848,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=-1/h=5": {
+          "count": 5,
+          "limitChangedDuringFollowup": 5,
+          "meanGoodputRps": 135.1524,
+          "meanP95Ms": 84.569,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=1/h=1": {
+          "count": 9,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 141.56022222222225,
+          "meanP95Ms": 44.3048888888889,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=1/h=3": {
+          "count": 9,
+          "limitChangedDuringFollowup": 6,
+          "meanGoodputRps": 147.46344444444446,
+          "meanP95Ms": 45.05233333333334,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=1/h=5": {
+          "count": 9,
+          "limitChangedDuringFollowup": 8,
+          "meanGoodputRps": 152.36033333333333,
+          "meanP95Ms": 58.228,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "comfortable/pending/headroom/pool_tick/dp=-1/h=1": {
+          "count": 2,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 209.599,
+          "meanP95Ms": 140.9035,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "comfortable/pending/headroom/pool_tick/dp=-1/h=3": {
+          "count": 2,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 207.792,
+          "meanP95Ms": 216.4135,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "comfortable/pending/headroom/pool_tick/dp=-1/h=5": {
+          "count": 2,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 209.3535,
+          "meanP95Ms": 214.473,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "over_slo/no_pending/binding/pool_tick/dp=1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 226.539,
+          "meanP95Ms": 151.929,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=1": {
+          "count": 16,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 142.4549375,
+          "meanP95Ms": 222.67587500000002,
+          "simultaneousLimitChangeAtStart": 4
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=3": {
+          "count": 13,
+          "limitChangedDuringFollowup": 12,
+          "meanGoodputRps": 137.60700000000003,
+          "meanP95Ms": 223.47915384615388,
+          "simultaneousLimitChangeAtStart": 3
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=5": {
+          "count": 13,
+          "limitChangedDuringFollowup": 13,
+          "meanGoodputRps": 137.02561538461538,
+          "meanP95Ms": 218.92361538461535,
+          "simultaneousLimitChangeAtStart": 3
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=1": {
+          "count": 20,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 139.83255000000003,
+          "meanP95Ms": 227.01205000000004,
+          "simultaneousLimitChangeAtStart": 6
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=3": {
+          "count": 18,
+          "limitChangedDuringFollowup": 18,
+          "meanGoodputRps": 138.81866666666667,
+          "meanP95Ms": 220.71516666666668,
+          "simultaneousLimitChangeAtStart": 5
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=5": {
+          "count": 18,
+          "limitChangedDuringFollowup": 18,
+          "meanGoodputRps": 138.09950000000003,
+          "meanP95Ms": 215.73927777777777,
+          "simultaneousLimitChangeAtStart": 5
+        },
+        "within_slo/no_pending/binding/pool_tick/dp=1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 144.864,
+          "meanP95Ms": 147.906,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "within_slo/pending/binding/pool_tick/dp=-1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 128.4,
+          "meanP95Ms": 140.82,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "within_slo/pending/binding/pool_tick/dp=-1/h=3": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 129.296,
+          "meanP95Ms": 140.935,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "within_slo/pending/binding/pool_tick/dp=-1/h=5": {
+          "count": 1,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 143.136,
+          "meanP95Ms": 149.747,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "within_slo/pending/binding/pool_tick/dp=1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 132.241,
+          "meanP95Ms": 132.681,
+          "simultaneousLimitChangeAtStart": 0
+        }
+      },
+      "scope": "descriptive_observed_trajectories_not_causal_action_effects"
+    },
+    "removedActions": {
+      "-1,-1": 3,
+      "-1,0": 6,
+      "0,-1": 2,
+      "0,0": 17,
+      "0,1": 3,
+      "1,-1": 1,
+      "1,0": 8
+    },
+    "retained": 415
+  }
+}
