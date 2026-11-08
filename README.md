@@ -10,6 +10,8 @@ Offline обучение Q-функции и экспорт переносимо
 
 JVM inference через `Controller`, бюджет времени и baseline fallback реализованы в отдельном `iasr-policy`; запуск и ограничения — [в инструкции](docs/dissertation/jvm-policy.md).
 
+[Диагностика совместного покрытия и новая итерация данных](docs/dissertation/joint-data-iteration.md) описывают `explore-balanced`, обучение без чтения test и ограничения второй модели.
+
 ## Архитектура
 
 ```

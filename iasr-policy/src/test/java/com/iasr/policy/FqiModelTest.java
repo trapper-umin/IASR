@@ -120,6 +120,21 @@ class FqiModelTest {
         assertThatThrownBy(() -> FqiModel.loadPrototype(MODEL).predict(input, unlimited())).isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test void scoresPoolActionFeatureWithFloat32SplitSemantics() throws Exception {
+        ObjectNode root = (ObjectNode) JSON.readTree(MODEL.toFile());
+        root.set("forest", JSON.readTree("[{\"left\":[1,-1,-1],\"right\":[2,-1,-1],\"feature\":[209,-2,-2],"
+                + "\"threshold\":[0.1,-2,-2],\"value\":[0,5,7]}]"));
+        Path path = temporary.resolve("pool-action.json"); JSON.writeValue(path.toFile(), root);
+        FqiModel model = FqiModel.loadPrototype(path);
+        double[] input = new double[210];
+        input[209] = -1;
+        assertThat(model.predict(input, unlimited())).isEqualTo(5);
+        input[209] = 1;
+        assertThat(model.predict(input, unlimited())).isEqualTo(7);
+        input[209] = 0.1; // float32(0.1) is greater than the double threshold.
+        assertThat(model.predict(input, unlimited())).isEqualTo(7);
+    }
+
     @Test void cooperativeDeadlineStopsScoring() throws Exception {
         var time = new java.util.concurrent.atomic.AtomicLong();
         var budget = new InferenceBudget(5, time::getAndIncrement);

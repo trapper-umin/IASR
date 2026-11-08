@@ -1,0 +1,20 @@
+
+=== steady / learned ===
+2026-11-08T16:59:31.356+03:00  WARN 1971 --- [-auto-1-exec-20] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=16, inflight=16, queue=12)
+2026-11-08T16:59:36.360+03:00  WARN 1971 --- [-auto-1-exec-21] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 155 request(s) rejected in the last 5000 ms (limit=15, inflight=15, queue=12)
+2026-11-08T16:59:41.381+03:00  WARN 1971 --- [-auto-1-exec-25] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 151 request(s) rejected in the last 5000 ms (limit=15, inflight=15, queue=12)
+2026-11-08T16:59:46.406+03:00  WARN 1971 --- [o-auto-1-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 152 request(s) rejected in the last 5000 ms (limit=15, inflight=15, queue=12)
+2026-11-08T16:59:51.424+03:00  WARN 1971 --- [-auto-1-exec-14] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 150 request(s) rejected in the last 5000 ms (limit=15, inflight=15, queue=12)
+2026-11-08T16:59:56.467+03:00  WARN 1971 --- [-auto-1-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 150 request(s) rejected in the last 5000 ms (limit=15, inflight=15, queue=12)
+   [1/1] goodput=90,6 rps  p95=274,0 ms  p99=287,0 ms  429=24,5%  hard-fail=0,0%
+
+=== ramp / learned ===
+2026-11-08T17:00:29.164+03:00  WARN 1971 --- [-auto-2-exec-32] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=22, inflight=21, queue=25)
+2026-11-08T17:00:34.172+03:00  WARN 1971 --- [-auto-2-exec-39] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 254 request(s) rejected in the last 5000 ms (limit=22, inflight=22, queue=31)
+2026-11-08T17:00:39.182+03:00  WARN 1971 --- [-auto-2-exec-38] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 497 request(s) rejected in the last 5000 ms (limit=22, inflight=22, queue=36)
+2026-11-08T17:00:44.188+03:00  WARN 1971 --- [-auto-2-exec-42] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 741 request(s) rejected in the last 5000 ms (limit=22, inflight=22, queue=41)
+2026-11-08T17:00:49.188+03:00  WARN 1971 --- [-auto-2-exec-25] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 985 request(s) rejected in the last 5000 ms (limit=22, inflight=22, queue=46)
+   [1/1] goodput=203,3 rps  p95=197,0 ms  p99=201,0 ms  429=27,4%  hard-fail=0,0%
+
+Report written to /tmp/iasr-balanced-policy-smoke-20261108
+All repetitions saved to /tmp/iasr-balanced-policy-smoke-20261108/episodes/b1873519-1332-4697-90ca-8ee47eec1ec8

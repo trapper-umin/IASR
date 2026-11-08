@@ -1,0 +1,160 @@
+{
+  "config": {
+    "allowsIncompleteJointSupport": false,
+    "depth": 6,
+    "gammaPerSecond": 0.95,
+    "iterationSelection": "fixed_budget_no_test_selection",
+    "iterations": 8,
+    "jointSupport": {
+      "actions": {
+        "-1,0": 67,
+        "-1,1": 4,
+        "0,-1": 8,
+        "0,0": 78,
+        "0,1": 9
+      },
+      "established": true,
+      "poolGrowth": 13,
+      "poolShrinkage": 8,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 4
+    },
+    "minLeaf": 3,
+    "nJobs": 1,
+    "seed": 42,
+    "testEvaluated": false,
+    "trees": 32
+  },
+  "counts": {
+    "train": {
+      "excluded": {
+        "unsupported_behavior_action": 26,
+        "unsupported_continuation": 3
+      },
+      "input": 195,
+      "scored": 166
+    },
+    "validation": {
+      "excluded": {
+        "unsupported_behavior_action": 37,
+        "unsupported_continuation": 1
+      },
+      "input": 120,
+      "scored": 82
+    }
+  },
+  "diagnosticOnly": true,
+  "policyPerformanceEstablished": false,
+  "portableExportMaxError": 0.0,
+  "reportVersion": 1,
+  "selectionBiasNote": "conditional diagnostics exclude unsupported states/actions; not an off-policy value estimate",
+  "test": {
+    "evaluated": false
+  },
+  "trace": [
+    {
+      "iteration": 1,
+      "train": {
+        "bellmanRmse": 0.9374888470007607,
+        "meanObservedBehaviorReward": -0.7745055628711385,
+        "scored": 166
+      },
+      "validation": {
+        "bellmanRmse": 0.7483345140329011,
+        "meanObservedBehaviorReward": -0.48124834178226616,
+        "scored": 82
+      }
+    },
+    {
+      "iteration": 2,
+      "train": {
+        "bellmanRmse": 0.8675961272072924,
+        "meanObservedBehaviorReward": -0.7745055628711385,
+        "scored": 166
+      },
+      "validation": {
+        "bellmanRmse": 0.7048478820137869,
+        "meanObservedBehaviorReward": -0.48124834178226616,
+        "scored": 82
+      }
+    },
+    {
+      "iteration": 3,
+      "train": {
+        "bellmanRmse": 0.8100163074509804,
+        "meanObservedBehaviorReward": -0.7745055628711385,
+        "scored": 166
+      },
+      "validation": {
+        "bellmanRmse": 0.6749149299831214,
+        "meanObservedBehaviorReward": -0.48124834178226616,
+        "scored": 82
+      }
+    },
+    {
+      "iteration": 4,
+      "train": {
+        "bellmanRmse": 0.7616691519735559,
+        "meanObservedBehaviorReward": -0.7745055628711385,
+        "scored": 166
+      },
+      "validation": {
+        "bellmanRmse": 0.6404680909886413,
+        "meanObservedBehaviorReward": -0.48124834178226616,
+        "scored": 82
+      }
+    },
+    {
+      "iteration": 5,
+      "train": {
+        "bellmanRmse": 0.7174717003297832,
+        "meanObservedBehaviorReward": -0.7745055628711385,
+        "scored": 166
+      },
+      "validation": {
+        "bellmanRmse": 0.62342846730179,
+        "meanObservedBehaviorReward": -0.48124834178226616,
+        "scored": 82
+      }
+    },
+    {
+      "iteration": 6,
+      "train": {
+        "bellmanRmse": 0.7081984212562125,
+        "meanObservedBehaviorReward": -0.7745055628711385,
+        "scored": 166
+      },
+      "validation": {
+        "bellmanRmse": 0.623279987173899,
+        "meanObservedBehaviorReward": -0.48124834178226616,
+        "scored": 82
+      }
+    },
+    {
+      "iteration": 7,
+      "train": {
+        "bellmanRmse": 0.6473105361399629,
+        "meanObservedBehaviorReward": -0.7745055628711385,
+        "scored": 166
+      },
+      "validation": {
+        "bellmanRmse": 0.65945662269145,
+        "meanObservedBehaviorReward": -0.48124834178226616,
+        "scored": 82
+      }
+    },
+    {
+      "iteration": 8,
+      "train": {
+        "bellmanRmse": 0.6368352819696614,
+        "meanObservedBehaviorReward": -0.7745055628711385,
+        "scored": 166
+      },
+      "validation": {
+        "bellmanRmse": 0.6486457104710623,
+        "meanObservedBehaviorReward": -0.48124834178226616,
+        "scored": 82
+      }
+    }
+  ]
+}

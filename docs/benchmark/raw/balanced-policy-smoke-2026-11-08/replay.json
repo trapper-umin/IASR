@@ -1,0 +1,79 @@
+{
+  "modelSha256": "bd3e2e83fec857e3fefa117bb92c4e1ba15e5aca0fdfc00ed91f557ada019539",
+  "integrity": {
+    "episodes": 2,
+    "records": 90,
+    "measurementTransitions": 71,
+    "details": [
+      {
+        "episodeId": "ramp/learned/1",
+        "records": 52,
+        "measurementTransitions": 43,
+        "irregularTransitions": 0,
+        "distinctAppliedChanges": 3,
+        "sourceDirty": false
+      },
+      {
+        "episodeId": "steady/learned/1",
+        "records": 38,
+        "measurementTransitions": 28,
+        "irregularTransitions": 0,
+        "distinctAppliedChanges": 2,
+        "sourceDirty": false
+      }
+    ]
+  },
+  "replay": [
+    {
+      "scenario": "ramp",
+      "episodeId": "ramp/learned/1",
+      "counts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3,
+        "unreplayable_initial_history": 3,
+        "learned_fallback_no_empirical_support": 23,
+        "matched_support_fallbacks": 23,
+        "learned_policy": 25,
+        "matched_model_decisions": 25
+      },
+      "inference": {
+        "decisions": 52,
+        "modelDecisions": 25,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 23,
+          "short_history": 3
+        },
+        "inferenceAttempts": 48,
+        "meanInferenceMs": 0.42940791666666667,
+        "maxInferenceMs": 0.783042
+      }
+    },
+    {
+      "scenario": "steady",
+      "episodeId": "steady/learned/1",
+      "counts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3,
+        "unreplayable_initial_history": 3,
+        "learned_fallback_no_empirical_support": 5,
+        "matched_support_fallbacks": 5,
+        "learned_policy": 29,
+        "matched_model_decisions": 29
+      },
+      "inference": {
+        "decisions": 38,
+        "modelDecisions": 29,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 5,
+          "short_history": 3
+        },
+        "inferenceAttempts": 34,
+        "meanInferenceMs": 0.7160221470588235,
+        "maxInferenceMs": 3.466584
+      }
+    }
+  ],
+  "performanceEstablished": false
+}

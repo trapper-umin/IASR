@@ -1,4 +1,295 @@
 {
+  "actionNodeCoverage": {
+    "nodes": [
+      {
+        "actionFeature": "action.limit",
+        "node": 24,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 11,
+            "historiesWithSupportedCandidatesOnBothBranches": 7
+          },
+          "validation": {
+            "historiesReachingNode": 3,
+            "historiesWithSupportedCandidatesOnBothBranches": 2
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.8132180988440919
+          },
+          {
+            "feature": "w1.timeout_rate",
+            "operator": "<=",
+            "threshold": 1.338770765064761
+          },
+          {
+            "feature": "w0.cpu_proc",
+            "operator": ">",
+            "threshold": 0.009530702837902472
+          },
+          {
+            "feature": "w0.admission_wait_mean_ms",
+            "operator": ">",
+            "threshold": 0.007298912659928837
+          },
+          {
+            "feature": "w3.hikari_active",
+            "operator": ">",
+            "threshold": 0.05393270876831032
+          }
+        ],
+        "threshold": -0.3858381031946456,
+        "tree": 5
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 48,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 15,
+            "historiesWithSupportedCandidatesOnBothBranches": 11
+          },
+          "validation": {
+            "historiesReachingNode": 6,
+            "historiesWithSupportedCandidatesOnBothBranches": 3
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": ">",
+            "threshold": 0.9491117574788602
+          },
+          {
+            "feature": "w2.pool_fraction",
+            "operator": "<=",
+            "threshold": -0.3317476422045982
+          },
+          {
+            "feature": "w0.goodput_rps",
+            "operator": "<=",
+            "threshold": 0.45560803269438177
+          },
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": ">",
+            "threshold": 1.7738792825330671
+          },
+          {
+            "feature": "w3.queue_length",
+            "operator": ">",
+            "threshold": 0.6216790222460432
+          }
+        ],
+        "threshold": -0.28887720140110573,
+        "tree": 11
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 33,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 8,
+            "historiesWithSupportedCandidatesOnBothBranches": 5
+          },
+          "validation": {
+            "historiesReachingNode": 5,
+            "historiesWithSupportedCandidatesOnBothBranches": 3
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.latency_p95_ms",
+            "operator": "<=",
+            "threshold": 0.9065291966922632
+          },
+          {
+            "feature": "w2.hikari_acquire_mean_ms",
+            "operator": ">",
+            "threshold": 0.5081272913557432
+          },
+          {
+            "feature": "w2.goodput_rps",
+            "operator": ">",
+            "threshold": 0.6945005724311004
+          },
+          {
+            "feature": "w0.cpu_proc",
+            "operator": ">",
+            "threshold": 0.014486639191921773
+          }
+        ],
+        "threshold": -0.6798898464440786,
+        "tree": 12
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 56,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 15,
+            "historiesWithSupportedCandidatesOnBothBranches": 11
+          },
+          "validation": {
+            "historiesReachingNode": 1,
+            "historiesWithSupportedCandidatesOnBothBranches": 0
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.service_mean_ms",
+            "operator": ">",
+            "threshold": 1.0160774945530442
+          },
+          {
+            "feature": "w3.pool_absolute",
+            "operator": "<=",
+            "threshold": -0.17227725454013676
+          },
+          {
+            "feature": "w3.pool_absolute",
+            "operator": "<=",
+            "threshold": -0.33216502532929415
+          },
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": ">",
+            "threshold": 1.6917689856145517
+          },
+          {
+            "feature": "w3.pool_fraction",
+            "operator": ">",
+            "threshold": -1.22928504641332
+          }
+        ],
+        "threshold": -0.01916557691021148,
+        "tree": 16
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 39,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 7,
+            "historiesWithSupportedCandidatesOnBothBranches": 4
+          },
+          "validation": {
+            "historiesReachingNode": 7,
+            "historiesWithSupportedCandidatesOnBothBranches": 5
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.service_mean_ms",
+            "operator": "<=",
+            "threshold": 0.8637847473506449
+          },
+          {
+            "feature": "w0.hikari_acquire_mean_ms",
+            "operator": ">",
+            "threshold": 0.6725710503813538
+          },
+          {
+            "feature": "w2.goodput_rps",
+            "operator": ">",
+            "threshold": 0.6848561295466404
+          }
+        ],
+        "threshold": -0.2972222083700924,
+        "tree": 21
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 42,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 15,
+            "historiesWithSupportedCandidatesOnBothBranches": 10
+          },
+          "validation": {
+            "historiesReachingNode": 8,
+            "historiesWithSupportedCandidatesOnBothBranches": 5
+          }
+        },
+        "path": [
+          {
+            "feature": "w3.hikari_acquire_mean_ms",
+            "operator": ">",
+            "threshold": 0.4596485777516809
+          },
+          {
+            "feature": "w3.goodput_rps",
+            "operator": "<=",
+            "threshold": 0.37700328567590197
+          },
+          {
+            "feature": "w0.pool_fraction",
+            "operator": "<=",
+            "threshold": -0.5110032775199718
+          },
+          {
+            "feature": "w0.timeout_rate",
+            "operator": "<=",
+            "threshold": 1.7119353120963572
+          },
+          {
+            "feature": "w2.hikari_active",
+            "operator": "<=",
+            "threshold": 2.3806186178261957
+          }
+        ],
+        "threshold": -0.22466861932755844,
+        "tree": 24
+      },
+      {
+        "actionFeature": "action.limit",
+        "node": 34,
+        "partitions": {
+          "train": {
+            "historiesReachingNode": 7,
+            "historiesWithSupportedCandidatesOnBothBranches": 5
+          },
+          "validation": {
+            "historiesReachingNode": 4,
+            "historiesWithSupportedCandidatesOnBothBranches": 3
+          }
+        },
+        "path": [
+          {
+            "feature": "w2.hikari_acquire_mean_ms",
+            "operator": "<=",
+            "threshold": 0.8748931604005157
+          },
+          {
+            "feature": "w3.latency_p99_ms",
+            "operator": ">",
+            "threshold": 0.44924766653529064
+          },
+          {
+            "feature": "w2.goodput_rps",
+            "operator": ">",
+            "threshold": 0.7019637173438551
+          },
+          {
+            "feature": "w3.pool_fraction",
+            "operator": "<=",
+            "threshold": 0.5997566739023583
+          },
+          {
+            "feature": "w0.cpu_proc",
+            "operator": ">",
+            "threshold": 0.02668770002465605
+          }
+        ],
+        "threshold": -0.12229119945424194,
+        "tree": 30
+      }
+    ],
+    "thresholdSpace": "normalized_float32_features"
+  },
   "actionSplitNodes": {
     "concurrency": 7,
     "pool": 0

@@ -239,6 +239,30 @@ class FqiTest(unittest.TestCase):
         self.assertIn("removed every transition", report["train"]["closureFailure"])
         self.assertEqual(report["train"]["closureTrace"][-1]["retained"], 0)
 
+    def test_action_node_audit_checks_supported_branch_comparisons(self):
+        from audit_joint_learning import action_node_coverage
+        directory = self.dataset()
+        _, parts = load_partitions(directory)
+        row = next(r for r in parts["train"] if r["history"][-1]["state"]["control_tick"] % 5 == 0)
+        preprocessing = fit_preprocessor([row])
+        observed = []
+        for action in row["candidateActions"]:
+            changed = copy.deepcopy(row)
+            changed["action"] = action
+            observed.append(changed)
+        model = {"preprocessing": preprocessing, "support": build_support(observed, preprocessing, 1, 1, 2),
+                 "forest": [{"left": [1, -1, -1], "right": [2, -1, -1], "feature": [209, -2, -2],
+                              "threshold": [0.5, -2, -2], "value": [0, 0, 1]}]}
+        result = action_node_coverage({"validation": [row]}, model)
+        self.assertEqual(result["nodes"][0]["partitions"]["validation"],
+                         {"historiesReachingNode": 1, "historiesWithSupportedCandidatesOnBothBranches": 1})
+        for bucket in model["support"]["bins"].values():
+            for key in list(bucket):
+                if key.endswith(",1"):
+                    del bucket[key]
+        result = action_node_coverage({"validation": [row]}, model)
+        self.assertEqual(result["nodes"][0]["partitions"]["validation"]["historiesWithSupportedCandidatesOnBothBranches"], 0)
+
     def test_tampered_partition_is_rejected(self):
         directory = self.dataset()
         path = directory / "test.jsonl"

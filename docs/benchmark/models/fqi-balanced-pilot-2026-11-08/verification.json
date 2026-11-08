@@ -1,0 +1,10 @@
+{
+  "trainingRepeatedByteIdentical": true,
+  "jvmTestsPassed": 11,
+  "jvmGoldenHistories": 81,
+  "sklearnGoldenInputs": 16,
+  "qTolerance": 1e-12,
+  "featureComparison": "exact_float32",
+  "testEvaluated": false,
+  "modelSha256": "bd3e2e83fec857e3fefa117bb92c4e1ba15e5aca0fdfc00ed91f557ada019539"
+}

@@ -79,6 +79,56 @@ def sensitivity(records, model):
             "limitSensitivityAtFixedPoolAction": summarize(limit_spreads)}
 
 
+def action_node_coverage(partitions, model):
+    """Where action-dependent splits can actually be reached by supported candidates."""
+    targets = {}
+    names = [*model["preprocessing"]["featureNames"], "action.limit", "action.pool"]
+    for ti, tree in enumerate(model["forest"]):
+        parents = {}
+        for node, left in enumerate(tree["left"]):
+            if left < 0:
+                continue
+            require(0 <= tree["feature"][node] < 210, "invalid tree feature")
+            for child, direction in ((left, "<="), (tree["right"][node], ">")):
+                require(node < child < len(tree["left"]) and child not in parents, "invalid tree edge")
+                parents[child] = (node, direction)
+        for node, feature in enumerate(tree["feature"]):
+            if feature not in (208, 209):
+                continue
+            ancestors, cursor = [], node
+            while cursor:
+                require(cursor in parents, "unreachable action node")
+                parent, direction = parents[cursor]
+                ancestors.append({"feature": names[tree["feature"][parent]], "operator": direction,
+                                  "threshold": tree["threshold"][parent]})
+                cursor = parent
+            targets[(ti, node)] = {"tree": ti, "node": node, "actionFeature": names[feature],
+                                   "threshold": tree["threshold"][node], "path": list(reversed(ancestors)),
+                                   "partitions": {}}
+    for split, records in partitions.items():
+        counts, branches = Counter(), Counter()
+        for row in records:
+            options = supported_actions(row["history"], row["context"], model["preprocessing"], model["support"])
+            state = transform(row["history"], row["context"], model["preprocessing"])
+            visited = defaultdict(set)
+            for action in options:
+                values = action_features(state, action, row["context"])
+                for ti in {key[0] for key in targets}:
+                    tree, node = model["forest"][ti], 0
+                    while tree["left"][node] >= 0:
+                        take_left = values[tree["feature"][node]] <= tree["threshold"][node]
+                        if (ti, node) in targets:
+                            visited[(ti, node)].add(take_left)
+                        node = tree["left"][node] if take_left else tree["right"][node]
+            for key, directions in visited.items():
+                counts[key] += 1
+                branches[key] += int(len(directions) == 2)
+        for key, target in targets.items():
+            target["partitions"][split] = {"historiesReachingNode": counts[key],
+                                           "historiesWithSupportedCandidatesOnBothBranches": branches[key]}
+    return {"thresholdSpace": "normalized_float32_features", "nodes": list(targets.values())}
+
+
 def audit(directory, model_path=None, min_samples=3, min_episodes=2, max_distance=2.0):
     directory = Path(directory)
     # Intentionally never open test.jsonl; even outcome diagnostics are development-only.
@@ -113,6 +163,7 @@ def audit(directory, model_path=None, min_samples=3, min_episodes=2, max_distanc
         report["actionSplitNodes"] = {name: sum(f == index for tree in model["forest"] for f in tree["feature"])
                                       for name, index in (("concurrency", 208), ("pool", 209))}
         report["modelDiagnostics"] = {name: sensitivity(rows, model) for name, rows in parts.items()}
+        report["actionNodeCoverage"] = action_node_coverage(parts, model)
     return report
 
 

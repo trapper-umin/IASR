@@ -1,0 +1,23 @@
+{
+  "episodes": 2,
+  "records": 90,
+  "measurementTransitions": 71,
+  "details": [
+    {
+      "episodeId": "ramp/learned/1",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 3,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/learned/1",
+      "records": 38,
+      "measurementTransitions": 28,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 2,
+      "sourceDirty": false
+    }
+  ]
+}
