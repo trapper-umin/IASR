@@ -19,8 +19,20 @@ def group_id(metadata):
     return hashlib.sha256(canonical.encode()).hexdigest()
 
 
-def partition_groups(groups, seed, test_scenarios=()):
-    require(len(groups) >= 3, "at least three distinct condition groups are required")
+def partition_groups(groups, seed, test_scenarios=(), validation_scenarios=(), development_only=False):
+    require(len(groups) >= (2 if development_only else 3), "at least two distinct condition groups are required" if development_only else "at least three distinct condition groups are required")
+    if development_only or validation_scenarios:
+        require(bool(validation_scenarios), "explicit validation profiles are required")
+        require(not development_only or not test_scenarios, "development-only data cannot include test profiles")
+        require(development_only or bool(test_scenarios), "explicit test profiles are required outside development-only mode")
+        validation, test = set(validation_scenarios), set(test_scenarios)
+        known = {g["profile"]["name"] for g in groups.values()}
+        require(not validation & test and validation | test <= known, "invalid or overlapping reserved profiles")
+        result = {key: "test" if g["profile"]["name"] in test else "validation" if g["profile"]["name"] in validation else "train"
+                  for key, g in groups.items()}
+        require(set(result.values()) == ({"train", "validation"} if development_only else {"train", "validation", "test"}),
+                "reserved profiles must leave nonempty train/validation partitions")
+        return result
     ids = sorted(groups)
     rng = random.Random(seed)
     rng.shuffle(ids)
@@ -69,7 +81,7 @@ def coverage(records, min_samples=3, min_episodes=2):
             "readiness": "not_established", "supportScope": "diagnostic_coarse_bins"}
 
 
-def prepare(root, output, seed=42, test_scenarios=(), allow_dirty=False):
+def prepare(root, output, seed=42, test_scenarios=(), allow_dirty=False, validation_scenarios=(), development_only=False):
     root, output = Path(root), Path(output)
     for marker in root.rglob("collection.json"):
         collection = read_json(marker)
@@ -78,7 +90,7 @@ def prepare(root, output, seed=42, test_scenarios=(), allow_dirty=False):
                 f"unfinished collection: {marker}")
     validation = validate_collection(root)
     paths = [root] if (root / "metadata.json").is_file() else sorted(p.parent for p in root.rglob("metadata.json"))
-    groups, episodes, by_split = {}, [], {key: [] for key in ("train", "validation", "test")}
+    groups, episodes, by_split = {}, [], {key: [] for key in (("train", "validation") if development_only else ("train", "validation", "test"))}
     for path in paths:
         metadata = read_json(path / "metadata.json")
         if metadata["mode"].removesuffix("-pinned") == "off":
@@ -93,7 +105,7 @@ def prepare(root, output, seed=42, test_scenarios=(), allow_dirty=False):
         for sample in built:
             sample.update(runId=metadata["runId"], episodeId=metadata["episodeId"], groupId=key)
         episodes.append((metadata, key, built, excluded))
-    assignment = partition_groups(groups, seed, test_scenarios)
+    assignment = partition_groups(groups, seed, test_scenarios, validation_scenarios, development_only)
     manifest_episodes = []
     for metadata, key, built, excluded in episodes:
         split = assignment[key]
@@ -105,7 +117,8 @@ def prepare(root, output, seed=42, test_scenarios=(), allow_dirty=False):
         require(bool(records), f"{split} has no usable four-window samples; collect longer/more varied episodes")
         records.sort(key=lambda r: (r["groupId"], r["runId"], r["episodeId"], r["sequence"]))
     manifest = {"preparationVersion": 1, "splitSeed": seed, "historyWindows": 4,
-                "testScenarios": list(test_scenarios), "prototypeAllowsDirtySource": allow_dirty,
+                "testScenarios": list(test_scenarios), "validationScenarios": list(validation_scenarios),
+                "developmentOnly": development_only, "prototypeAllowsDirtySource": allow_dirty,
                 "groups": {key: {"split": assignment[key], "conditions": groups[key]} for key in sorted(groups)},
                 "episodes": manifest_episodes, "validation": validation,
                 "sampleCounts": {name: len(records) for name, records in by_split.items()}}
@@ -124,11 +137,14 @@ def main():
     parser.add_argument("--out", required=True, type=Path)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--test-scenarios", default="", help="comma-separated profiles reserved entirely for test")
+    parser.add_argument("--validation-scenarios", default="", help="profiles reserved entirely for validation")
+    parser.add_argument("--development-only", action="store_true", help="prepare train/validation without test data")
     parser.add_argument("--allow-dirty", action="store_true", help="prototype only; manifest records this exception")
     args = parser.parse_args()
     try:
         result = prepare(args.directory, args.out, args.seed,
-                         tuple(filter(None, args.test_scenarios.split(","))), args.allow_dirty)
+                         tuple(filter(None, args.test_scenarios.split(","))), args.allow_dirty,
+                         tuple(filter(None, args.validation_scenarios.split(","))), args.development_only)
     except (ValueError, KeyError, TypeError, OSError) as error:
         parser.exit(1, f"Dataset preparation failed: {error}\n")
     print(json.dumps({"groups": len(result["groups"]), "sampleCounts": result["sampleCounts"]}, indent=2))

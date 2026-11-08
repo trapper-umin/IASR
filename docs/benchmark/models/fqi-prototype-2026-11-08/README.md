@@ -25,8 +25,10 @@ JSON-предсказания совпали со sklearn на проверен�
 ## Воспроизведение и следующий шаг
 
 ```bash
-python3 docs/benchmark/tools/train_fqi.py /tmp/iasr-fqi-prepared --out /tmp/iasr-fqi-model --iterations 8 --trees 32 --depth 6 --leaf 3 --seed 42
+python3 docs/benchmark/tools/train_fqi.py /tmp/iasr-fqi-prepared --out /tmp/iasr-fqi-model --iterations 8 --trees 32 --depth 6 --leaf 3 --seed 42 --allow-incomplete-joint-support
 python3 docs/benchmark/tools/fqi_runtime.py /tmp/iasr-fqi-model/model.json /tmp/iasr-fqi-prepared/test.jsonl
 ```
 
 Версия происхождения в новом артефакте будет отражать checkout тренера; для побайтового совпадения происхождение и зависимости также должны совпадать. `train-decisions.json`, `validation-decisions.json`, `test-decisions.json` сохраняют аудит предложений. Модель помечена `deploymentAllowed: false`; последующая [JVM-итерация](../../../dissertation/jvm-policy.md) добавила контроллер, baseline fallback, бюджет и технический сквозной прогон. Пул модель по-прежнему не меняет.
+
+Последующий [аудит покрытия](../../../dissertation/joint-data-iteration.md) обнаружил, что все исходные одновременные изменения обоих ресурсов исключены при согласовании поддержки. Для воспроизведения диагностического экспорта текущий тренер требует `--allow-incomplete-joint-support`; это не устраняет ограничение модели.

@@ -1,0 +1,220 @@
+{
+  "actionSplitNodes": {
+    "concurrency": 7,
+    "pool": 0
+  },
+  "auditVersion": 1,
+  "inputSha256": {
+    "train": "d6e68f4128fc53ef30bed2fc40cd155036754d8ced4e57a772ca0bb0eb368c2d",
+    "validation": "986fbcc371db1ab7c50d21915bcadbf7a0528150e06823a51f99c272925b49a5"
+  },
+  "modelDiagnostics": {
+    "train": {
+      "decisions": {
+        "-1,0": 19,
+        "0,0": 231
+      },
+      "fallbacks": 10,
+      "histories": 260,
+      "limitSensitivityAtFixedPoolAction": {
+        "historiesWithComparableActions": 163,
+        "maxQSpread": 0.0062475375056449955,
+        "nonzeroQSpreadHistories": 19
+      },
+      "poolSensitivityAtFixedLimitAction": {
+        "historiesWithComparableActions": 49,
+        "maxQSpread": 0.0,
+        "nonzeroQSpreadHistories": 0
+      },
+      "supportedPoolOpportunities": 49,
+      "supportedSimultaneousOpportunities": 0
+    },
+    "validation": {
+      "decisions": {
+        "-1,0": 11,
+        "0,0": 145
+      },
+      "fallbacks": 4,
+      "histories": 160,
+      "limitSensitivityAtFixedPoolAction": {
+        "historiesWithComparableActions": 93,
+        "maxQSpread": 0.0062475375056449955,
+        "nonzeroQSpreadHistories": 11
+      },
+      "poolSensitivityAtFixedLimitAction": {
+        "historiesWithComparableActions": 32,
+        "maxQSpread": 0.0,
+        "nonzeroQSpreadHistories": 0
+      },
+      "supportedPoolOpportunities": 32,
+      "supportedSimultaneousOpportunities": 0
+    }
+  },
+  "modelSha256": "8d319019aa51a826825f94a6a7c9ff8c8a631e7658f49e7f5942f46d6d0559ef",
+  "necessaryJointCoverageEstablished": false,
+  "partitionsRead": [
+    "train",
+    "validation"
+  ],
+  "performanceEstablished": false,
+  "supportParameters": {
+    "maxRmsDistance": 2.0,
+    "minEpisodes": 2,
+    "minSamples": 3
+  },
+  "testEvaluated": false,
+  "train": {
+    "afterClosure": {
+      "actions": {
+        "-1,0": 51,
+        "0,-1": 8,
+        "0,0": 137,
+        "0,1": 14,
+        "1,0": 27
+      },
+      "established": false,
+      "poolGrowth": 14,
+      "poolShrinkage": 8,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 0
+    },
+    "beforeClosure": {
+      "actions": {
+        "-1,-1": 4,
+        "-1,0": 54,
+        "-1,1": 2,
+        "0,-1": 10,
+        "0,0": 144,
+        "0,1": 15,
+        "1,-1": 1,
+        "1,0": 30
+      },
+      "established": true,
+      "poolGrowth": 17,
+      "poolShrinkage": 15,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 7
+    },
+    "excluded": {
+      "unsupported_behavior_action": 18,
+      "unsupported_continuation": 5
+    },
+    "input": 260,
+    "lagDescriptions": {
+      "excluded": {
+        "h3:gap_or_episode_end": 6,
+        "h5:gap_or_episode_end": 6
+      },
+      "groups": {
+        "comfortable/no_pending/headroom/pool_tick/dp=-1/h=1": {
+          "count": 7,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 130.82857142857142,
+          "meanP95Ms": 49.58428571428571
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=-1/h=3": {
+          "count": 5,
+          "limitChangedDuringFollowup": 3,
+          "meanGoodputRps": 134.8586,
+          "meanP95Ms": 84.848
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=-1/h=5": {
+          "count": 5,
+          "limitChangedDuringFollowup": 5,
+          "meanGoodputRps": 135.1524,
+          "meanP95Ms": 84.569
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=1/h=1": {
+          "count": 9,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 141.56022222222225,
+          "meanP95Ms": 44.3048888888889
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=1/h=3": {
+          "count": 9,
+          "limitChangedDuringFollowup": 6,
+          "meanGoodputRps": 147.46344444444446,
+          "meanP95Ms": 45.05233333333334
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=1/h=5": {
+          "count": 9,
+          "limitChangedDuringFollowup": 8,
+          "meanGoodputRps": 152.36033333333333,
+          "meanP95Ms": 58.228
+        },
+        "comfortable/pending/headroom/pool_tick/dp=-1/h=1": {
+          "count": 2,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 209.599,
+          "meanP95Ms": 140.9035
+        },
+        "comfortable/pending/headroom/pool_tick/dp=-1/h=3": {
+          "count": 2,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 207.792,
+          "meanP95Ms": 216.4135
+        },
+        "comfortable/pending/headroom/pool_tick/dp=-1/h=5": {
+          "count": 2,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 209.3535,
+          "meanP95Ms": 214.473
+        },
+        "over_slo/no_pending/binding/pool_tick/dp=1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 226.539,
+          "meanP95Ms": 151.929
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=1": {
+          "count": 6,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 209.04266666666663,
+          "meanP95Ms": 200.91616666666667
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=3": {
+          "count": 4,
+          "limitChangedDuringFollowup": 3,
+          "meanGoodputRps": 213.33975000000004,
+          "meanP95Ms": 205.56900000000002
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=5": {
+          "count": 4,
+          "limitChangedDuringFollowup": 4,
+          "meanGoodputRps": 211.97225,
+          "meanP95Ms": 203.0915
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=1": {
+          "count": 7,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 202.33542857142857,
+          "meanP95Ms": 214.51228571428572
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=3": {
+          "count": 6,
+          "limitChangedDuringFollowup": 6,
+          "meanGoodputRps": 200.50750000000002,
+          "meanP95Ms": 213.85783333333336
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=5": {
+          "count": 6,
+          "limitChangedDuringFollowup": 6,
+          "meanGoodputRps": 200.0675,
+          "meanP95Ms": 210.95883333333336
+        }
+      },
+      "scope": "descriptive_observed_trajectories_not_causal_action_effects"
+    },
+    "removedActions": {
+      "-1,-1": 4,
+      "-1,0": 3,
+      "-1,1": 2,
+      "0,-1": 2,
+      "0,0": 7,
+      "0,1": 1,
+      "1,-1": 1,
+      "1,0": 3
+    },
+    "retained": 237
+  }
+}

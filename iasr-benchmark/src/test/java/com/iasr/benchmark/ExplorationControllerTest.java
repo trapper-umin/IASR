@@ -51,4 +51,43 @@ class ExplorationControllerTest {
         assertThat(controller.decide(state(3, 120), ACTUATORS).reason("concurrency_limit")).isEqualTo("explore_hold");
         assertThat(controller.decide(state(4, 0), ACTUATORS).reason("concurrency_limit")).isEqualTo("baseline");
     }
+    private JointActionSpace balancedSpace() {
+        return new JointActionSpace(List.of(new ActuatorGuardrail("concurrency_limit", 1, 20, 5, 0),
+                new ActuatorGuardrail("hikari_max_pool", 1, 10, 2, 0, false)), 150, 1, 5);
+    }
+
+    @Test
+    void balancedSamplingCoversAllLegalJointActionsEvenlyAndReproducibly() {
+        var first = new ExplorationController(balancedSpace(), (s, a) -> com.iasr.core.controller.ControlAction.NONE,
+                1, 42, ExplorationController.Sampling.BALANCED, 150);
+        var second = new ExplorationController(balancedSpace(), (s, a) -> com.iasr.core.controller.ControlAction.NONE,
+                1, 42, ExplorationController.Sampling.BALANCED, 150);
+        var counts = new java.util.HashMap<java.util.Map<String, Integer>, Integer>();
+        for (int i = 0; i < 500; i++) {
+            var action = first.decide(state(i, 120), ACTUATORS);
+            assertThat(action.desiredValues()).isEqualTo(second.decide(state(i, 120), ACTUATORS).desiredValues());
+            if (i > 3 && i % 5 == 0) counts.merge(action.desiredValues(), 1, Integer::sum);
+        }
+        assertThat(counts).hasSize(9);
+        assertThat(java.util.Collections.max(counts.values()) - java.util.Collections.min(counts.values())).isLessThanOrEqualTo(1);
+        assertThat(first.parameters()).containsEntry("sampling", "balanced");
+    }
+
+    @Test
+    void balancedSamplingRechecksSloAndCooldownMaskOnEveryTick() {
+        var space = balancedSpace();
+        var controller = new ExplorationController(space, (s, a) -> com.iasr.core.controller.ControlAction.NONE,
+                1, 7, ExplorationController.Sampling.BALANCED, 150);
+        for (int i = 0; i < 3; i++) controller.decide(state(i, 120), ACTUATORS);
+        for (int i = 3; i < 100; i++) {
+            var snapshot = MetricsSnapshot.builder().putAll(state(i, 120).asMap())
+                    .put(MetricNames.LATENCY_P95_MS, i % 2 == 0 ? 200 : 50)
+                    .put(MetricNames.cooldownRemaining("concurrency_limit"), i % 3 == 0 ? 1 : 0).build();
+            var action = controller.decide(snapshot, ACTUATORS);
+            var delta = new JointActionSpace.Delta(action.getOrDefault("concurrency_limit", 10) - 10,
+                    action.getOrDefault("hikari_max_pool", 5) - 5);
+            assertThat(space.candidates(snapshot, ACTUATORS)).contains(delta);
+        }
+    }
+
 }

@@ -155,6 +155,76 @@ class FqiTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "pool growth"):
             train(directory, self.root / "model", **self.options())
 
+    def test_joint_support_is_checked_after_closure(self):
+        from unittest.mock import patch
+        from train_fqi import joint_readiness
+        directory = self.dataset()
+        _, parts = load_partitions(directory)
+        retained = []
+        for action in ([0, 1], [0, -1], [1, 0]):
+            row = copy.deepcopy(parts["train"][0])
+            row["action"] = action
+            retained.append({"record": row})
+        self.assertFalse(joint_readiness([r["record"] for r in retained])["established"])
+        with patch("train_fqi.close_training_support", return_value=({}, retained, {})):
+            with self.assertRaisesRegex(ValueError, "support closure lacks retained"):
+                train(directory, self.root / "model", **self.options())
+        self.assertFalse((self.root / "model").exists())
+
+    def test_development_audit_never_opens_test_partition(self):
+        from unittest.mock import patch
+        from audit_joint_learning import audit
+        directory = self.dataset()
+        original = Path.read_text
+        def development_only(path, *args, **kwargs):
+            if path.name == "test.jsonl":
+                raise AssertionError("test outcomes must not be read")
+            return original(path, *args, **kwargs)
+        with patch.object(Path, "read_text", development_only):
+            report = audit(directory, min_samples=1, min_episodes=1)
+            model, trained = train(directory, self.root / "development-model", development_only=True, **self.options())
+        self.assertEqual(trained["test"], {"evaluated": False})
+        self.assertNotIn("test.jsonl", model["inputSha256"])
+        self.assertNotIn("test", trained["counts"])
+        self.assertEqual(report["partitionsRead"], ["train", "validation"])
+        self.assertFalse(report["testEvaluated"])
+        self.assertTrue(report["necessaryJointCoverageEstablished"])
+
+    def test_lag_audit_counts_interventions_without_crossing_episodes(self):
+        from audit_joint_learning import lag_descriptions
+        directory = self.dataset()
+        _, parts = load_partitions(directory)
+        records = []
+        for sequence, action in enumerate(([0, 1], [1, 0], [0, 0])):
+            row = copy.deepcopy(parts["train"][0])
+            row.update(sequence=sequence, action=action)
+            records.append(row)
+        isolated = copy.deepcopy(records[2])
+        isolated["episodeId"] = "different-episode"
+        report = lag_descriptions([*records[:2], isolated], (3,))
+        self.assertFalse(report["groups"])
+        report = lag_descriptions(records, (3,))
+        self.assertEqual(len(report["groups"]), 1)
+        self.assertEqual(next(iter(report["groups"].values()))["limitChangedDuringFollowup"], 1)
+        records[1]["action"] = [0, -1]
+        report = lag_descriptions(records, (3,))
+        self.assertEqual(report["excluded"]["h3:another_pool_change"], 1)
+
+    def test_explicit_development_split_has_no_test_and_keeps_profiles_together(self):
+        self.dataset()
+        for path in (self.root / "raw").rglob("metadata.json"):
+            metadata = json.loads(path.read_text())
+            condition = int(path.parent.name.split("-")[0])
+            metadata["configuration"]["conditions"]["profile"]["name"] = {0: "steady", 1: "ramp", 2: "spike"}[condition]
+            path.write_text(json.dumps(metadata))
+        result = prepare(self.root / "raw", self.root / "development", development_only=True, validation_scenarios=("spike",))
+        self.assertEqual(set(result["sampleCounts"]), {"train", "validation"})
+        self.assertFalse((self.root / "development/test.jsonl").exists())
+        for group in result["groups"].values():
+            self.assertEqual(group["split"], "validation" if group["conditions"]["profile"]["name"] == "spike" else "train")
+        with self.assertRaisesRegex(ValueError, "development-only dataset has no test"):
+            load_partitions(self.root / "development")
+
     def test_tampered_partition_is_rejected(self):
         directory = self.dataset()
         path = directory / "test.jsonl"
