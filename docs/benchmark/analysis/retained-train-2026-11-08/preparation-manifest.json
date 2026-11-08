@@ -1,0 +1,646 @@
+{
+  "developmentOnly": true,
+  "episodes": [
+    {
+      "episodeId": "ramp/explore/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ab148feda78100d0e2c91d079d8525eb4a18a37425b45e6bda53f5e5ce2258fa",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "ramp/explore/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ab148feda78100d0e2c91d079d8525eb4a18a37425b45e6bda53f5e5ce2258fa",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "ramp/explore/3",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ab148feda78100d0e2c91d079d8525eb4a18a37425b45e6bda53f5e5ce2258fa",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "ramp/explore/4",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ab148feda78100d0e2c91d079d8525eb4a18a37425b45e6bda53f5e5ce2258fa",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 9,
+        "short_history": 3
+      },
+      "groupId": "0582009e92b92b99efab00b206a1232641d13f6a68ea785cf0a51bbc0d82cab5",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 25,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "steady/explore/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "0582009e92b92b99efab00b206a1232641d13f6a68ea785cf0a51bbc0d82cab5",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 25,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "steady/explore/3",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "0582009e92b92b99efab00b206a1232641d13f6a68ea785cf0a51bbc0d82cab5",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 25,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "steady/explore/4",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "0582009e92b92b99efab00b206a1232641d13f6a68ea785cf0a51bbc0d82cab5",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 25,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "ramp/explore-balanced/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 9,
+        "short_history": 3
+      },
+      "groupId": "b4cddcd2270dbfc28f471323255888bcaee0431550a71bee44012adbbb566831",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 40,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "ramp/explore-balanced/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "b4cddcd2270dbfc28f471323255888bcaee0431550a71bee44012adbbb566831",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 40,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "ramp/explore-balanced/3",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 9,
+        "short_history": 3
+      },
+      "groupId": "b4cddcd2270dbfc28f471323255888bcaee0431550a71bee44012adbbb566831",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 40,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "spike/explore-balanced/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ac6b4df5892b3915e15c20cce97c1322249331ee9bbbb2d9a1292bfed6668fb0",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 40,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "validation"
+    },
+    {
+      "episodeId": "spike/explore-balanced/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ac6b4df5892b3915e15c20cce97c1322249331ee9bbbb2d9a1292bfed6668fb0",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 40,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "validation"
+    },
+    {
+      "episodeId": "spike/explore-balanced/3",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ac6b4df5892b3915e15c20cce97c1322249331ee9bbbb2d9a1292bfed6668fb0",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 40,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "validation"
+    },
+    {
+      "episodeId": "steady/explore-balanced/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 9,
+        "short_history": 3
+      },
+      "groupId": "f506284cedfd4947801a96b49512bf338688a0470e05215ec0b2f8d7b33f360e",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 25,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "steady/explore-balanced/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "f506284cedfd4947801a96b49512bf338688a0470e05215ec0b2f8d7b33f360e",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 25,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "steady/explore-balanced/3",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 9,
+        "short_history": 3
+      },
+      "groupId": "f506284cedfd4947801a96b49512bf338688a0470e05215ec0b2f8d7b33f360e",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 25,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "train"
+    }
+  ],
+  "extensionVersion": 1,
+  "groups": {
+    "0582009e92b92b99efab00b206a1232641d13f6a68ea785cf0a51bbc0d82cab5": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 30,
+          "thrash": 0.3,
+          "workers": 8
+        },
+        "initialLimit": 22,
+        "initialPool": 6,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 30000,
+          "requestTimeoutMs": 3000,
+          "scenario": "steady",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 30,
+          "degradedFactor": 2.4,
+          "durationScale": 1.0,
+          "loadScale": 1.0,
+          "name": "steady",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "train"
+    },
+    "ab148feda78100d0e2c91d079d8525eb4a18a37425b45e6bda53f5e5ce2258fa": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 30,
+          "thrash": 0.3,
+          "workers": 8
+        },
+        "initialLimit": 22,
+        "initialPool": 6,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 45000,
+          "requestTimeoutMs": 3000,
+          "scenario": "ramp",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 30,
+          "degradedFactor": 2.4,
+          "durationScale": 1.0,
+          "loadScale": 1.0,
+          "name": "ramp",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "train"
+    },
+    "ac6b4df5892b3915e15c20cce97c1322249331ee9bbbb2d9a1292bfed6668fb0": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 30,
+          "thrash": 0.3,
+          "workers": 8
+        },
+        "initialLimit": 20,
+        "initialPool": 2,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 45000,
+          "requestTimeoutMs": 3000,
+          "scenario": "spike",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 30,
+          "degradedFactor": 2.4,
+          "durationScale": 1.0,
+          "loadScale": 1.0,
+          "name": "spike",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "validation"
+    },
+    "b4cddcd2270dbfc28f471323255888bcaee0431550a71bee44012adbbb566831": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 30,
+          "thrash": 0.3,
+          "workers": 8
+        },
+        "initialLimit": 20,
+        "initialPool": 2,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 45000,
+          "requestTimeoutMs": 3000,
+          "scenario": "ramp",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 30,
+          "degradedFactor": 2.4,
+          "durationScale": 1.0,
+          "loadScale": 1.0,
+          "name": "ramp",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "train"
+    },
+    "f506284cedfd4947801a96b49512bf338688a0470e05215ec0b2f8d7b33f360e": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 30,
+          "thrash": 0.3,
+          "workers": 8
+        },
+        "initialLimit": 20,
+        "initialPool": 2,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 30000,
+          "requestTimeoutMs": 3000,
+          "scenario": "steady",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 30,
+          "degradedFactor": 2.4,
+          "durationScale": 1.0,
+          "loadScale": 1.0,
+          "name": "steady",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "train"
+    }
+  },
+  "historyWindows": 4,
+  "partitionReservations": {
+    "episodes": [
+      {
+        "episodeId": "ramp/explore/1",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "train"
+      },
+      {
+        "episodeId": "ramp/explore/2",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "train"
+      },
+      {
+        "episodeId": "ramp/explore/3",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "train"
+      },
+      {
+        "episodeId": "ramp/explore/4",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "train"
+      },
+      {
+        "episodeId": "slow-dependency/explore/1",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "test"
+      },
+      {
+        "episodeId": "slow-dependency/explore/2",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "test"
+      },
+      {
+        "episodeId": "slow-dependency/explore/3",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "test"
+      },
+      {
+        "episodeId": "slow-dependency/explore/4",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "test"
+      },
+      {
+        "episodeId": "spike/explore/1",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "validation"
+      },
+      {
+        "episodeId": "spike/explore/2",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "validation"
+      },
+      {
+        "episodeId": "spike/explore/3",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "validation"
+      },
+      {
+        "episodeId": "spike/explore/4",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "validation"
+      },
+      {
+        "episodeId": "steady/explore/1",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "train"
+      },
+      {
+        "episodeId": "steady/explore/2",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "train"
+      },
+      {
+        "episodeId": "steady/explore/3",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "train"
+      },
+      {
+        "episodeId": "steady/explore/4",
+        "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+        "split": "train"
+      },
+      {
+        "episodeId": "ramp/explore-balanced/1",
+        "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+        "split": "train"
+      },
+      {
+        "episodeId": "ramp/explore-balanced/2",
+        "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+        "split": "train"
+      },
+      {
+        "episodeId": "ramp/explore-balanced/3",
+        "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+        "split": "train"
+      },
+      {
+        "episodeId": "spike/explore-balanced/1",
+        "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+        "split": "validation"
+      },
+      {
+        "episodeId": "spike/explore-balanced/2",
+        "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+        "split": "validation"
+      },
+      {
+        "episodeId": "spike/explore-balanced/3",
+        "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+        "split": "validation"
+      },
+      {
+        "episodeId": "steady/explore-balanced/1",
+        "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+        "split": "train"
+      },
+      {
+        "episodeId": "steady/explore-balanced/2",
+        "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+        "split": "train"
+      },
+      {
+        "episodeId": "steady/explore-balanced/3",
+        "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+        "split": "train"
+      }
+    ],
+    "groups": {
+      "0582009e92b92b99efab00b206a1232641d13f6a68ea785cf0a51bbc0d82cab5": "train",
+      "ab148feda78100d0e2c91d079d8525eb4a18a37425b45e6bda53f5e5ce2258fa": "train",
+      "ac6b4df5892b3915e15c20cce97c1322249331ee9bbbb2d9a1292bfed6668fb0": "validation",
+      "b2a95ce19aee2fc045e9b5b89105ba23025baa3db15df0057c1abbdc3adfca62": "validation",
+      "b4cddcd2270dbfc28f471323255888bcaee0431550a71bee44012adbbb566831": "train",
+      "d64541a996746e80e77dc5c455851e0ed4ff1ef3e2c25fc286fa2904649a9b82": "test",
+      "f506284cedfd4947801a96b49512bf338688a0470e05215ec0b2f8d7b33f360e": "train"
+    }
+  },
+  "partitionSha256": {
+    "train": "1a1db762695635c2d03b6067a13c0b0d7734063a2db23ba67a002d3f7ba82e56",
+    "validation": "ea2c0aba7b70f995d716ba0c0961a1be56842e097d946922b2193deaa33e5603"
+  },
+  "preparationVersion": 1,
+  "prototypeAllowsDirtySource": false,
+  "sampleCounts": {
+    "train": 455,
+    "validation": 120
+  },
+  "sources": [
+    {
+      "manifestSha256": "d7882b028ca18f29c9df191aa8b189f4ed6b8adb191bc74c632f95ed476b4fd8",
+      "partitionSha256": {
+        "train": "d6e68f4128fc53ef30bed2fc40cd155036754d8ced4e57a772ca0bb0eb368c2d"
+      },
+      "partitionsRead": [
+        "train"
+      ],
+      "role": "retained_train"
+    },
+    {
+      "manifestSha256": "576046f71bb52da23a4ea2356555057744bdb326f9579fb5c069a82eedadb0fa",
+      "partitionSha256": {
+        "train": "0e67d69cfdb43ec2276d3224671dd42acb110a8be4f1c33db8570400445dc6ed",
+        "validation": "ea2c0aba7b70f995d716ba0c0961a1be56842e097d946922b2193deaa33e5603"
+      },
+      "partitionsRead": [
+        "train",
+        "validation"
+      ],
+      "role": "current_development"
+    }
+  ],
+  "testEvaluated": false,
+  "validationPolicy": "exact_current_partition_bytes",
+  "validationSha256": "ea2c0aba7b70f995d716ba0c0961a1be56842e097d946922b2193deaa33e5603"
+}

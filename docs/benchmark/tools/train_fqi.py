@@ -34,6 +34,9 @@ def load_partitions(directory, splits=("train", "validation", "test")):
         episodes[identity] = episode
     partitions, seen = {}, set()
     for split in splits:
+        expected_digest = manifest.get("partitionSha256", {}).get(split)
+        if expected_digest is not None:
+            require(hashlib.sha256((directory / f"{split}.jsonl").read_bytes()).hexdigest() == expected_digest, "frozen partition content differs")
         records = [json.loads(line) for line in (directory / f"{split}.jsonl").read_text().splitlines()]
         require(records, f"empty {split}")
         require(len(records) == manifest["sampleCounts"][split], "sample count differs from manifest")
@@ -178,7 +181,7 @@ def source_version():
 
 
 def train(directory, output, iterations=8, trees=32, depth=6, leaf=3, seed=42,
-          gamma=0.95, min_samples=3, min_episodes=2, max_distance=2.0, allow_incomplete_joint_support=False, development_only=False):
+          gamma=0.95, min_samples=3, min_episodes=2, max_distance=2.0, allow_incomplete_joint_support=False, development_only=False, max_features=1.0):
     import numpy as np
     import sklearn
     import scipy
@@ -189,6 +192,8 @@ def train(directory, output, iterations=8, trees=32, depth=6, leaf=3, seed=42,
     require(all(type(v) is int and v > 0 for v in (iterations, trees, depth, leaf, min_samples, min_episodes)),
             "iteration/tree/support counts must be positive integers")
     require(math.isfinite(gamma) and 0 < gamma < 1 and math.isfinite(max_distance) and max_distance > 0, "invalid discount/support radius")
+    require(type(max_features) in (int, float) and math.isfinite(max_features) and 0 < max_features <= 1, "invalid max_features fraction")
+    max_features = float(max_features)
     directory, output = Path(directory), Path(output)
     require(not output.exists(), "model output already exists")
     manifest, partitions = load_partitions(directory, splits=("train", "validation") if development_only else ("train", "validation", "test"))
@@ -211,7 +216,7 @@ def train(directory, output, iterations=8, trees=32, depth=6, leaf=3, seed=42,
     for iteration in range(iterations):
         targets = bellman_targets(train_cache, model, gamma)
         fitted = ExtraTreesRegressor(n_estimators=trees, max_depth=depth, min_samples_leaf=leaf,
-                                     random_state=seed + iteration, n_jobs=1)
+                                     random_state=seed + iteration, n_jobs=1, max_features=max_features)
         fitted.fit(x, np.asarray(targets, dtype=np.float64))
         model = fitted
         trace.append({"iteration": iteration + 1, "train": diagnostics(train_cache, model, gamma),
@@ -221,7 +226,7 @@ def train(directory, output, iterations=8, trees=32, depth=6, leaf=3, seed=42,
     export_error = max(abs(predict_forest(forest, row.tolist()) - expected[i]) for i, row in enumerate(x))
     require(export_error <= 1e-10, "portable export does not match sklearn")
     test_cache, test_excluded = cache_records(partitions["test"], preprocessing, support) if "test" in partitions else ([], {})
-    config = {"iterations": iterations, "trees": trees, "depth": depth, "minLeaf": leaf, "seed": seed,
+    config = {"iterations": iterations, "trees": trees, "depth": depth, "minLeaf": leaf, "seed": seed, "maxFeatures": max_features,
               "gammaPerSecond": gamma, "jointSupport": joint_support,
               "allowsIncompleteJointSupport": allow_incomplete_joint_support, "testEvaluated": not development_only, "iterationSelection": "fixed_budget_no_test_selection", "nJobs": 1}
     digests = {name: hashlib.sha256((directory / name).read_bytes()).hexdigest()
@@ -258,12 +263,13 @@ def main():
     parser.add_argument("--depth", type=int, default=6)
     parser.add_argument("--leaf", type=int, default=3)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--max-features", type=float, default=1.0)
     parser.add_argument("--development-only", action="store_true", help="fit and diagnose train/validation without opening test outcomes")
     parser.add_argument("--allow-incomplete-joint-support", action="store_true", help="diagnostic legacy export only; never establishes joint readiness")
     args = parser.parse_args()
     try:
         _, report = train(args.dataset, args.out, args.iterations, args.trees, args.depth, args.leaf, args.seed,
-                          allow_incomplete_joint_support=args.allow_incomplete_joint_support, development_only=args.development_only)
+                          allow_incomplete_joint_support=args.allow_incomplete_joint_support, development_only=args.development_only, max_features=args.max_features)
     except (ValueError, KeyError, TypeError, OSError, ImportError) as error:
         parser.exit(1, f"FQI training failed: {error}\n")
     print(json.dumps({"counts": report["counts"], "portableExportMaxError": report["portableExportMaxError"]}, indent=2))

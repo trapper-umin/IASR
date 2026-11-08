@@ -1,0 +1,300 @@
+{
+  "auditVersion": 1,
+  "inputSha256": {
+    "train": "1a1db762695635c2d03b6067a13c0b0d7734063a2db23ba67a002d3f7ba82e56",
+    "validation": "ea2c0aba7b70f995d716ba0c0961a1be56842e097d946922b2193deaa33e5603"
+  },
+  "necessaryJointCoverageEstablished": true,
+  "partitionsRead": [
+    "train",
+    "validation"
+  ],
+  "performanceEstablished": false,
+  "supportParameters": {
+    "maxRmsDistance": 2.0,
+    "minEpisodes": 2,
+    "minSamples": 3
+  },
+  "testEvaluated": false,
+  "train": {
+    "afterClosure": {
+      "actions": {
+        "-1,-1": 4,
+        "-1,0": 121,
+        "-1,1": 6,
+        "0,-1": 16,
+        "0,0": 218,
+        "0,1": 23,
+        "1,0": 27
+      },
+      "established": true,
+      "poolGrowth": 29,
+      "poolShrinkage": 20,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 10
+    },
+    "beforeClosure": {
+      "actions": {
+        "-1,-1": 7,
+        "-1,0": 127,
+        "-1,1": 6,
+        "0,-1": 18,
+        "0,0": 235,
+        "0,1": 26,
+        "1,-1": 1,
+        "1,0": 35
+      },
+      "established": true,
+      "poolGrowth": 32,
+      "poolShrinkage": 26,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 14
+    },
+    "closureFailure": null,
+    "closureTrace": [
+      {
+        "excluded": {
+          "unsupported_behavior_action": 25,
+          "unsupported_continuation": 8
+        },
+        "input": 455,
+        "pass": 1,
+        "retained": 422,
+        "retainedCoverage": {
+          "actions": {
+            "-1,-1": 4,
+            "-1,0": 121,
+            "-1,1": 6,
+            "0,-1": 17,
+            "0,0": 222,
+            "0,1": 23,
+            "1,0": 29
+          },
+          "established": true,
+          "poolGrowth": 29,
+          "poolShrinkage": 21,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 10
+        }
+      },
+      {
+        "excluded": {
+          "unsupported_behavior_action": 2,
+          "unsupported_continuation": 5
+        },
+        "input": 422,
+        "pass": 2,
+        "retained": 415,
+        "retainedCoverage": {
+          "actions": {
+            "-1,-1": 4,
+            "-1,0": 121,
+            "-1,1": 6,
+            "0,-1": 16,
+            "0,0": 218,
+            "0,1": 23,
+            "1,0": 27
+          },
+          "established": true,
+          "poolGrowth": 29,
+          "poolShrinkage": 20,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 10
+        }
+      },
+      {
+        "excluded": {},
+        "input": 415,
+        "pass": 3,
+        "retained": 415,
+        "retainedCoverage": {
+          "actions": {
+            "-1,-1": 4,
+            "-1,0": 121,
+            "-1,1": 6,
+            "0,-1": 16,
+            "0,0": 218,
+            "0,1": 23,
+            "1,0": 27
+          },
+          "established": true,
+          "poolGrowth": 29,
+          "poolShrinkage": 20,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 10
+        }
+      }
+    ],
+    "excluded": {
+      "unsupported_behavior_action": 28,
+      "unsupported_continuation": 12
+    },
+    "input": 455,
+    "lagDescriptions": {
+      "excluded": {
+        "h3:gap_or_episode_end": 10,
+        "h5:gap_or_episode_end": 10
+      },
+      "groups": {
+        "comfortable/no_pending/headroom/pool_tick/dp=-1/h=1": {
+          "count": 7,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 130.82857142857142,
+          "meanP95Ms": 49.58428571428571,
+          "simultaneousLimitChangeAtStart": 2
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=-1/h=3": {
+          "count": 5,
+          "limitChangedDuringFollowup": 3,
+          "meanGoodputRps": 134.8586,
+          "meanP95Ms": 84.848,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=-1/h=5": {
+          "count": 5,
+          "limitChangedDuringFollowup": 5,
+          "meanGoodputRps": 135.1524,
+          "meanP95Ms": 84.569,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=1/h=1": {
+          "count": 9,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 141.56022222222225,
+          "meanP95Ms": 44.3048888888889,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=1/h=3": {
+          "count": 9,
+          "limitChangedDuringFollowup": 6,
+          "meanGoodputRps": 147.46344444444446,
+          "meanP95Ms": 45.05233333333334,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=1/h=5": {
+          "count": 9,
+          "limitChangedDuringFollowup": 8,
+          "meanGoodputRps": 152.36033333333333,
+          "meanP95Ms": 58.228,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "comfortable/pending/headroom/pool_tick/dp=-1/h=1": {
+          "count": 2,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 209.599,
+          "meanP95Ms": 140.9035,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "comfortable/pending/headroom/pool_tick/dp=-1/h=3": {
+          "count": 2,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 207.792,
+          "meanP95Ms": 216.4135,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "comfortable/pending/headroom/pool_tick/dp=-1/h=5": {
+          "count": 2,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 209.3535,
+          "meanP95Ms": 214.473,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "over_slo/no_pending/binding/pool_tick/dp=1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 226.539,
+          "meanP95Ms": 151.929,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=1": {
+          "count": 16,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 142.4549375,
+          "meanP95Ms": 222.67587500000002,
+          "simultaneousLimitChangeAtStart": 4
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=3": {
+          "count": 13,
+          "limitChangedDuringFollowup": 12,
+          "meanGoodputRps": 137.60700000000003,
+          "meanP95Ms": 223.47915384615388,
+          "simultaneousLimitChangeAtStart": 3
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=5": {
+          "count": 13,
+          "limitChangedDuringFollowup": 13,
+          "meanGoodputRps": 137.02561538461538,
+          "meanP95Ms": 218.92361538461535,
+          "simultaneousLimitChangeAtStart": 3
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=1": {
+          "count": 20,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 139.83255000000003,
+          "meanP95Ms": 227.01205000000004,
+          "simultaneousLimitChangeAtStart": 6
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=3": {
+          "count": 18,
+          "limitChangedDuringFollowup": 18,
+          "meanGoodputRps": 138.81866666666667,
+          "meanP95Ms": 220.71516666666668,
+          "simultaneousLimitChangeAtStart": 5
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=5": {
+          "count": 18,
+          "limitChangedDuringFollowup": 18,
+          "meanGoodputRps": 138.09950000000003,
+          "meanP95Ms": 215.73927777777777,
+          "simultaneousLimitChangeAtStart": 5
+        },
+        "within_slo/no_pending/binding/pool_tick/dp=1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 144.864,
+          "meanP95Ms": 147.906,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "within_slo/pending/binding/pool_tick/dp=-1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 128.4,
+          "meanP95Ms": 140.82,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "within_slo/pending/binding/pool_tick/dp=-1/h=3": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 129.296,
+          "meanP95Ms": 140.935,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "within_slo/pending/binding/pool_tick/dp=-1/h=5": {
+          "count": 1,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 143.136,
+          "meanP95Ms": 149.747,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "within_slo/pending/binding/pool_tick/dp=1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 132.241,
+          "meanP95Ms": 132.681,
+          "simultaneousLimitChangeAtStart": 0
+        }
+      },
+      "scope": "descriptive_observed_trajectories_not_causal_action_effects"
+    },
+    "removedActions": {
+      "-1,-1": 3,
+      "-1,0": 6,
+      "0,-1": 2,
+      "0,0": 17,
+      "0,1": 3,
+      "1,-1": 1,
+      "1,0": 8
+    },
+    "retained": 415
+  }
+}
