@@ -11,10 +11,13 @@ public final class MetricNames {
 
     private MetricNames() {}
 
-    // ── Latency ──────────────────────────────────────────────────────────
+    // Successful-request latency from admission entry to response completion.
+    // Includes admission wait; excludes client/network and server accept queues.
     public static final String LATENCY_P95_MS       = "latency_p95_ms";
     public static final String LATENCY_P99_MS       = "latency_p99_ms";
     public static final String LATENCY_MEAN_MS      = "latency_mean_ms";
+    /** Successful-request duration after admission, including connection acquisition. */
+    public static final String SERVICE_MEAN_MS      = "service_mean_ms";
 
     // ── Throughput ───────────────────────────────────────────────────────
     public static final String GOODPUT_RPS          = "goodput_rps";
@@ -46,11 +49,10 @@ public final class MetricNames {
 
     /**
      * Mean time inside the downstream dependency, with the connection wait
-     * removed: {@code latency_mean_ms - hikari_acquire_mean_ms}.
+     * removed: {@code service_mean_ms - hikari_acquire_mean_ms}.
      * <p>
-     * The residual of the latency decomposition, and the only component no
-     * actuator can shorten — when it dominates, the answer is to admit less,
-     * not to grow anything.
+     * An approximation: includes application work, and connection-acquire and
+     * HTTP samples can belong to different completion windows.
      */
     public static final String DEPENDENCY_MEAN_MS   = "dependency_mean_ms";
 

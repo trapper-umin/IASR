@@ -13,10 +13,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.LongSupplier;
 
 /**
  * Servlet filter that enforces the IASR concurrency limit on every incoming
- * HTTP request and records per-request latency for the control loop.
+ * HTTP request and records successful-request latency, including admission wait.
  * <p>
  * If a permit cannot be acquired within the configured timeout the filter
  * responds with <b>429 Too Many Requests</b> and increments the timeout counter.
@@ -50,6 +51,7 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
     private final IasrMeterBinder meterBinder;
     private final WindowedLatencyTracker latencyTracker;
     private final Set<String> excludedPrefixes;
+    private final LongSupplier nanoTime;
 
     public ConcurrencyLimitFilter(ConcurrencyLimiter limiter,
                                   long acquireTimeoutMs,
@@ -63,11 +65,24 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
                                   IasrMeterBinder meterBinder,
                                   WindowedLatencyTracker latencyTracker,
                                   Set<String> excludedPrefixes) {
+        this(limiter, acquireTimeoutMs, meterBinder, latencyTracker, excludedPrefixes, System::nanoTime);
+    }
+
+    ConcurrencyLimitFilter(ConcurrencyLimiter limiter,
+                           long acquireTimeoutMs,
+                           IasrMeterBinder meterBinder,
+                           WindowedLatencyTracker latencyTracker,
+                           Set<String> excludedPrefixes,
+                           LongSupplier nanoTime) {
         this.limiter = limiter;
         this.acquireTimeoutMs = acquireTimeoutMs;
         this.meterBinder = meterBinder;
         this.latencyTracker = latencyTracker;
         this.excludedPrefixes = excludedPrefixes != null ? excludedPrefixes : EXCLUDED_PREFIXES;
+        this.nanoTime = nanoTime;
+        if (meterBinder != null) {
+            meterBinder.enableResponseMetrics();
+        }
     }
 
     @Override
@@ -76,12 +91,15 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
                                     FilterChain chain)
             throws ServletException, IOException {
         boolean acquired = false;
-        long admissionStartNs = System.nanoTime();
+        long admissionStartNs = nanoTime.getAsLong();
         try {
             acquired = limiter.tryAcquire(acquireTimeoutMs, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            if (meterBinder != null) {
+                meterBinder.recordResponse(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            }
             response.getWriter().write("{\"error\":\"Service interrupted\"}");
             return;
         }
@@ -89,6 +107,7 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
         if (!acquired) {
             if (meterBinder != null) {
                 meterBinder.recordTimeout();
+                meterBinder.recordResponse(429);
             }
             logRejection(request);
 
@@ -98,32 +117,30 @@ public class ConcurrencyLimitFilter extends OncePerRequestFilter {
             return;
         }
 
-        long startNs = System.nanoTime();
+        long startNs = nanoTime.getAsLong();
         if (meterBinder != null) {
-            // Recorded only for admitted requests, and only here — latency
-            // measured from this point onwards excludes the wait by
-            // construction, so without this the client-visible time cannot be
-            // accounted for at all.
+            // Includes all admitted requests, even those that later fail.
+            // The successful-request tracker separately pairs wait and service.
             meterBinder.recordAdmissionWait(startNs - admissionStartNs);
         }
+        boolean completed = false;
         try {
             chain.doFilter(request, response);
-
-            if (response.getStatus() >= 500 && meterBinder != null) {
-                meterBinder.recordError();
-            }
+            completed = true;
         } catch (Exception e) {
-            if (meterBinder != null) {
-                meterBinder.recordError();
-            }
             if (e instanceof ServletException se) throw se;
             if (e instanceof IOException ioe) throw ioe;
             throw new ServletException(e);
         } finally {
             limiter.release();
-            if (latencyTracker != null) {
-                double durationMs = (System.nanoTime() - startNs) / 1_000_000.0;
-                latencyTracker.record(durationMs);
+            int status = completed ? response.getStatus() : HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+            if (meterBinder != null) {
+                meterBinder.recordResponse(status);
+            }
+            if (latencyTracker != null && status >= 200 && status < 300) {
+                double durationMs = (nanoTime.getAsLong() - startNs) / 1_000_000.0;
+                double waitMs = (startNs - admissionStartNs) / 1_000_000.0;
+                latencyTracker.record(durationMs, waitMs);
             }
         }
     }

@@ -21,7 +21,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class WindowedLatencyTracker {
 
-    private final ConcurrentLinkedQueue<Double> observations = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Observation> observations = new ConcurrentLinkedQueue<>();
+
+    private record Observation(double totalMs, double serviceMs) { }
 
     /**
      * Record a single request duration.  Thread-safe, non-blocking.
@@ -29,7 +31,15 @@ public class WindowedLatencyTracker {
      * @param durationMs request duration in milliseconds
      */
     public void record(double durationMs) {
-        observations.add(durationMs);
+        record(durationMs, 0);
+    }
+
+    /**
+     * Record a successful request, pairing its service duration and admission
+     * wait before computing any percentiles. Percentiles cannot be added.
+     */
+    public void record(double serviceDurationMs, double admissionWaitMs) {
+        observations.add(new Observation(serviceDurationMs + admissionWaitMs, serviceDurationMs));
     }
 
     /**
@@ -39,8 +49,8 @@ public class WindowedLatencyTracker {
      * @return computed statistics, or {@link WindowStats#EMPTY} if no observations
      */
     public WindowStats drainAndCompute() {
-        List<Double> drained = new ArrayList<>();
-        Double val;
+        List<Observation> drained = new ArrayList<>();
+        Observation val;
         while ((val = observations.poll()) != null) {
             drained.add(val);
         }
@@ -50,9 +60,11 @@ public class WindowedLatencyTracker {
 
         double[] arr = new double[drained.size()];
         double sum = 0;
+        double serviceSum = 0;
         for (int i = 0; i < drained.size(); i++) {
-            arr[i] = drained.get(i);
+            arr[i] = drained.get(i).totalMs();
             sum += arr[i];
+            serviceSum += drained.get(i).serviceMs();
         }
         Arrays.sort(arr);
 
@@ -61,7 +73,8 @@ public class WindowedLatencyTracker {
                 sum / arr.length,
                 percentile(arr, 0.95),
                 percentile(arr, 0.99),
-                arr[arr.length - 1]
+                arr[arr.length - 1],
+                serviceSum / arr.length
         );
     }
 
@@ -73,7 +86,13 @@ public class WindowedLatencyTracker {
     /**
      * Per-window latency statistics.
      */
-    public record WindowStats(int count, double meanMs, double p95Ms, double p99Ms, double maxMs) {
+    public record WindowStats(int count, double meanMs, double p95Ms, double p99Ms,
+                              double maxMs, double serviceMeanMs) {
+
+        /** Compatibility for callers supplying durations without a separate wait. */
+        public WindowStats(int count, double meanMs, double p95Ms, double p99Ms, double maxMs) {
+            this(count, meanMs, p95Ms, p99Ms, maxMs, meanMs);
+        }
 
         public static final WindowStats EMPTY = new WindowStats(0, 0, 0, 0, 0);
 

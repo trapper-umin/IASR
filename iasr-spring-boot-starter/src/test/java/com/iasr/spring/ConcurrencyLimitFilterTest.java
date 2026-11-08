@@ -72,6 +72,7 @@ class ConcurrencyLimitFilterTest {
         assertThat(tracker.drainAndCompute().hasData())
                 .as("probe latency must not pollute the control signal")
                 .isFalse();
+        assertThat(counter("iasr.http.requests")).isZero();
     }
 
     @Test
@@ -86,6 +87,43 @@ class ConcurrencyLimitFilterTest {
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(limiter.getInflight()).as("the permit is returned").isZero();
         assertThat(tracker.drainAndCompute().count()).isEqualTo(1);
+        assertThat(counter("iasr.http.requests")).isEqualTo(1);
+        assertThat(counter("iasr.http.successes")).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("successful latency includes admission wait while service duration remains separate")
+    void includesAdmissionWaitInSloLatency() throws Exception {
+        java.util.concurrent.atomic.AtomicInteger clockRead = new java.util.concurrent.atomic.AtomicInteger();
+        long[] times = {0, 100_000_000, 120_000_000};
+        ConcurrencyLimitFilter timed = new ConcurrencyLimitFilter(
+                limiter, 20, binder, tracker, null, () -> times[clockRead.getAndIncrement()]);
+
+        timed.doFilter(get("/api/orders"), new MockHttpServletResponse(), new MockFilterChain());
+
+        WindowedLatencyTracker.WindowStats stats = tracker.drainAndCompute();
+        assertThat(stats.p95Ms()).isEqualTo(120.0);
+        assertThat(stats.serviceMeanMs()).isEqualTo(20.0);
+        assertThat(registry.get("iasr.concurrency.wait").timer().mean(TimeUnit.MILLISECONDS))
+                .isEqualTo(100.0);
+    }
+
+    @Test
+    @DisplayName("filter and metrics provider agree on successes, rejections and errors")
+    void filterOutcomesFeedTheProvider() throws Exception {
+        filter.doFilter(get("/api/orders"), new MockHttpServletResponse(), new MockFilterChain());
+        filter.doFilter(get("/api/orders"), new MockHttpServletResponse(),
+                (rq, rs) -> ((HttpServletResponse) rs).setStatus(500));
+        exhaustPermits();
+        filter.doFilter(get("/api/orders"), new MockHttpServletResponse(), new MockFilterChain());
+        filter.doFilter(get("/health"), new MockHttpServletResponse(), new MockFilterChain());
+
+        var snapshot = new com.iasr.micrometer.MicrometerMetricsProvider(registry, null, tracker).snapshot();
+
+        assertThat(snapshot.get(com.iasr.core.metrics.MetricNames.GOODPUT_RPS)).isEqualTo(1.0);
+        assertThat(snapshot.get(com.iasr.core.metrics.MetricNames.ERROR_RATE)).isEqualTo(0.333);
+        assertThat(snapshot.get(com.iasr.core.metrics.MetricNames.TIMEOUT_RATE)).isEqualTo(0.333);
+        assertThat(counter("iasr.http.requests")).isEqualTo(3);
     }
 
     @Test
@@ -102,6 +140,8 @@ class ConcurrencyLimitFilterTest {
         assertThat(response.getContentAsString()).contains("Too many requests");
         assertThat(chain.getRequest()).as("the request never reached the application").isNull();
         assertThat(counter("iasr.concurrency.timeouts")).isEqualTo(1.0);
+        assertThat(counter("iasr.http.requests")).isEqualTo(1);
+        assertThat(counter("iasr.http.successes")).isZero();
         assertThat(tracker.drainAndCompute().hasData())
                 .as("a rejected request has no service latency to report")
                 .isFalse();
@@ -117,6 +157,9 @@ class ConcurrencyLimitFilterTest {
 
         assertThat(counter("iasr.http.errors")).isEqualTo(1.0);
         assertThat(limiter.getInflight()).isZero();
+        assertThat(counter("iasr.http.requests")).isEqualTo(1);
+        assertThat(counter("iasr.http.successes")).isZero();
+        assertThat(tracker.drainAndCompute().hasData()).isFalse();
     }
 
     @Test
@@ -127,6 +170,9 @@ class ConcurrencyLimitFilterTest {
         filter.doFilter(get("/api/orders"), new MockHttpServletResponse(), notFound);
 
         assertThat(counter("iasr.http.errors")).isZero();
+        assertThat(counter("iasr.http.requests")).isEqualTo(1);
+        assertThat(counter("iasr.http.successes")).isZero();
+        assertThat(tracker.drainAndCompute().hasData()).isFalse();
     }
 
     @Test
@@ -146,6 +192,9 @@ class ConcurrencyLimitFilterTest {
                 .as("a failed request must not leak its permit")
                 .isZero();
         assertThat(counter("iasr.http.errors")).isEqualTo(1.0);
+        assertThat(counter("iasr.http.requests")).isEqualTo(1);
+        assertThat(counter("iasr.http.successes")).isZero();
+        assertThat(tracker.drainAndCompute().hasData()).isFalse();
     }
 
     @Test

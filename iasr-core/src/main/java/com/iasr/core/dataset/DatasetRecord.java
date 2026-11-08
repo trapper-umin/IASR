@@ -28,6 +28,9 @@ import java.util.Map;
 @Getter
 public final class DatasetRecord {
 
+    /** v2: successful-request latency includes admission wait; goodput excludes rejections. */
+    public static final int SCHEMA_VERSION = 2;
+
     private final Instant timestamp;
     private final double windowSec;
     private final Map<String, Double> state;
@@ -76,6 +79,7 @@ public final class DatasetRecord {
     public String toJsonLine() {
         StringBuilder sb = new StringBuilder(512);
         sb.append('{');
+        sb.append("\"schemaVersion\":").append(SCHEMA_VERSION).append(',');
         appendString(sb, "timestamp", timestamp.toString());
         sb.append(',');
         appendNumber(sb, "windowSec", windowSec);

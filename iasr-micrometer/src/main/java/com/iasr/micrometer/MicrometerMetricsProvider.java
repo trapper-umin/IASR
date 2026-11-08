@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
  * <h3>Expected meters</h3>
  * <ul>
  *   <li>{@code http.server.requests} — Timer (throughput, error/timeout counts)</li>
+ *   <li>{@code iasr.http.requests}, {@code iasr.http.successes} — preferred business counters</li>
  *   <li>{@code iasr.concurrency.inflight} — Gauge</li>
  *   <li>{@code iasr.concurrency.timeouts} — Counter</li>
  *   <li>{@code iasr.http.errors} — Counter</li>
@@ -66,10 +67,13 @@ public class MicrometerMetricsProvider implements MetricsProvider {
     private final Set<String> missingPercentilesWarned = ConcurrentHashMap.newKeySet();
 
     private long prevTotalRequests = 0;
+    private long prevSuccessfulRequests = 0;
+    private long prevHttpRequests = 0;
+    private Boolean previousBusinessCounters;
     private double prevTotalTimeMs = 0;
     private long prevErrorRequests = 0;
     private long prevTimeoutCount = 0;
-    private long prevSnapshotTimeNs = 0;
+    private long prevSnapshotTimeNs = Long.MIN_VALUE;
     private long prevAcquireCount = 0;
     private double prevAcquireTotalTimeMs = 0;
     private long prevAdmissionWaitCount = 0;
@@ -153,18 +157,53 @@ public class MicrometerMetricsProvider implements MetricsProvider {
     @Override
     public MetricsSnapshot snapshot() {
         MetricsSnapshot.Builder b = MetricsSnapshot.builder();
-        long now = System.nanoTime();
+        long now = registry.config().clock().monotonicTime();
         double serviceMeanMs = 0;
 
         // ── Read Micrometer cumulative counters (always, for throughput AND baseline sync) ──
         Collection<Timer> httpTimers = registry.find("http.server.requests").timers();
-        long totalRequestsNow = 0;
+        long httpRequestsNow = 0;
+        long httpSuccessesNow = 0;
+        long httpErrorsNow = 0;
+        boolean hasStatusTags = false;
         double totalTimeNowMs = 0;
         for (Timer t : httpTimers) {
-            totalRequestsNow += t.count();
+            httpRequestsNow += t.count();
             totalTimeNowMs += t.totalTime(TimeUnit.MILLISECONDS);
+            String status = t.getId().getTag("status");
+            if (status != null) {
+                hasStatusTags = true;
+                if (status.matches("2\\d{2}")) httpSuccessesNow += t.count();
+                if (status.matches("5\\d{2}")) httpErrorsNow += t.count();
+            }
         }
+        long httpRequestsDelta = httpRequestsNow - prevHttpRequests;
+        prevHttpRequests = httpRequestsNow;
+
+        // The servlet filter counts business responses directly, excluding probes.
+        // Outside the starter, prefer explicit HTTP statuses. Untagged legacy
+        // timers can only approximate success by subtracting known failures.
+        Counter businessRequests = registry.find("iasr.http.requests").counter();
+        boolean useBusinessCounters = businessRequests != null;
+        long totalRequestsNow = useBusinessCounters ? (long) businessRequests.count() : httpRequestsNow;
+        long errorNow = useBusinessCounters || registry.find("iasr.http.errors").counter() != null
+                ? countErrors() : httpErrorsNow;
+        long timeoutNow = countTimeouts();
+        long successfulRequestsNow = useBusinessCounters
+                ? countCounter("iasr.http.successes")
+                : hasStatusTags ? httpSuccessesNow
+                : Math.max(0, httpRequestsNow - errorNow - timeoutNow);
         long requestsDelta = totalRequestsNow - prevTotalRequests;
+        long successesDelta = successfulRequestsNow - prevSuccessfulRequests;
+        long errorsDelta = errorNow - prevErrorRequests;
+        long timeoutsDelta = timeoutNow - prevTimeoutCount;
+
+        boolean sourceChanged = previousBusinessCounters != null
+                && previousBusinessCounters != useBusinessCounters;
+        if (sourceChanged || requestsDelta < 0 || successesDelta < 0 || errorsDelta < 0 || timeoutsDelta < 0) {
+            log.warn("HTTP counter source changed or reset; resetting rate baseline");
+            requestsDelta = successesDelta = errorsDelta = timeoutsDelta = 0;
+        }
 
         // ── HTTP latency ────────────────────────────────────────────────
         WindowStats windowStats = latencyTracker != null
@@ -174,13 +213,13 @@ public class MicrometerMetricsProvider implements MetricsProvider {
         if (windowStats.hasData()) {
             b.put(MetricNames.LATENCY_P95_MS, round3(windowStats.p95Ms()));
             b.put(MetricNames.LATENCY_P99_MS, round3(windowStats.p99Ms()));
-            serviceMeanMs = round3(windowStats.meanMs());
-            b.put(MetricNames.LATENCY_MEAN_MS, serviceMeanMs);
-        } else if (requestsDelta >= MIN_REQUESTS_PER_WINDOW) {
-            // Enough real traffic but tracker had no data (non-Spring usage).
+            serviceMeanMs = round3(windowStats.serviceMeanMs());
+            b.put(MetricNames.LATENCY_MEAN_MS, round3(windowStats.meanMs()));
+        } else if (latencyTracker == null && httpRequestsDelta >= MIN_REQUESTS_PER_WINDOW) {
+            // No tracker (non-Spring usage): this mean includes every HTTP status.
             // Compute mean from Micrometer totalTime delta (per-window).
             double timeDeltaMs = totalTimeNowMs - prevTotalTimeMs;
-            serviceMeanMs = round3(timeDeltaMs / requestsDelta);
+            serviceMeanMs = round3(Math.max(0, timeDeltaMs) / httpRequestsDelta);
             b.put(MetricNames.LATENCY_P95_MS, 0.0);
             b.put(MetricNames.LATENCY_P99_MS, 0.0);
             b.put(MetricNames.LATENCY_MEAN_MS, serviceMeanMs);
@@ -197,45 +236,30 @@ public class MicrometerMetricsProvider implements MetricsProvider {
         prevTotalTimeMs = totalTimeNowMs;
 
         // ── HTTP throughput ─────────────────────────────────────────────
-        if (!httpTimers.isEmpty()) {
-            double elapsedSec = prevSnapshotTimeNs > 0
+        if (useBusinessCounters || !httpTimers.isEmpty()) {
+            double elapsedSec = prevSnapshotTimeNs != Long.MIN_VALUE
                     ? (now - prevSnapshotTimeNs) / 1_000_000_000.0
                     : 1.0;
 
-            long errorNow = countErrors();
-            long timeoutNow = countTimeouts();
-
-            long errorsDelta = errorNow - prevErrorRequests;
-            long timeoutsDelta = timeoutNow - prevTimeoutCount;
-
-            if (requestsDelta < 0 || errorsDelta < 0 || timeoutsDelta < 0) {
-                log.warn("Counter reset detected (reqΔ={}, errΔ={}, toutΔ={}), resetting baseline",
-                        requestsDelta, errorsDelta, timeoutsDelta);
-                requestsDelta = 0;
-                errorsDelta = 0;
-                timeoutsDelta = 0;
-            }
-
             double goodput = elapsedSec > 0
-                    ? Math.max(0, requestsDelta - errorsDelta) / elapsedSec
+                    ? Math.max(0, successesDelta) / elapsedSec
                     : 0;
-            double errorRate = requestsDelta > 0 ? (double) errorsDelta / requestsDelta : 0;
-            double timeoutRate = requestsDelta > 0 ? (double) timeoutsDelta / requestsDelta : 0;
+            double errorRate = requestsDelta > 0 ? Math.min(1, (double) errorsDelta / requestsDelta) : 0;
+            double timeoutRate = requestsDelta > 0 ? Math.min(1, (double) timeoutsDelta / requestsDelta) : 0;
 
             b.put(MetricNames.GOODPUT_RPS, round3(goodput));
             b.put(MetricNames.ERROR_RATE, round3(errorRate));
             b.put(MetricNames.TIMEOUT_RATE, round3(timeoutRate));
-
-            prevTotalRequests = totalRequestsNow;
-            prevErrorRequests = errorNow;
-            prevTimeoutCount = timeoutNow;
         } else {
-            prevTotalRequests = 0;
-            prevTotalTimeMs = 0;
             b.put(MetricNames.GOODPUT_RPS, 0.0);
             b.put(MetricNames.ERROR_RATE, 0.0);
             b.put(MetricNames.TIMEOUT_RATE, 0.0);
         }
+        prevTotalRequests = totalRequestsNow;
+        prevSuccessfulRequests = successfulRequestsNow;
+        prevErrorRequests = errorNow;
+        prevTimeoutCount = timeoutNow;
+        previousBusinessCounters = useBusinessCounters;
 
         // ── Inflight and permit queue ───────────────────────────────────
         Gauge inflight = findGauge("iasr.concurrency.inflight");
@@ -261,6 +285,12 @@ public class MicrometerMetricsProvider implements MetricsProvider {
         prevAdmissionWaitCount = waitCountNow;
         prevAdmissionWaitTotalMs = waitTotalNowMs;
         b.put(MetricNames.ADMISSION_WAIT_MEAN_MS, admissionWaitMean);
+        // Without a tracker the HTTP timer includes admission; this remains an
+        // approximation because the wait timer can have a different population.
+        if (latencyTracker == null) {
+            serviceMeanMs = round3(Math.max(0, serviceMeanMs - admissionWaitMean));
+        }
+        b.put(MetricNames.SERVICE_MEAN_MS, serviceMeanMs);
 
         // ── CPU ─────────────────────────────────────────────────────────
         Gauge cpuGauge = findGauge("process.cpu.usage");
@@ -398,17 +428,16 @@ public class MicrometerMetricsProvider implements MetricsProvider {
     }
 
     private long countErrors() {
-        try {
-            Counter c = registry.find("iasr.http.errors").counter();
-            return c != null ? (long) c.count() : 0;
-        } catch (Exception e) {
-            return 0;
-        }
+        return countCounter("iasr.http.errors");
     }
 
     private long countTimeouts() {
+        return countCounter("iasr.concurrency.timeouts");
+    }
+
+    private long countCounter(String name) {
         try {
-            Counter c = registry.find("iasr.concurrency.timeouts").counter();
+            Counter c = registry.find(name).counter();
             return c != null ? (long) c.count() : 0;
         } catch (Exception e) {
             return 0;

@@ -51,6 +51,33 @@ class WindowedLatencyTrackerTest {
     }
 
     @Test
+    @DisplayName("includes admission wait per request and retains a separate service mean")
+    void includesAdmissionWait() {
+        WindowedLatencyTracker tracker = new WindowedLatencyTracker();
+        tracker.record(10, 90);
+        tracker.record(30, 10);
+
+        WindowStats stats = tracker.drainAndCompute();
+
+        assertThat(stats.meanMs()).isEqualTo(70.0);
+        assertThat(stats.p95Ms()).isEqualTo(100.0);
+        assertThat(stats.serviceMeanMs()).isEqualTo(20.0);
+        assertThat(tracker.drainAndCompute()).isEqualTo(WindowStats.EMPTY);
+    }
+
+    @Test
+    @DisplayName("computes percentiles of paired durations rather than adding percentiles")
+    void pairsAdmissionAndServiceBeforeComputingPercentiles() {
+        WindowedLatencyTracker tracker = new WindowedLatencyTracker();
+        for (int i = 0; i < 50; i++) {
+            tracker.record(90, 10);
+            tracker.record(10, 90);
+        }
+
+        assertThat(tracker.drainAndCompute().p95Ms()).isEqualTo(100.0);
+    }
+
+    @Test
     @DisplayName("percentiles do not depend on insertion order")
     void orderIndependent() {
         WindowedLatencyTracker ascending = new WindowedLatencyTracker();
