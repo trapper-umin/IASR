@@ -10,7 +10,9 @@ from policy_data import candidates
 
 def export(model_path, prepared, output):
     model = load_model(model_path)
-    rows = [json.loads(line) for name in ("train", "validation", "test")
+    manifest = json.loads((prepared / "manifest.json").read_text())
+    splits = ("train", "validation") if manifest.get("developmentOnly") or model.get("trainingConfig", {}).get("testEvaluated") is False else ("train", "validation", "test")
+    rows = [json.loads(line) for name in splits
             for line in (prepared / (name + ".jsonl")).read_text().splitlines()]
     # Evenly sample all three partitions; include explicit missing and out-of-support cases.
     selected = [rows[i] for i in range(0, len(rows), max(1, len(rows) // 64))]

@@ -183,6 +183,11 @@ class FqiTest(unittest.TestCase):
         with patch.object(Path, "read_text", development_only):
             report = audit(directory, min_samples=1, min_episodes=1)
             model, trained = train(directory, self.root / "development-model", development_only=True, **self.options())
+            from export_jvm_fixtures import export
+            from contextlib import redirect_stdout
+            from io import StringIO
+            with redirect_stdout(StringIO()):
+                export(self.root / "development-model/model.json", directory, self.root / "jvm-fixtures.json")
         self.assertEqual(trained["test"], {"evaluated": False})
         self.assertNotIn("test.jsonl", model["inputSha256"])
         self.assertNotIn("test", trained["counts"])
@@ -224,6 +229,15 @@ class FqiTest(unittest.TestCase):
             self.assertEqual(group["split"], "validation" if group["conditions"]["profile"]["name"] == "spike" else "train")
         with self.assertRaisesRegex(ValueError, "development-only dataset has no test"):
             load_partitions(self.root / "development")
+
+    def test_audit_preserves_diagnosis_if_support_closure_exhausts_data(self):
+        from audit_joint_learning import audit
+        directory = self.dataset()
+        report = audit(directory, min_samples=1000000)
+        self.assertFalse(report["necessaryJointCoverageEstablished"])
+        self.assertEqual(report["train"]["retained"], 0)
+        self.assertIn("removed every transition", report["train"]["closureFailure"])
+        self.assertEqual(report["train"]["closureTrace"][-1]["retained"], 0)
 
     def test_tampered_partition_is_rejected(self):
         directory = self.dataset()

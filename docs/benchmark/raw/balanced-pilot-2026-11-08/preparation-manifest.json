@@ -1,0 +1,356 @@
+{
+  "developmentOnly": true,
+  "episodes": [
+    {
+      "episodeId": "ramp/explore-balanced/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 9,
+        "short_history": 3
+      },
+      "groupId": "b4cddcd2270dbfc28f471323255888bcaee0431550a71bee44012adbbb566831",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 40,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "ramp/explore-balanced/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "b4cddcd2270dbfc28f471323255888bcaee0431550a71bee44012adbbb566831",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 40,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "ramp/explore-balanced/3",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 9,
+        "short_history": 3
+      },
+      "groupId": "b4cddcd2270dbfc28f471323255888bcaee0431550a71bee44012adbbb566831",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 40,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "spike/explore-balanced/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ac6b4df5892b3915e15c20cce97c1322249331ee9bbbb2d9a1292bfed6668fb0",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 40,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "validation"
+    },
+    {
+      "episodeId": "spike/explore-balanced/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ac6b4df5892b3915e15c20cce97c1322249331ee9bbbb2d9a1292bfed6668fb0",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 40,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "validation"
+    },
+    {
+      "episodeId": "spike/explore-balanced/3",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ac6b4df5892b3915e15c20cce97c1322249331ee9bbbb2d9a1292bfed6668fb0",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 40,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "validation"
+    },
+    {
+      "episodeId": "steady/explore-balanced/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 9,
+        "short_history": 3
+      },
+      "groupId": "f506284cedfd4947801a96b49512bf338688a0470e05215ec0b2f8d7b33f360e",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 25,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "steady/explore-balanced/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "f506284cedfd4947801a96b49512bf338688a0470e05215ec0b2f8d7b33f360e",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 25,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "steady/explore-balanced/3",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 9,
+        "short_history": 3
+      },
+      "groupId": "f506284cedfd4947801a96b49512bf338688a0470e05215ec0b2f8d7b33f360e",
+      "runId": "d9b84727-c0f7-4dd6-b14e-5f253ea01deb",
+      "samples": 25,
+      "source": {
+        "commit": "980ab8e5c7d7e5feb6b9cd4c87b5ba44bddb66e0",
+        "dirty": false
+      },
+      "split": "train"
+    }
+  ],
+  "groups": {
+    "ac6b4df5892b3915e15c20cce97c1322249331ee9bbbb2d9a1292bfed6668fb0": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 30,
+          "thrash": 0.3,
+          "workers": 8
+        },
+        "initialLimit": 20,
+        "initialPool": 2,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 45000,
+          "requestTimeoutMs": 3000,
+          "scenario": "spike",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 30,
+          "degradedFactor": 2.4,
+          "durationScale": 1.0,
+          "loadScale": 1.0,
+          "name": "spike",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "validation"
+    },
+    "b4cddcd2270dbfc28f471323255888bcaee0431550a71bee44012adbbb566831": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 30,
+          "thrash": 0.3,
+          "workers": 8
+        },
+        "initialLimit": 20,
+        "initialPool": 2,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 45000,
+          "requestTimeoutMs": 3000,
+          "scenario": "ramp",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 30,
+          "degradedFactor": 2.4,
+          "durationScale": 1.0,
+          "loadScale": 1.0,
+          "name": "ramp",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "train"
+    },
+    "f506284cedfd4947801a96b49512bf338688a0470e05215ec0b2f8d7b33f360e": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 30,
+          "thrash": 0.3,
+          "workers": 8
+        },
+        "initialLimit": 20,
+        "initialPool": 2,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 30000,
+          "requestTimeoutMs": 3000,
+          "scenario": "steady",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 30,
+          "degradedFactor": 2.4,
+          "durationScale": 1.0,
+          "loadScale": 1.0,
+          "name": "steady",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "train"
+    }
+  },
+  "historyWindows": 4,
+  "preparationVersion": 1,
+  "prototypeAllowsDirtySource": false,
+  "sampleCounts": {
+    "train": 195,
+    "validation": 120
+  },
+  "splitSeed": 42,
+  "testScenarios": [],
+  "validation": {
+    "details": [
+      {
+        "distinctAppliedChanges": 7,
+        "episodeId": "ramp/explore-balanced/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 53,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "ramp/explore-balanced/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "ramp/explore-balanced/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 53,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 7,
+        "episodeId": "spike/explore-balanced/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 5,
+        "episodeId": "spike/explore-balanced/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 7,
+        "episodeId": "spike/explore-balanced/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 5,
+        "episodeId": "steady/explore-balanced/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 28,
+        "records": 38,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "steady/explore-balanced/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 28,
+        "records": 37,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 5,
+        "episodeId": "steady/explore-balanced/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 28,
+        "records": 38,
+        "sourceDirty": false
+      }
+    ],
+    "episodes": 9,
+    "measurementTransitions": 342,
+    "records": 427
+  },
+  "validationScenarios": [
+    "spike"
+  ]
+}

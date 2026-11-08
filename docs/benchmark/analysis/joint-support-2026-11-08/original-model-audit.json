@@ -95,6 +95,75 @@
       "scope": "necessary_retained_action_coverage_only",
       "simultaneousChanges": 7
     },
+    "closureFailure": null,
+    "closureTrace": [
+      {
+        "excluded": {
+          "unsupported_behavior_action": 15,
+          "unsupported_continuation": 3
+        },
+        "input": 260,
+        "pass": 1,
+        "retained": 242,
+        "retainedCoverage": {
+          "actions": {
+            "-1,0": 51,
+            "0,-1": 9,
+            "0,0": 140,
+            "0,1": 14,
+            "1,0": 28
+          },
+          "established": false,
+          "poolGrowth": 14,
+          "poolShrinkage": 9,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 0
+        }
+      },
+      {
+        "excluded": {
+          "unsupported_behavior_action": 1,
+          "unsupported_continuation": 4
+        },
+        "input": 242,
+        "pass": 2,
+        "retained": 237,
+        "retainedCoverage": {
+          "actions": {
+            "-1,0": 51,
+            "0,-1": 8,
+            "0,0": 137,
+            "0,1": 14,
+            "1,0": 27
+          },
+          "established": false,
+          "poolGrowth": 14,
+          "poolShrinkage": 8,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 0
+        }
+      },
+      {
+        "excluded": {},
+        "input": 237,
+        "pass": 3,
+        "retained": 237,
+        "retainedCoverage": {
+          "actions": {
+            "-1,0": 51,
+            "0,-1": 8,
+            "0,0": 137,
+            "0,1": 14,
+            "1,0": 27
+          },
+          "established": false,
+          "poolGrowth": 14,
+          "poolShrinkage": 8,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 0
+        }
+      }
+    ],
     "excluded": {
       "unsupported_behavior_action": 18,
       "unsupported_continuation": 5
@@ -110,97 +179,113 @@
           "count": 7,
           "limitChangedDuringFollowup": 0,
           "meanGoodputRps": 130.82857142857142,
-          "meanP95Ms": 49.58428571428571
+          "meanP95Ms": 49.58428571428571,
+          "simultaneousLimitChangeAtStart": 2
         },
         "comfortable/no_pending/headroom/pool_tick/dp=-1/h=3": {
           "count": 5,
           "limitChangedDuringFollowup": 3,
           "meanGoodputRps": 134.8586,
-          "meanP95Ms": 84.848
+          "meanP95Ms": 84.848,
+          "simultaneousLimitChangeAtStart": 1
         },
         "comfortable/no_pending/headroom/pool_tick/dp=-1/h=5": {
           "count": 5,
           "limitChangedDuringFollowup": 5,
           "meanGoodputRps": 135.1524,
-          "meanP95Ms": 84.569
+          "meanP95Ms": 84.569,
+          "simultaneousLimitChangeAtStart": 1
         },
         "comfortable/no_pending/headroom/pool_tick/dp=1/h=1": {
           "count": 9,
           "limitChangedDuringFollowup": 0,
           "meanGoodputRps": 141.56022222222225,
-          "meanP95Ms": 44.3048888888889
+          "meanP95Ms": 44.3048888888889,
+          "simultaneousLimitChangeAtStart": 0
         },
         "comfortable/no_pending/headroom/pool_tick/dp=1/h=3": {
           "count": 9,
           "limitChangedDuringFollowup": 6,
           "meanGoodputRps": 147.46344444444446,
-          "meanP95Ms": 45.05233333333334
+          "meanP95Ms": 45.05233333333334,
+          "simultaneousLimitChangeAtStart": 0
         },
         "comfortable/no_pending/headroom/pool_tick/dp=1/h=5": {
           "count": 9,
           "limitChangedDuringFollowup": 8,
           "meanGoodputRps": 152.36033333333333,
-          "meanP95Ms": 58.228
+          "meanP95Ms": 58.228,
+          "simultaneousLimitChangeAtStart": 0
         },
         "comfortable/pending/headroom/pool_tick/dp=-1/h=1": {
           "count": 2,
           "limitChangedDuringFollowup": 0,
           "meanGoodputRps": 209.599,
-          "meanP95Ms": 140.9035
+          "meanP95Ms": 140.9035,
+          "simultaneousLimitChangeAtStart": 1
         },
         "comfortable/pending/headroom/pool_tick/dp=-1/h=3": {
           "count": 2,
           "limitChangedDuringFollowup": 1,
           "meanGoodputRps": 207.792,
-          "meanP95Ms": 216.4135
+          "meanP95Ms": 216.4135,
+          "simultaneousLimitChangeAtStart": 1
         },
         "comfortable/pending/headroom/pool_tick/dp=-1/h=5": {
           "count": 2,
           "limitChangedDuringFollowup": 1,
           "meanGoodputRps": 209.3535,
-          "meanP95Ms": 214.473
+          "meanP95Ms": 214.473,
+          "simultaneousLimitChangeAtStart": 1
         },
         "over_slo/no_pending/binding/pool_tick/dp=1/h=1": {
           "count": 1,
           "limitChangedDuringFollowup": 0,
           "meanGoodputRps": 226.539,
-          "meanP95Ms": 151.929
+          "meanP95Ms": 151.929,
+          "simultaneousLimitChangeAtStart": 0
         },
         "over_slo/pending/binding/pool_tick/dp=-1/h=1": {
           "count": 6,
           "limitChangedDuringFollowup": 0,
           "meanGoodputRps": 209.04266666666663,
-          "meanP95Ms": 200.91616666666667
+          "meanP95Ms": 200.91616666666667,
+          "simultaneousLimitChangeAtStart": 2
         },
         "over_slo/pending/binding/pool_tick/dp=-1/h=3": {
           "count": 4,
           "limitChangedDuringFollowup": 3,
           "meanGoodputRps": 213.33975000000004,
-          "meanP95Ms": 205.56900000000002
+          "meanP95Ms": 205.56900000000002,
+          "simultaneousLimitChangeAtStart": 1
         },
         "over_slo/pending/binding/pool_tick/dp=-1/h=5": {
           "count": 4,
           "limitChangedDuringFollowup": 4,
           "meanGoodputRps": 211.97225,
-          "meanP95Ms": 203.0915
+          "meanP95Ms": 203.0915,
+          "simultaneousLimitChangeAtStart": 1
         },
         "over_slo/pending/binding/pool_tick/dp=1/h=1": {
           "count": 7,
           "limitChangedDuringFollowup": 0,
           "meanGoodputRps": 202.33542857142857,
-          "meanP95Ms": 214.51228571428572
+          "meanP95Ms": 214.51228571428572,
+          "simultaneousLimitChangeAtStart": 2
         },
         "over_slo/pending/binding/pool_tick/dp=1/h=3": {
           "count": 6,
           "limitChangedDuringFollowup": 6,
           "meanGoodputRps": 200.50750000000002,
-          "meanP95Ms": 213.85783333333336
+          "meanP95Ms": 213.85783333333336,
+          "simultaneousLimitChangeAtStart": 2
         },
         "over_slo/pending/binding/pool_tick/dp=1/h=5": {
           "count": 6,
           "limitChangedDuringFollowup": 6,
           "meanGoodputRps": 200.0675,
-          "meanP95Ms": 210.95883333333336
+          "meanP95Ms": 210.95883333333336,
+          "simultaneousLimitChangeAtStart": 2
         }
       },
       "scope": "descriptive_observed_trajectories_not_causal_action_effects"

@@ -1,0 +1,79 @@
+{
+  "episodes": 9,
+  "records": 427,
+  "measurementTransitions": 342,
+  "details": [
+    {
+      "episodeId": "ramp/explore-balanced/1",
+      "records": 53,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 7,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "ramp/explore-balanced/2",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 6,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "ramp/explore-balanced/3",
+      "records": 53,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 6,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "spike/explore-balanced/1",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 7,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "spike/explore-balanced/2",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 5,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "spike/explore-balanced/3",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 7,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/explore-balanced/1",
+      "records": 38,
+      "measurementTransitions": 28,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 5,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/explore-balanced/2",
+      "records": 37,
+      "measurementTransitions": 28,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 6,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/explore-balanced/3",
+      "records": 38,
+      "measurementTransitions": 28,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 5,
+      "sourceDirty": false
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "auditVersion": 1,
+  "inputSha256": {
+    "train": "0e67d69cfdb43ec2276d3224671dd42acb110a8be4f1c33db8570400445dc6ed",
+    "validation": "ea2c0aba7b70f995d716ba0c0961a1be56842e097d946922b2193deaa33e5603"
+  },
+  "necessaryJointCoverageEstablished": true,
+  "partitionsRead": [
+    "train",
+    "validation"
+  ],
+  "performanceEstablished": false,
+  "supportParameters": {
+    "maxRmsDistance": 2.0,
+    "minEpisodes": 2,
+    "minSamples": 3
+  },
+  "testEvaluated": false,
+  "train": {
+    "afterClosure": {
+      "actions": {
+        "-1,0": 67,
+        "-1,1": 4,
+        "0,-1": 8,
+        "0,0": 78,
+        "0,1": 9
+      },
+      "established": true,
+      "poolGrowth": 13,
+      "poolShrinkage": 8,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 4
+    },
+    "beforeClosure": {
+      "actions": {
+        "-1,-1": 3,
+        "-1,0": 73,
+        "-1,1": 4,
+        "0,-1": 8,
+        "0,0": 91,
+        "0,1": 11,
+        "1,0": 5
+      },
+      "established": true,
+      "poolGrowth": 15,
+      "poolShrinkage": 11,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 7
+    },
+    "closureFailure": null,
+    "closureTrace": [
+      {
+        "excluded": {
+          "unsupported_behavior_action": 20,
+          "unsupported_continuation": 6
+        },
+        "input": 195,
+        "pass": 1,
+        "retained": 169,
+        "retainedCoverage": {
+          "actions": {
+            "-1,0": 68,
+            "-1,1": 4,
+            "0,-1": 8,
+            "0,0": 80,
+            "0,1": 9
+          },
+          "established": true,
+          "poolGrowth": 13,
+          "poolShrinkage": 8,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 4
+        }
+      },
+      {
+        "excluded": {
+          "unsupported_behavior_action": 2,
+          "unsupported_continuation": 1
+        },
+        "input": 169,
+        "pass": 2,
+        "retained": 166,
+        "retainedCoverage": {
+          "actions": {
+            "-1,0": 67,
+            "-1,1": 4,
+            "0,-1": 8,
+            "0,0": 78,
+            "0,1": 9
+          },
+          "established": true,
+          "poolGrowth": 13,
+          "poolShrinkage": 8,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 4
+        }
+      },
+      {
+        "excluded": {},
+        "input": 166,
+        "pass": 3,
+        "retained": 166,
+        "retainedCoverage": {
+          "actions": {
+            "-1,0": 67,
+            "-1,1": 4,
+            "0,-1": 8,
+            "0,0": 78,
+            "0,1": 9
+          },
+          "established": true,
+          "poolGrowth": 13,
+          "poolShrinkage": 8,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 4
+        }
+      }
+    ],
+    "excluded": {
+      "unsupported_behavior_action": 26,
+      "unsupported_continuation": 3
+    },
+    "input": 195,
+    "lagDescriptions": {
+      "excluded": {
+        "h3:gap_or_episode_end": 4,
+        "h5:gap_or_episode_end": 4
+      },
+      "groups": {
+        "over_slo/pending/binding/pool_tick/dp=-1/h=1": {
+          "count": 10,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 102.50229999999999,
+          "meanP95Ms": 235.7317,
+          "simultaneousLimitChangeAtStart": 2
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=3": {
+          "count": 9,
+          "limitChangedDuringFollowup": 9,
+          "meanGoodputRps": 103.94800000000001,
+          "meanP95Ms": 231.4392222222222,
+          "simultaneousLimitChangeAtStart": 2
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=5": {
+          "count": 9,
+          "limitChangedDuringFollowup": 9,
+          "meanGoodputRps": 103.71600000000001,
+          "meanP95Ms": 225.96011111111113,
+          "simultaneousLimitChangeAtStart": 2
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=1": {
+          "count": 13,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 106.17715384615384,
+          "meanP95Ms": 233.74269230769232,
+          "simultaneousLimitChangeAtStart": 4
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=3": {
+          "count": 12,
+          "limitChangedDuringFollowup": 12,
+          "meanGoodputRps": 107.97424999999998,
+          "meanP95Ms": 224.1438333333333,
+          "simultaneousLimitChangeAtStart": 3
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=5": {
+          "count": 12,
+          "limitChangedDuringFollowup": 12,
+          "meanGoodputRps": 107.1155,
+          "meanP95Ms": 218.12949999999998,
+          "simultaneousLimitChangeAtStart": 3
+        },
+        "within_slo/no_pending/binding/pool_tick/dp=1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 144.864,
+          "meanP95Ms": 147.906,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "within_slo/pending/binding/pool_tick/dp=-1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 128.4,
+          "meanP95Ms": 140.82,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "within_slo/pending/binding/pool_tick/dp=-1/h=3": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 129.296,
+          "meanP95Ms": 140.935,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "within_slo/pending/binding/pool_tick/dp=-1/h=5": {
+          "count": 1,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 143.136,
+          "meanP95Ms": 149.747,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "within_slo/pending/binding/pool_tick/dp=1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 132.241,
+          "meanP95Ms": 132.681,
+          "simultaneousLimitChangeAtStart": 0
+        }
+      },
+      "scope": "descriptive_observed_trajectories_not_causal_action_effects"
+    },
+    "removedActions": {
+      "-1,-1": 3,
+      "-1,0": 6,
+      "0,0": 13,
+      "0,1": 2,
+      "1,0": 5
+    },
+    "retained": 166
+  }
+}

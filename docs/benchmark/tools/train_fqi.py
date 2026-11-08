@@ -104,12 +104,15 @@ def cache_records(records, preprocessing, support):
     return usable, dict(excluded)
 
 
-def close_training_support(records, preprocessing, min_samples, min_episodes, max_distance):
+def close_training_support(records, preprocessing, min_samples, min_episodes, max_distance, trace=None):
     """Support and Bellman rows must agree: excluded targets cannot certify an action."""
     retained = records
     for iteration in range(len(records) + 1):
         support = build_support(retained, preprocessing, min_samples, min_episodes, max_distance)
-        cached, _ = cache_records(retained, preprocessing, support)
+        cached, pass_excluded = cache_records(retained, preprocessing, support)
+        if trace is not None:
+            trace.append({"pass": iteration + 1, "input": len(retained), "retained": len(cached),
+                          "excluded": pass_excluded, "retainedCoverage": joint_readiness([item["record"] for item in cached])})
         if len(cached) == len(retained):
             support["fittedOn"] = "train_bellman_fixed_point"
             support["closurePasses"] = iteration + 1

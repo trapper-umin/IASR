@@ -1,0 +1,4 @@
+scenario,mode,dispatched,succeeded,rejected_429,server_errors,client_timeouts,goodput_rps,p50_ms,p95_ms,p99_ms,max_ms,slo_breach_pct,rejection_pct,hard_failure_pct
+steady,explore-balanced,3601,2732,869,0,0,91.1,256.0,321.0,332.0,463.0,98.3,24.1,0.0
+ramp,explore-balanced,12599,5291,7308,0,0,117.6,162.0,290.0,303.0,425.0,54.7,58.0,0.0
+spike,explore-balanced,10998,5424,5574,0,0,120.5,159.0,250.0,262.0,333.0,54.7,50.7,0.0

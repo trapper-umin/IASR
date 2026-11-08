@@ -17,7 +17,7 @@ def lag_descriptions(records, horizons=(1, 3, 5)):
     """Observed trajectories only. Intervening changes are counted, never called causal effects."""
     indexed = {(r["runId"], r["episodeId"], r["sequence"]): r for r in records}
     groups = defaultdict(lambda: {"count": 0, "limitChangedDuringFollowup": 0,
-                                  "goodputSum": 0.0, "p95Sum": 0.0})
+                                  "goodputSum": 0.0, "p95Sum": 0.0, "simultaneousLimitChangeAtStart": 0})
     excluded = Counter()
     for row in records:
         if row["action"][1] == 0:
@@ -38,11 +38,12 @@ def lag_descriptions(records, horizons=(1, 3, 5)):
             key = f"{state_bin(row)}/dp={row['action'][1]}/h={horizon}"
             group = groups[key]
             group["count"] += 1
+            group["simultaneousLimitChangeAtStart"] += int(row["action"][0] != 0)
             group["limitChangedDuringFollowup"] += int(any(r["action"][0] != 0 for r in future[1:]))
             group["goodputSum"] += gp
             group["p95Sum"] += p95
     return {"scope": "descriptive_observed_trajectories_not_causal_action_effects",
-            "groups": {key: {"count": value["count"], "limitChangedDuringFollowup": value["limitChangedDuringFollowup"],
+            "groups": {key: {"count": value["count"], "simultaneousLimitChangeAtStart": value["simultaneousLimitChangeAtStart"], "limitChangedDuringFollowup": value["limitChangedDuringFollowup"],
                               "meanGoodputRps": value["goodputSum"] / value["count"],
                               "meanP95Ms": value["p95Sum"] / value["count"]} for key, value in sorted(groups.items())},
             "excluded": dict(sorted(excluded.items()))}
@@ -83,7 +84,13 @@ def audit(directory, model_path=None, min_samples=3, min_episodes=2, max_distanc
     # Intentionally never open test.jsonl; even outcome diagnostics are development-only.
     manifest, parts = load_partitions(directory, splits=("train", "validation"))
     prep = fit_preprocessor(parts["train"])
-    support, cached, excluded = close_training_support(parts["train"], prep, min_samples, min_episodes, max_distance)
+    closure_trace, closure_failure = [], None
+    try:
+        support, cached, excluded = close_training_support(parts["train"], prep, min_samples, min_episodes, max_distance, trace=closure_trace)
+    except ValueError as error:
+        if "support closure removed every transition" not in str(error):
+            raise
+        cached, excluded, closure_failure = [], {"support_closure_exhausted": len(parts["train"])}, str(error)
     retained = [item["record"] for item in cached]
     counts = Counter(tuple(r["action"]) for r in parts["train"])
     final = Counter(tuple(r["action"]) for r in retained)
@@ -92,6 +99,7 @@ def audit(directory, model_path=None, min_samples=3, min_episodes=2, max_distanc
               "supportParameters": {"minSamples": min_samples, "minEpisodes": min_episodes, "maxRmsDistance": max_distance},
               "train": {"beforeClosure": joint_readiness(parts["train"]), "afterClosure": joint_readiness(retained),
                         "input": len(parts["train"]), "retained": len(retained), "excluded": excluded,
+                        "closureTrace": closure_trace, "closureFailure": closure_failure,
                         "removedActions": {action_key(key): counts[key] - final[key] for key in sorted(counts) if counts[key] > final[key]},
                         "lagDescriptions": lag_descriptions(parts["train"])},
               "necessaryJointCoverageEstablished": joint_readiness(retained)["established"],

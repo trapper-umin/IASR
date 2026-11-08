@@ -20,7 +20,8 @@ import static org.assertj.core.api.Assertions.*;
 class FqiModelTest {
     static final ObjectMapper JSON = new ObjectMapper();
     static final Path ROOT = root();
-    static final Path MODEL = ROOT.resolve("docs/benchmark/models/fqi-prototype-2026-11-08/model.json");
+    static final Path MODEL = Path.of(System.getProperty("iasr.test.model",
+            ROOT.resolve("docs/benchmark/models/fqi-prototype-2026-11-08/model.json").toString()));
     @TempDir Path temporary;
 
     static Path root() {
@@ -30,7 +31,9 @@ class FqiModelTest {
     }
     static InferenceBudget unlimited() { return new InferenceBudget(Long.MAX_VALUE); }
     static JsonNode fixtures() throws Exception {
-        return JSON.readTree(FqiModelTest.class.getResourceAsStream("/fqi-parity.json"));
+        String path = System.getProperty("iasr.test.fixtures");
+        return path == null ? JSON.readTree(FqiModelTest.class.getResourceAsStream("/fqi-parity.json"))
+                : JSON.readTree(Path.of(path).toFile());
     }
     static PolicyContext context(JsonNode node) throws Exception {
         Map<String, ActuatorGuardrail> rules = new LinkedHashMap<>();
