@@ -1,0 +1,1208 @@
+{
+  "auditVersion": 1,
+  "cases": [
+    {
+      "actionNodesOnLiveObservations": {
+        "nodes": [],
+        "note": "routing is architectural, not learned feature importance or proof of action quality",
+        "partitions": {
+          "live": {
+            "-1,-1": {
+              "historiesWithOtherSupportedActions": 0,
+              "historiesWithSupportedAction": 0
+            },
+            "-1,0": {
+              "historiesWithOtherSupportedActions": 18,
+              "historiesWithSupportedAction": 18
+            },
+            "-1,1": {
+              "historiesWithOtherSupportedActions": 0,
+              "historiesWithSupportedAction": 0
+            },
+            "0,-1": {
+              "historiesWithOtherSupportedActions": 6,
+              "historiesWithSupportedAction": 6
+            },
+            "0,0": {
+              "historiesWithOtherSupportedActions": 25,
+              "historiesWithSupportedAction": 32
+            },
+            "0,1": {
+              "historiesWithOtherSupportedActions": 7,
+              "historiesWithSupportedAction": 7
+            },
+            "1,0": {
+              "historiesWithOtherSupportedActions": 8,
+              "historiesWithSupportedAction": 8
+            }
+          }
+        },
+        "routing": "per_normalized_joint_action"
+      },
+      "arm": "experimental",
+      "candidate": "per-action",
+      "episodePath": "experimental/steady/episodes/f519a371-9793-4c72-b80f-a188557c53ef/steady/learned/repeat-0001",
+      "fallbackActions": {
+        "-1,1": 1,
+        "-2,0": 1,
+        "0,0": 3
+      },
+      "fallbackReasons": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 1,
+        "learned_fallback_short_history": 3
+      },
+      "inference": {
+        "decisions": 37,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 33,
+        "maxInferenceMs": 3.541958,
+        "meanInferenceMs": 0.5939215757575758,
+        "modelDecisions": 32
+      },
+      "modelActions": {
+        "-1,0": 10,
+        "0,-1": 1,
+        "0,0": 14,
+        "0,1": 4,
+        "1,0": 3
+      },
+      "modelDecisions": 32,
+      "modelLimitChanges": 13,
+      "modelOnLiveObservations": {
+        "decisions": {
+          "-1,0": 10,
+          "0,-1": 1,
+          "0,0": 14,
+          "0,1": 4,
+          "1,0": 3
+        },
+        "fallbacks": 1,
+        "histories": 33,
+        "limitSensitivityAtFixedPoolAction": {
+          "historiesWithComparableActions": 19,
+          "maxQSpread": 1.0843640468955766,
+          "nonzeroQSpreadHistories": 19
+        },
+        "poolSensitivityAtFixedLimitAction": {
+          "historiesWithComparableActions": 7,
+          "maxQSpread": 4.000824357991679,
+          "nonzeroQSpreadHistories": 7
+        },
+        "supportedPoolOpportunities": 7,
+        "supportedSimultaneousOpportunities": 0
+      },
+      "modelPoolChanges": 5,
+      "modelSimultaneousChanges": 0,
+      "records": 37,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3601,
+        "durationMs": 30000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 106.9,
+        "maxMs": 497.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 208.0,
+        "p95Ms": 323.0,
+        "p99Ms": 333.0,
+        "rejected429": 393,
+        "rejectionRatePercent": 10.9,
+        "scenario": "steady",
+        "serverErrors": 0,
+        "sloBreachPercent": 56.8,
+        "succeeded": 3208
+      },
+      "scenario": "steady"
+    },
+    {
+      "actionNodesOnLiveObservations": {
+        "nodes": [
+          {
+            "actionFeature": "action.pool",
+            "node": 50,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_pending",
+                "operator": ">",
+                "threshold": 0.3520702427974244
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 1.1160182653148796
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.7836339225373667
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.21448936952021413
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.9987363984258307
+              }
+            ],
+            "threshold": 0.14336282347485563,
+            "tree": 1
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 8,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 3,
+                "historiesWithSupportedCandidatesOnBothBranches": 2
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.17266904001044758
+              },
+              {
+                "feature": "w2.latency_p99_ms",
+                "operator": "<=",
+                "threshold": -0.6166236028948031
+              },
+              {
+                "feature": "w2.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.2188897052129134
+              },
+              {
+                "feature": "w3.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.13935234614549175
+              },
+              {
+                "feature": "w2.cpu_proc",
+                "operator": ">",
+                "threshold": -0.11282123461244722
+              }
+            ],
+            "threshold": -0.7775030554167475,
+            "tree": 4
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 70,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.hikari_pending",
+                "operator": ">",
+                "threshold": 0.42788986096555126
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 1.3134912571113557
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 1.0086409564985004
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 1.1617056180636531
+              },
+              {
+                "feature": "w1.gc_pause_p95_ms",
+                "operator": "<=",
+                "threshold": 0.02336771003748392
+              }
+            ],
+            "threshold": -0.2035034555958134,
+            "tree": 8
+          },
+          {
+            "actionFeature": "action.pool",
+            "node": 50,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.latency_mean_ms",
+                "operator": ">",
+                "threshold": 0.13347296335754266
+              },
+              {
+                "feature": "w3.latency_p99_ms",
+                "operator": "<=",
+                "threshold": 0.43599244931162473
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.031709898161566774
+              },
+              {
+                "feature": "w3.latency_mean_ms",
+                "operator": ">",
+                "threshold": 0.27856127635520933
+              }
+            ],
+            "threshold": 0.16143315525792223,
+            "tree": 17
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 29,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.11566431677604017
+              },
+              {
+                "feature": "w2.timeout_rate",
+                "operator": ">",
+                "threshold": 0.40772051585503766
+              },
+              {
+                "feature": "w1.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.47558555727619006
+              },
+              {
+                "feature": "w2.goodput_rps",
+                "operator": ">",
+                "threshold": -0.19134835949291534
+              },
+              {
+                "feature": "w1.pool_phase",
+                "operator": "<=",
+                "threshold": 0.07352694453370145
+              }
+            ],
+            "threshold": -0.10809341636863234,
+            "tree": 18
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 24,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w0.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.17315714500060175
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.4497273053900318
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": ">",
+                "threshold": -0.46440068130120665
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 0.31043231285255024
+              }
+            ],
+            "threshold": -0.5415574752453516,
+            "tree": 23
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 12,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.30285740809182515
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 1.1442244183230053
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.3567502258325841
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 0.24029358498601683
+              },
+              {
+                "feature": "w2.timeout_rate",
+                "operator": "<=",
+                "threshold": 0.9524420564700564
+              }
+            ],
+            "threshold": -0.15771235439819864,
+            "tree": 25
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 15,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.latency_p99_ms",
+                "operator": "<=",
+                "threshold": -0.03224375646322153
+              },
+              {
+                "feature": "w2.pool_absolute",
+                "operator": ">",
+                "threshold": -0.3049404861195667
+              },
+              {
+                "feature": "w2.latency_p99_ms",
+                "operator": "<=",
+                "threshold": -0.5688818445463785
+              },
+              {
+                "feature": "w3.admission_wait_mean_ms",
+                "operator": ">",
+                "threshold": -0.9702538308813807
+              },
+              {
+                "feature": "w2.limit_fraction",
+                "operator": "<=",
+                "threshold": 0.1430777144126833
+              }
+            ],
+            "threshold": -0.8968782014664627,
+            "tree": 29
+          }
+        ],
+        "thresholdSpace": "normalized_float32_features"
+      },
+      "arm": "reference",
+      "candidate": "pooled",
+      "episodePath": "reference/steady/episodes/067543e9-1e85-4393-8acf-a5e9bbb7771c/steady/learned/repeat-0001",
+      "fallbackActions": {
+        "-1,1": 1,
+        "-2,0": 2,
+        "0,0": 3
+      },
+      "fallbackReasons": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 2,
+        "learned_fallback_short_history": 3
+      },
+      "inference": {
+        "decisions": 38,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 2,
+          "short_history": 3
+        },
+        "inferenceAttempts": 34,
+        "maxInferenceMs": 9.450125,
+        "meanInferenceMs": 0.8224645294117647,
+        "modelDecisions": 32
+      },
+      "modelActions": {
+        "0,0": 32
+      },
+      "modelDecisions": 32,
+      "modelLimitChanges": 0,
+      "modelOnLiveObservations": {
+        "decisions": {
+          "0,0": 32
+        },
+        "fallbacks": 2,
+        "histories": 34,
+        "limitSensitivityAtFixedPoolAction": {
+          "historiesWithComparableActions": 31,
+          "maxQSpread": 0.004941982073410012,
+          "nonzeroQSpreadHistories": 2
+        },
+        "poolSensitivityAtFixedLimitAction": {
+          "historiesWithComparableActions": 7,
+          "maxQSpread": 0.0,
+          "nonzeroQSpreadHistories": 0
+        },
+        "supportedPoolOpportunities": 7,
+        "supportedSimultaneousOpportunities": 6
+      },
+      "modelPoolChanges": 0,
+      "modelSimultaneousChanges": 0,
+      "records": 38,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3601,
+        "durationMs": 30000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 90.8,
+        "maxMs": 423.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 284.0,
+        "p95Ms": 295.0,
+        "p99Ms": 298.0,
+        "rejected429": 877,
+        "rejectionRatePercent": 24.4,
+        "scenario": "steady",
+        "serverErrors": 0,
+        "sloBreachPercent": 98.5,
+        "succeeded": 2724
+      },
+      "scenario": "steady"
+    },
+    {
+      "actionNodesOnLiveObservations": {
+        "nodes": [
+          {
+            "actionFeature": "action.pool",
+            "node": 50,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_pending",
+                "operator": ">",
+                "threshold": 0.3520702427974244
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 1.1160182653148796
+              },
+              {
+                "feature": "w3.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.7836339225373667
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.21448936952021413
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.9987363984258307
+              }
+            ],
+            "threshold": 0.14336282347485563,
+            "tree": 1
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 8,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 4,
+                "historiesWithSupportedCandidatesOnBothBranches": 3
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.hikari_pending",
+                "operator": "<=",
+                "threshold": 0.17266904001044758
+              },
+              {
+                "feature": "w2.latency_p99_ms",
+                "operator": "<=",
+                "threshold": -0.6166236028948031
+              },
+              {
+                "feature": "w2.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.2188897052129134
+              },
+              {
+                "feature": "w3.goodput_rps",
+                "operator": "<=",
+                "threshold": 0.13935234614549175
+              },
+              {
+                "feature": "w2.cpu_proc",
+                "operator": ">",
+                "threshold": -0.11282123461244722
+              }
+            ],
+            "threshold": -0.7775030554167475,
+            "tree": 4
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 70,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.hikari_pending",
+                "operator": ">",
+                "threshold": 0.42788986096555126
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 1.3134912571113557
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 1.0086409564985004
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 1.1617056180636531
+              },
+              {
+                "feature": "w1.gc_pause_p95_ms",
+                "operator": "<=",
+                "threshold": 0.02336771003748392
+              }
+            ],
+            "threshold": -0.2035034555958134,
+            "tree": 8
+          },
+          {
+            "actionFeature": "action.pool",
+            "node": 50,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.latency_mean_ms",
+                "operator": ">",
+                "threshold": 0.13347296335754266
+              },
+              {
+                "feature": "w3.latency_p99_ms",
+                "operator": "<=",
+                "threshold": 0.43599244931162473
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": "<=",
+                "threshold": 0.031709898161566774
+              },
+              {
+                "feature": "w3.latency_mean_ms",
+                "operator": ">",
+                "threshold": 0.27856127635520933
+              }
+            ],
+            "threshold": 0.16143315525792223,
+            "tree": 17
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 29,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.11566431677604017
+              },
+              {
+                "feature": "w2.timeout_rate",
+                "operator": ">",
+                "threshold": 0.40772051585503766
+              },
+              {
+                "feature": "w1.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.47558555727619006
+              },
+              {
+                "feature": "w2.goodput_rps",
+                "operator": ">",
+                "threshold": -0.19134835949291534
+              },
+              {
+                "feature": "w1.pool_phase",
+                "operator": "<=",
+                "threshold": 0.07352694453370145
+              }
+            ],
+            "threshold": -0.10809341636863234,
+            "tree": 18
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 24,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w0.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.17315714500060175
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": "<=",
+                "threshold": 0.4497273053900318
+              },
+              {
+                "feature": "w3.pool_absolute",
+                "operator": ">",
+                "threshold": -0.46440068130120665
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 0.31043231285255024
+              }
+            ],
+            "threshold": -0.5415574752453516,
+            "tree": 23
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 12,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w2.pool_absolute",
+                "operator": "<=",
+                "threshold": -0.30285740809182515
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 1.1442244183230053
+              },
+              {
+                "feature": "w3.hikari_acquire_mean_ms",
+                "operator": "<=",
+                "threshold": 0.3567502258325841
+              },
+              {
+                "feature": "w3.service_mean_ms",
+                "operator": ">",
+                "threshold": 0.24029358498601683
+              },
+              {
+                "feature": "w2.timeout_rate",
+                "operator": "<=",
+                "threshold": 0.9524420564700564
+              }
+            ],
+            "threshold": -0.15771235439819864,
+            "tree": 25
+          },
+          {
+            "actionFeature": "action.limit",
+            "node": 15,
+            "partitions": {
+              "live": {
+                "historiesReachingNode": 0,
+                "historiesWithSupportedCandidatesOnBothBranches": 0
+              }
+            },
+            "path": [
+              {
+                "feature": "w3.latency_p99_ms",
+                "operator": "<=",
+                "threshold": -0.03224375646322153
+              },
+              {
+                "feature": "w2.pool_absolute",
+                "operator": ">",
+                "threshold": -0.3049404861195667
+              },
+              {
+                "feature": "w2.latency_p99_ms",
+                "operator": "<=",
+                "threshold": -0.5688818445463785
+              },
+              {
+                "feature": "w3.admission_wait_mean_ms",
+                "operator": ">",
+                "threshold": -0.9702538308813807
+              },
+              {
+                "feature": "w2.limit_fraction",
+                "operator": "<=",
+                "threshold": 0.1430777144126833
+              }
+            ],
+            "threshold": -0.8968782014664627,
+            "tree": 29
+          }
+        ],
+        "thresholdSpace": "normalized_float32_features"
+      },
+      "arm": "reference",
+      "candidate": "pooled",
+      "episodePath": "reference/spike/episodes/15b1cf57-149f-4684-ad11-f92297d83f84/spike/learned/repeat-0001",
+      "fallbackActions": {
+        "0,0": 3,
+        "0,1": 1
+      },
+      "fallbackReasons": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3
+      },
+      "inference": {
+        "decisions": 52,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 48,
+        "maxInferenceMs": 9.271875,
+        "meanInferenceMs": 0.6451561875,
+        "modelDecisions": 48
+      },
+      "modelActions": {
+        "0,0": 48
+      },
+      "modelDecisions": 48,
+      "modelLimitChanges": 0,
+      "modelOnLiveObservations": {
+        "decisions": {
+          "0,0": 48
+        },
+        "fallbacks": 0,
+        "histories": 48,
+        "limitSensitivityAtFixedPoolAction": {
+          "historiesWithComparableActions": 48,
+          "maxQSpread": 0.004941982073410012,
+          "nonzeroQSpreadHistories": 3
+        },
+        "poolSensitivityAtFixedLimitAction": {
+          "historiesWithComparableActions": 10,
+          "maxQSpread": 0.0,
+          "nonzeroQSpreadHistories": 0
+        },
+        "supportedPoolOpportunities": 10,
+        "supportedSimultaneousOpportunities": 9
+      },
+      "modelPoolChanges": 0,
+      "modelSimultaneousChanges": 0,
+      "records": 52,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 10998,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 90.6,
+        "maxMs": 505.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 320.0,
+        "p95Ms": 331.0,
+        "p99Ms": 334.0,
+        "rejected429": 6922,
+        "rejectionRatePercent": 62.9,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 98.9,
+        "succeeded": 4076
+      },
+      "scenario": "spike"
+    },
+    {
+      "actionNodesOnLiveObservations": {
+        "nodes": [],
+        "note": "routing is architectural, not learned feature importance or proof of action quality",
+        "partitions": {
+          "live": {
+            "-1,-1": {
+              "historiesWithOtherSupportedActions": 2,
+              "historiesWithSupportedAction": 2
+            },
+            "-1,0": {
+              "historiesWithOtherSupportedActions": 25,
+              "historiesWithSupportedAction": 25
+            },
+            "-1,1": {
+              "historiesWithOtherSupportedActions": 2,
+              "historiesWithSupportedAction": 2
+            },
+            "0,-1": {
+              "historiesWithOtherSupportedActions": 10,
+              "historiesWithSupportedAction": 10
+            },
+            "0,0": {
+              "historiesWithOtherSupportedActions": 33,
+              "historiesWithSupportedAction": 46
+            },
+            "0,1": {
+              "historiesWithOtherSupportedActions": 10,
+              "historiesWithSupportedAction": 10
+            },
+            "1,0": {
+              "historiesWithOtherSupportedActions": 16,
+              "historiesWithSupportedAction": 16
+            }
+          }
+        },
+        "routing": "per_normalized_joint_action"
+      },
+      "arm": "experimental",
+      "candidate": "per-action",
+      "episodePath": "experimental/spike/episodes/7b60c8b9-b062-4740-97e8-5d19f64eb886/spike/learned/repeat-0001",
+      "fallbackActions": {
+        "-2,0": 1,
+        "-2,1": 1,
+        "0,0": 4,
+        "0,1": 1
+      },
+      "fallbackReasons": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 3,
+        "learned_fallback_short_history": 3
+      },
+      "inference": {
+        "decisions": 53,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 3,
+          "short_history": 3
+        },
+        "inferenceAttempts": 49,
+        "maxInferenceMs": 2.73475,
+        "meanInferenceMs": 0.4065322448979592,
+        "modelDecisions": 46
+      },
+      "modelActions": {
+        "-1,0": 10,
+        "-1,1": 2,
+        "0,-1": 1,
+        "0,0": 24,
+        "0,1": 4,
+        "1,0": 5
+      },
+      "modelDecisions": 46,
+      "modelLimitChanges": 17,
+      "modelOnLiveObservations": {
+        "decisions": {
+          "-1,0": 10,
+          "-1,1": 2,
+          "0,-1": 1,
+          "0,0": 24,
+          "0,1": 4,
+          "1,0": 5
+        },
+        "fallbacks": 3,
+        "histories": 49,
+        "limitSensitivityAtFixedPoolAction": {
+          "historiesWithComparableActions": 28,
+          "maxQSpread": 4.125767195220286,
+          "nonzeroQSpreadHistories": 28
+        },
+        "poolSensitivityAtFixedLimitAction": {
+          "historiesWithComparableActions": 10,
+          "maxQSpread": 5.198730000004579,
+          "nonzeroQSpreadHistories": 10
+        },
+        "supportedPoolOpportunities": 10,
+        "supportedSimultaneousOpportunities": 2
+      },
+      "modelPoolChanges": 7,
+      "modelSimultaneousChanges": 2,
+      "records": 53,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 10998,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 142.0,
+        "maxMs": 432.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 165.0,
+        "p95Ms": 242.0,
+        "p99Ms": 258.0,
+        "rejected429": 4610,
+        "rejectionRatePercent": 41.9,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 52.5,
+        "succeeded": 6388
+      },
+      "scenario": "spike"
+    }
+  ],
+  "integrity": {
+    "details": [
+      {
+        "distinctAppliedChanges": 7,
+        "episodeId": "spike/learned/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 53,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "steady/learned/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 28,
+        "records": 37,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 1,
+        "episodeId": "spike/learned/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 1,
+        "episodeId": "steady/learned/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 28,
+        "records": 38,
+        "sourceDirty": false
+      }
+    ],
+    "episodes": 4,
+    "measurementTransitions": 142,
+    "records": 180
+  },
+  "limitation": "one repeat per arm/profile, separate JVMs, known development conditions; no inferential performance comparison",
+  "performanceEstablished": false,
+  "planSha256": "f9bff05d221bddf930c80ac140e8ca925f89305356a7fa789e175abba220b584",
+  "purpose": "diagnostic_comparison_of_q_representation_not_a_metric_based_policy_selection",
+  "replay": {
+    "experimental": {
+      "integrity": {
+        "details": [
+          {
+            "distinctAppliedChanges": 7,
+            "episodeId": "spike/learned/1",
+            "irregularTransitions": 0,
+            "measurementTransitions": 43,
+            "records": 53,
+            "sourceDirty": false
+          },
+          {
+            "distinctAppliedChanges": 6,
+            "episodeId": "steady/learned/1",
+            "irregularTransitions": 0,
+            "measurementTransitions": 28,
+            "records": 37,
+            "sourceDirty": false
+          }
+        ],
+        "episodes": 2,
+        "measurementTransitions": 71,
+        "records": 90
+      },
+      "modelSha256": "2f4e3907b48616caba5d94d9682a47c8e0a04c2fea922ad2e468398851910aff",
+      "performanceEstablished": false,
+      "replay": [
+        {
+          "counts": {
+            "learned_fallback_invalid_observation": 1,
+            "learned_fallback_no_empirical_support": 3,
+            "learned_fallback_short_history": 3,
+            "learned_policy": 46,
+            "matched_model_decisions": 46,
+            "matched_support_fallbacks": 3,
+            "unreplayable_initial_history": 3
+          },
+          "episodeId": "spike/learned/1",
+          "inference": {
+            "decisions": 53,
+            "fallbacks": {
+              "invalid_observation": 1,
+              "no_empirical_support": 3,
+              "short_history": 3
+            },
+            "inferenceAttempts": 49,
+            "maxInferenceMs": 2.73475,
+            "meanInferenceMs": 0.4065322448979592,
+            "modelDecisions": 46
+          },
+          "scenario": "spike"
+        },
+        {
+          "counts": {
+            "learned_fallback_invalid_observation": 1,
+            "learned_fallback_no_empirical_support": 1,
+            "learned_fallback_short_history": 3,
+            "learned_policy": 32,
+            "matched_model_decisions": 32,
+            "matched_support_fallbacks": 1,
+            "unreplayable_initial_history": 3
+          },
+          "episodeId": "steady/learned/1",
+          "inference": {
+            "decisions": 37,
+            "fallbacks": {
+              "invalid_observation": 1,
+              "no_empirical_support": 1,
+              "short_history": 3
+            },
+            "inferenceAttempts": 33,
+            "maxInferenceMs": 3.541958,
+            "meanInferenceMs": 0.5939215757575758,
+            "modelDecisions": 32
+          },
+          "scenario": "steady"
+        }
+      ]
+    },
+    "reference": {
+      "integrity": {
+        "details": [
+          {
+            "distinctAppliedChanges": 1,
+            "episodeId": "spike/learned/1",
+            "irregularTransitions": 0,
+            "measurementTransitions": 43,
+            "records": 52,
+            "sourceDirty": false
+          },
+          {
+            "distinctAppliedChanges": 1,
+            "episodeId": "steady/learned/1",
+            "irregularTransitions": 0,
+            "measurementTransitions": 28,
+            "records": 38,
+            "sourceDirty": false
+          }
+        ],
+        "episodes": 2,
+        "measurementTransitions": 71,
+        "records": 90
+      },
+      "modelSha256": "68782f14bf638a1b58b8cd1b4a38adf40ac14521d7f681a4b0b0b9fcdc34184a",
+      "performanceEstablished": false,
+      "replay": [
+        {
+          "counts": {
+            "learned_fallback_invalid_observation": 1,
+            "learned_fallback_short_history": 3,
+            "learned_policy": 48,
+            "matched_model_decisions": 48,
+            "unreplayable_initial_history": 3
+          },
+          "episodeId": "spike/learned/1",
+          "inference": {
+            "decisions": 52,
+            "fallbacks": {
+              "invalid_observation": 1,
+              "short_history": 3
+            },
+            "inferenceAttempts": 48,
+            "maxInferenceMs": 9.271875,
+            "meanInferenceMs": 0.6451561875,
+            "modelDecisions": 48
+          },
+          "scenario": "spike"
+        },
+        {
+          "counts": {
+            "learned_fallback_invalid_observation": 1,
+            "learned_fallback_no_empirical_support": 2,
+            "learned_fallback_short_history": 3,
+            "learned_policy": 32,
+            "matched_model_decisions": 32,
+            "matched_support_fallbacks": 2,
+            "unreplayable_initial_history": 3
+          },
+          "episodeId": "steady/learned/1",
+          "inference": {
+            "decisions": 38,
+            "fallbacks": {
+              "invalid_observation": 1,
+              "no_empirical_support": 2,
+              "short_history": 3
+            },
+            "inferenceAttempts": 34,
+            "maxInferenceMs": 9.450125,
+            "meanInferenceMs": 0.8224645294117647,
+            "modelDecisions": 32
+          },
+          "scenario": "steady"
+        }
+      ]
+    }
+  },
+  "selectionUnchanged": null,
+  "sourceCommit": "2fa8face314ebedef8485e35839498d18d5fd670",
+  "testEvaluated": false
+}

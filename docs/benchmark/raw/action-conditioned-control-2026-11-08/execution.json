@@ -1,0 +1,72 @@
+{
+  "status": "complete",
+  "plan": {
+    "planVersion": 2,
+    "selectionPolicy": "predeclared_method_comparison",
+    "purpose": "diagnostic_comparison_of_q_representation_not_a_metric_based_policy_selection",
+    "arms": {
+      "experimental": {
+        "candidate": "per-action",
+        "modelSha256": "2f4e3907b48616caba5d94d9682a47c8e0a04c2fea922ad2e468398851910aff"
+      },
+      "reference": {
+        "candidate": "pooled",
+        "modelSha256": "68782f14bf638a1b58b8cd1b4a38adf40ac14521d7f681a4b0b0b9fcdc34184a"
+      }
+    },
+    "order": [
+      [
+        "steady",
+        "experimental"
+      ],
+      [
+        "steady",
+        "reference"
+      ],
+      [
+        "spike",
+        "reference"
+      ],
+      [
+        "spike",
+        "experimental"
+      ]
+    ],
+    "repeats": 1,
+    "properties": {
+      "bench.db.workers": 8,
+      "bench.db.serviceMs": 30,
+      "bench.poolSize": 2,
+      "bench.poolMin": 2,
+      "bench.poolMax": 12,
+      "bench.initialLimit": 20,
+      "bench.sloMs": 150,
+      "bench.poolPeriod": 5,
+      "bench.inferenceBudgetMs": 20
+    },
+    "testEvaluated": false,
+    "performanceEstablished": false
+  },
+  "completed": [
+    {
+      "scenario": "steady",
+      "arm": "experimental",
+      "completedAt": "2026-11-08T19:24:46.441146+00:00"
+    },
+    {
+      "scenario": "steady",
+      "arm": "reference",
+      "completedAt": "2026-11-08T19:25:25.371378+00:00"
+    },
+    {
+      "scenario": "spike",
+      "arm": "reference",
+      "completedAt": "2026-11-08T19:26:18.339800+00:00"
+    },
+    {
+      "scenario": "spike",
+      "arm": "experimental",
+      "completedAt": "2026-11-08T19:27:12.692980+00:00"
+    }
+  ]
+}

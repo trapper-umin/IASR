@@ -1,0 +1,39 @@
+{
+  "details": [
+    {
+      "distinctAppliedChanges": 7,
+      "episodeId": "spike/learned/1",
+      "irregularTransitions": 0,
+      "measurementTransitions": 43,
+      "records": 53,
+      "sourceDirty": false
+    },
+    {
+      "distinctAppliedChanges": 6,
+      "episodeId": "steady/learned/1",
+      "irregularTransitions": 0,
+      "measurementTransitions": 28,
+      "records": 37,
+      "sourceDirty": false
+    },
+    {
+      "distinctAppliedChanges": 1,
+      "episodeId": "spike/learned/1",
+      "irregularTransitions": 0,
+      "measurementTransitions": 43,
+      "records": 52,
+      "sourceDirty": false
+    },
+    {
+      "distinctAppliedChanges": 1,
+      "episodeId": "steady/learned/1",
+      "irregularTransitions": 0,
+      "measurementTransitions": 28,
+      "records": 38,
+      "sourceDirty": false
+    }
+  ],
+  "episodes": 4,
+  "measurementTransitions": 142,
+  "records": 180
+}

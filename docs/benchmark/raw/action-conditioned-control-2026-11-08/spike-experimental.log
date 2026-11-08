@@ -1,0 +1,11 @@
+
+=== spike / learned ===
+2026-11-08T22:26:37.804+03:00  WARN 15966 --- [-auto-1-exec-39] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=23, inflight=23, queue=40)
+2026-11-08T22:26:42.805+03:00  WARN 15966 --- [-auto-1-exec-60] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1247 request(s) rejected in the last 5000 ms (limit=21, inflight=21, queue=40)
+2026-11-08T22:26:47.805+03:00  WARN 15966 --- [-auto-1-exec-62] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1248 request(s) rejected in the last 5000 ms (limit=18, inflight=18, queue=40)
+2026-11-08T22:26:52.807+03:00  WARN 15966 --- [-auto-1-exec-23] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1148 request(s) rejected in the last 5000 ms (limit=16, inflight=16, queue=40)
+2026-11-08T22:27:12.224+03:00  WARN 15966 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-1-Acceptor] did not stop cleanly
+   [1/1] goodput=142,0 rps  p95=242,0 ms  p99=258,0 ms  429=41,9%  hard-fail=0,0%
+
+Report written to /tmp/iasr-action-control-20261108/experimental/spike
+All repetitions saved to /tmp/iasr-action-control-20261108/experimental/spike/episodes/7b60c8b9-b062-4740-97e8-5d19f64eb886

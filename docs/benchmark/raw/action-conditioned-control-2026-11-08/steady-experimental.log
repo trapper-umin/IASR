@@ -1,0 +1,10 @@
+
+=== steady / learned ===
+2026-11-08T22:24:16.903+03:00  WARN 15503 --- [-auto-1-exec-24] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=21, inflight=21, queue=12)
+2026-11-08T22:24:21.911+03:00  WARN 15503 --- [-auto-1-exec-27] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 152 request(s) rejected in the last 5000 ms (limit=19, inflight=19, queue=12)
+2026-11-08T22:24:26.919+03:00  WARN 15503 --- [o-auto-1-exec-7] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 153 request(s) rejected in the last 5000 ms (limit=17, inflight=17, queue=12)
+2026-11-08T22:24:33.861+03:00  WARN 15503 --- [-auto-1-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 87 request(s) rejected in the last 5000 ms (limit=14, inflight=14, queue=12)
+   [1/1] goodput=106,9 rps  p95=323,0 ms  p99=333,0 ms  429=10,9%  hard-fail=0,0%
+
+Report written to /tmp/iasr-action-control-20261108/experimental/steady
+All repetitions saved to /tmp/iasr-action-control-20261108/experimental/steady/episodes/f519a371-9793-4c72-b80f-a188557c53ef

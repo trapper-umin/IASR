@@ -1,0 +1,15 @@
+
+=== spike / learned ===
+2026-11-08T22:25:33.414+03:00  WARN 15914 --- [-auto-1-exec-30] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=20, inflight=20, queue=12)
+2026-11-08T22:25:38.439+03:00  WARN 15914 --- [-auto-1-exec-31] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 152 request(s) rejected in the last 5000 ms (limit=20, inflight=20, queue=12)
+2026-11-08T22:25:43.465+03:00  WARN 15914 --- [-auto-1-exec-14] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 152 request(s) rejected in the last 5000 ms (limit=20, inflight=20, queue=12)
+2026-11-08T22:25:48.467+03:00  WARN 15914 --- [-auto-1-exec-23] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1228 request(s) rejected in the last 5000 ms (limit=20, inflight=20, queue=40)
+2026-11-08T22:25:53.468+03:00  WARN 15914 --- [o-auto-1-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1550 request(s) rejected in the last 5000 ms (limit=20, inflight=20, queue=40)
+2026-11-08T22:25:58.468+03:00  WARN 15914 --- [-auto-1-exec-20] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1548 request(s) rejected in the last 5000 ms (limit=20, inflight=20, queue=40)
+2026-11-08T22:26:03.470+03:00  WARN 15914 --- [-auto-1-exec-33] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1549 request(s) rejected in the last 5000 ms (limit=20, inflight=20, queue=40)
+2026-11-08T22:26:08.498+03:00  WARN 15914 --- [-auto-1-exec-28] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 470 request(s) rejected in the last 5000 ms (limit=20, inflight=20, queue=12)
+2026-11-08T22:26:13.506+03:00  WARN 15914 --- [o-auto-1-exec-4] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 149 request(s) rejected in the last 5000 ms (limit=20, inflight=20, queue=12)
+   [1/1] goodput=90,6 rps  p95=331,0 ms  p99=334,0 ms  429=62,9%  hard-fail=0,0%
+
+Report written to /tmp/iasr-action-control-20261108/reference/spike
+All repetitions saved to /tmp/iasr-action-control-20261108/reference/spike/episodes/15b1cf57-149f-4684-ad11-f92297d83f84

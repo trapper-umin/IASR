@@ -25,6 +25,21 @@ class ControllerComparisonTest(unittest.TestCase):
                 if node["actionFeature"] == "action.pool":
                     self.assertEqual(node["partitions"]["live"]["historiesReachingNode"], 0)
 
+    def test_action_conditioned_policy_changes_both_resources_without_counting_fallback(self):
+        raw = self.ROOT / "raw/action-conditioned-control-2026-11-08"
+        models = self.ROOT / "models/fqi-action-conditioned-2026-11-08"
+        report = audit(raw, models, models / "technical-check-plan.json")
+        self.assertIsNone(report["selectionUnchanged"])
+        self.assertEqual(report["integrity"]["records"], 180)
+        experimental = [c for c in report["cases"] if c["arm"] == "experimental"]
+        self.assertEqual(sum(c["modelDecisions"] for c in experimental), 78)
+        self.assertEqual(sum(c["modelLimitChanges"] for c in experimental), 30)
+        self.assertEqual(sum(c["modelPoolChanges"] for c in experimental), 12)
+        self.assertEqual(sum(c["modelSimultaneousChanges"] for c in experimental), 2)
+        for case in experimental:
+            self.assertEqual(case["actionNodesOnLiveObservations"]["routing"], "per_normalized_joint_action")
+        self.assertTrue(all(c["modelPoolChanges"] == 0 for c in report["cases"] if c["arm"] == "reference"))
+
     def test_changed_metric_winner_is_rejected_before_comparison(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
