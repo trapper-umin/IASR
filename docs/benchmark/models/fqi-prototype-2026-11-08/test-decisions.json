@@ -1,0 +1,121 @@
+{
+  "observedHistories": 160,
+  "fallbacks": 5,
+  "proposedActions": {
+    "0,0": 131,
+    "-1,0": 24
+  },
+  "policyPerformanceEstablished": false,
+  "examples": [
+    {
+      "episodeId": "slow-dependency/explore/1",
+      "sequence": 11,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 4.898915223245452,
+      "fallback": false,
+      "supportedCandidates": 3
+    },
+    {
+      "episodeId": "slow-dependency/explore/1",
+      "sequence": 12,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 4.720475228146961,
+      "fallback": false,
+      "supportedCandidates": 1
+    },
+    {
+      "episodeId": "slow-dependency/explore/1",
+      "sequence": 13,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 4.769358828900323,
+      "fallback": false,
+      "supportedCandidates": 3
+    },
+    {
+      "episodeId": "slow-dependency/explore/1",
+      "sequence": 14,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 4.820177235903269,
+      "fallback": false,
+      "supportedCandidates": 1
+    },
+    {
+      "episodeId": "slow-dependency/explore/1",
+      "sequence": 15,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 4.752501701579003,
+      "fallback": false,
+      "supportedCandidates": 4
+    },
+    {
+      "episodeId": "slow-dependency/explore/1",
+      "sequence": 16,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 4.8119873445384735,
+      "fallback": false,
+      "supportedCandidates": 3
+    },
+    {
+      "episodeId": "slow-dependency/explore/1",
+      "sequence": 17,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 4.817257828685464,
+      "fallback": false,
+      "supportedCandidates": 3
+    },
+    {
+      "episodeId": "slow-dependency/explore/1",
+      "sequence": 18,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 5.187571479139096,
+      "fallback": false,
+      "supportedCandidates": 1
+    },
+    {
+      "episodeId": "slow-dependency/explore/1",
+      "sequence": 19,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 5.1797816977420155,
+      "fallback": false,
+      "supportedCandidates": 3
+    },
+    {
+      "episodeId": "slow-dependency/explore/1",
+      "sequence": 20,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 5.222454987744277,
+      "fallback": false,
+      "supportedCandidates": 3
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "initialResources" : {
+    "concurrency_limit" : 22,
+    "hikari_max_pool" : 6
+  },
+  "configuration" : {
+    "iasr" : {
+      "enabled" : true,
+      "applyActions" : true,
+      "datasetLoggingEnabled" : true,
+      "sloLatencyMs" : 150.0,
+      "windowMs" : 1000,
+      "concurrency" : {
+        "initialLimit" : 22,
+        "minLimit" : 5,
+        "maxLimit" : 400,
+        "maxStep" : 20,
+        "maxStepDown" : 50,
+        "cooldownTicks" : 1,
+        "acquireTimeoutMs" : 100,
+        "blockIncreaseOnSloViolation" : true
+      },
+      "hikari" : {
+        "minPoolSize" : 2,
+        "maxPoolSize" : 30,
+        "maxStep" : 2,
+        "cooldownTicks" : 2,
+        "blockIncreaseOnSloViolation" : false
+      },
+      "controller" : {
+        "comfortFactor" : 0.7,
+        "concurrencyIncreaseStep" : 1,
+        "concurrencyDecreaseFactor" : 0.85,
+        "errorRateThreshold" : 0.01,
+        "timeoutRateThreshold" : 0.005,
+        "hikariStep" : 1,
+        "hikariPendingThreshold" : 0.0,
+        "hikariAcquireTimeThresholdMs" : 10.0,
+        "utilizationGate" : 0.9,
+        "sloTargetHeadroom" : 0.0,
+        "minGradient" : 0.9,
+        "hikariIdleShrinkThreshold" : 2.0
+      }
+    },
+    "controllerClass" : "com.iasr.benchmark.ExplorationController",
+    "guardrails" : [ {
+      "actuatorName" : "concurrency_limit",
+      "minValue" : 5,
+      "maxValue" : 400,
+      "maxStep" : 20,
+      "cooldownTicks" : 1,
+      "blockIncreaseOnSloViolation" : true,
+      "maxStepDown" : 50
+    }, {
+      "actuatorName" : "hikari_max_pool",
+      "minValue" : 2,
+      "maxValue" : 30,
+      "maxStep" : 2,
+      "cooldownTicks" : 2,
+      "blockIncreaseOnSloViolation" : false,
+      "maxStepDown" : 0
+    } ],
+    "exploration" : {
+      "actionSpaceVersion" : 1,
+      "policySeed" : -3832747923516086032,
+      "epsilon" : 1.0,
+      "poolPeriodTicks" : 5,
+      "nonExploringAction" : "hold",
+      "historyWindows" : 4,
+      "limitStep" : 1
+    },
+    "backend" : {
+      "workers" : 8,
+      "kind" : "synthetic",
+      "rowsPerMs" : 9200,
+      "thrash" : 0.3,
+      "appMs" : 5,
+      "serviceMs" : 30
+    },
+    "pool" : {
+      "minimumIdle" : 6,
+      "maximum" : 6,
+      "connectionTimeoutMs" : 3000
+    },
+    "load" : {
+      "warmupRps" : 60,
+      "requestTimeoutMs" : 3000,
+      "clientThreads" : 64,
+      "scenario" : "steady",
+      "warmupMs" : 6000,
+      "durationMs" : 30000
+    },
+    "runtime" : {
+      "arch" : "aarch64",
+      "javaVersion" : "17.0.16",
+      "os" : "Mac OS X",
+      "availableProcessors" : 10
+    },
+    "sloMs" : 150.0,
+    "conditions" : {
+      "profile" : {
+        "degradedFactor" : 2.4,
+        "baseServiceMs" : 30,
+        "loadScale" : 1.0,
+        "profileVersion" : 1,
+        "durationScale" : 1.0,
+        "name" : "steady"
+      },
+      "backend" : {
+        "workers" : 8,
+        "kind" : "synthetic",
+        "rowsPerMs" : 9200,
+        "thrash" : 0.3,
+        "appMs" : 5,
+        "serviceMs" : 30
+      },
+      "load" : {
+        "warmupRps" : 60,
+        "requestTimeoutMs" : 3000,
+        "clientThreads" : 64,
+        "scenario" : "steady",
+        "warmupMs" : 6000,
+        "durationMs" : 30000
+      },
+      "runtime" : {
+        "arch" : "aarch64",
+        "javaVersion" : "17.0.16",
+        "os" : "Mac OS X",
+        "availableProcessors" : 10
+      },
+      "initialPool" : 6,
+      "initialLimit" : 22,
+      "sloMs" : 150.0
+    }
+  },
+  "measurementInitialResources" : {
+    "concurrency_limit" : 23,
+    "hikari_max_pool" : 6
+  },
+  "timing" : {
+    "captureStartedAt" : "2026-11-08T11:29:45.973480Z",
+    "warmupStartedAt" : "2026-11-08T11:29:45.973737Z",
+    "measurementStartedAt" : "2026-11-08T11:29:52.033927Z",
+    "measurementScheduledEndAt" : "2026-11-08T11:30:22.033927Z",
+    "drainCompletedAt" : "2026-11-08T11:30:22.092025Z",
+    "captureEndedAt" : "2026-11-08T11:30:22.104301Z"
+  },
+  "metadataVersion" : 1,
+  "datasetSchemaVersion" : 3,
+  "runId" : "2276cc1c-cc39-4e18-b052-811dd184afed",
+  "episodeId" : "steady/explore/4",
+  "scenario" : "steady",
+  "mode" : "explore",
+  "repetition" : 4,
+  "orderSeed" : 42,
+  "source" : {
+    "commit" : "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+    "dirty" : false
+  },
+  "datasetRecords" : 37,
+  "status" : "complete"
+}

@@ -1,0 +1,121 @@
+{
+  "observedHistories": 160,
+  "fallbacks": 4,
+  "proposedActions": {
+    "0,0": 145,
+    "-1,0": 11
+  },
+  "policyPerformanceEstablished": false,
+  "examples": [
+    {
+      "episodeId": "spike/explore/1",
+      "sequence": 11,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.5004896522351507,
+      "fallback": false,
+      "supportedCandidates": 3
+    },
+    {
+      "episodeId": "spike/explore/1",
+      "sequence": 12,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.4889200360588473,
+      "fallback": false,
+      "supportedCandidates": 1
+    },
+    {
+      "episodeId": "spike/explore/1",
+      "sequence": 13,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.4937777326276733,
+      "fallback": false,
+      "supportedCandidates": 3
+    },
+    {
+      "episodeId": "spike/explore/1",
+      "sequence": 14,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.5089632009125835,
+      "fallback": false,
+      "supportedCandidates": 1
+    },
+    {
+      "episodeId": "spike/explore/1",
+      "sequence": 15,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.4979872995027805,
+      "fallback": false,
+      "supportedCandidates": 4
+    },
+    {
+      "episodeId": "spike/explore/1",
+      "sequence": 16,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.5191091888366066,
+      "fallback": false,
+      "supportedCandidates": 1
+    },
+    {
+      "episodeId": "spike/explore/1",
+      "sequence": 17,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.4979872995027805,
+      "fallback": false,
+      "supportedCandidates": 3
+    },
+    {
+      "episodeId": "spike/explore/1",
+      "sequence": 18,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.5511081837275094,
+      "fallback": false,
+      "supportedCandidates": 1
+    },
+    {
+      "episodeId": "spike/explore/1",
+      "sequence": 19,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": -1.995673696811021,
+      "fallback": false,
+      "supportedCandidates": 2
+    },
+    {
+      "episodeId": "spike/explore/1",
+      "sequence": 20,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": -3.1337973073384955,
+      "fallback": false,
+      "supportedCandidates": 3
+    }
+  ]
+}

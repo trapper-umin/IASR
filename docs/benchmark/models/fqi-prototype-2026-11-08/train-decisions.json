@@ -1,0 +1,121 @@
+{
+  "observedHistories": 260,
+  "fallbacks": 10,
+  "proposedActions": {
+    "0,0": 231,
+    "-1,0": 19
+  },
+  "policyPerformanceEstablished": false,
+  "examples": [
+    {
+      "episodeId": "steady/explore/1",
+      "sequence": 11,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.431419506019576,
+      "fallback": false,
+      "supportedCandidates": 3
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "sequence": 12,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.4299980045853546,
+      "fallback": false,
+      "supportedCandidates": 1
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "sequence": 13,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.430403901558777,
+      "fallback": false,
+      "supportedCandidates": 3
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "sequence": 14,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.452194868533207,
+      "fallback": false,
+      "supportedCandidates": 1
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "sequence": 15,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.428953561494025,
+      "fallback": false,
+      "supportedCandidates": 4
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "sequence": 16,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.4297740014759017,
+      "fallback": false,
+      "supportedCandidates": 3
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "sequence": 17,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.4296581830353774,
+      "fallback": false,
+      "supportedCandidates": 1
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "sequence": 18,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.4306502358026036,
+      "fallback": false,
+      "supportedCandidates": 3
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "sequence": 19,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.429663543040852,
+      "fallback": false,
+      "supportedCandidates": 1
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "sequence": 20,
+      "action": [
+        0,
+        0
+      ],
+      "qValue": 3.4516665059780833,
+      "fallback": false,
+      "supportedCandidates": 4
+    }
+  ]
+}

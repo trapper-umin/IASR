@@ -1,0 +1,561 @@
+{
+  "episodes": [
+    {
+      "episodeId": "ramp/explore/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ab148feda78100d0e2c91d079d8525eb4a18a37425b45e6bda53f5e5ce2258fa",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "ramp/explore/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ab148feda78100d0e2c91d079d8525eb4a18a37425b45e6bda53f5e5ce2258fa",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "ramp/explore/3",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ab148feda78100d0e2c91d079d8525eb4a18a37425b45e6bda53f5e5ce2258fa",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "ramp/explore/4",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "ab148feda78100d0e2c91d079d8525eb4a18a37425b45e6bda53f5e5ce2258fa",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "slow-dependency/explore/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "d64541a996746e80e77dc5c455851e0ed4ff1ef3e2c25fc286fa2904649a9b82",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "test"
+    },
+    {
+      "episodeId": "slow-dependency/explore/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "d64541a996746e80e77dc5c455851e0ed4ff1ef3e2c25fc286fa2904649a9b82",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "test"
+    },
+    {
+      "episodeId": "slow-dependency/explore/3",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 9,
+        "short_history": 3
+      },
+      "groupId": "d64541a996746e80e77dc5c455851e0ed4ff1ef3e2c25fc286fa2904649a9b82",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "test"
+    },
+    {
+      "episodeId": "slow-dependency/explore/4",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "d64541a996746e80e77dc5c455851e0ed4ff1ef3e2c25fc286fa2904649a9b82",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "test"
+    },
+    {
+      "episodeId": "spike/explore/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "b2a95ce19aee2fc045e9b5b89105ba23025baa3db15df0057c1abbdc3adfca62",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "validation"
+    },
+    {
+      "episodeId": "spike/explore/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "b2a95ce19aee2fc045e9b5b89105ba23025baa3db15df0057c1abbdc3adfca62",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "validation"
+    },
+    {
+      "episodeId": "spike/explore/3",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "b2a95ce19aee2fc045e9b5b89105ba23025baa3db15df0057c1abbdc3adfca62",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "validation"
+    },
+    {
+      "episodeId": "spike/explore/4",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "b2a95ce19aee2fc045e9b5b89105ba23025baa3db15df0057c1abbdc3adfca62",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 40,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "validation"
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 9,
+        "short_history": 3
+      },
+      "groupId": "0582009e92b92b99efab00b206a1232641d13f6a68ea785cf0a51bbc0d82cab5",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 25,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "steady/explore/2",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "0582009e92b92b99efab00b206a1232641d13f6a68ea785cf0a51bbc0d82cab5",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 25,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "steady/explore/3",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "0582009e92b92b99efab00b206a1232641d13f6a68ea785cf0a51bbc0d82cab5",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 25,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    },
+    {
+      "episodeId": "steady/explore/4",
+      "excluded": {
+        "censored": 1,
+        "phase_or_interval": 8,
+        "short_history": 3
+      },
+      "groupId": "0582009e92b92b99efab00b206a1232641d13f6a68ea785cf0a51bbc0d82cab5",
+      "runId": "2276cc1c-cc39-4e18-b052-811dd184afed",
+      "samples": 25,
+      "source": {
+        "commit": "ee31f9652677f4271bd57e7e7aa8bd740bda4571",
+        "dirty": false
+      },
+      "split": "train"
+    }
+  ],
+  "groups": {
+    "0582009e92b92b99efab00b206a1232641d13f6a68ea785cf0a51bbc0d82cab5": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 30,
+          "thrash": 0.3,
+          "workers": 8
+        },
+        "initialLimit": 22,
+        "initialPool": 6,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 30000,
+          "requestTimeoutMs": 3000,
+          "scenario": "steady",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 30,
+          "degradedFactor": 2.4,
+          "durationScale": 1.0,
+          "loadScale": 1.0,
+          "name": "steady",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "train"
+    },
+    "ab148feda78100d0e2c91d079d8525eb4a18a37425b45e6bda53f5e5ce2258fa": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 30,
+          "thrash": 0.3,
+          "workers": 8
+        },
+        "initialLimit": 22,
+        "initialPool": 6,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 45000,
+          "requestTimeoutMs": 3000,
+          "scenario": "ramp",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 30,
+          "degradedFactor": 2.4,
+          "durationScale": 1.0,
+          "loadScale": 1.0,
+          "name": "ramp",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "train"
+    },
+    "b2a95ce19aee2fc045e9b5b89105ba23025baa3db15df0057c1abbdc3adfca62": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 30,
+          "thrash": 0.3,
+          "workers": 8
+        },
+        "initialLimit": 22,
+        "initialPool": 6,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 45000,
+          "requestTimeoutMs": 3000,
+          "scenario": "spike",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 30,
+          "degradedFactor": 2.4,
+          "durationScale": 1.0,
+          "loadScale": 1.0,
+          "name": "spike",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "validation"
+    },
+    "d64541a996746e80e77dc5c455851e0ed4ff1ef3e2c25fc286fa2904649a9b82": {
+      "conditions": {
+        "backend": {
+          "appMs": 5,
+          "kind": "synthetic",
+          "rowsPerMs": 9200,
+          "serviceMs": 30,
+          "thrash": 0.3,
+          "workers": 8
+        },
+        "initialLimit": 22,
+        "initialPool": 6,
+        "load": {
+          "clientThreads": 64,
+          "durationMs": 45000,
+          "requestTimeoutMs": 3000,
+          "scenario": "slow-dependency",
+          "warmupMs": 6000,
+          "warmupRps": 60
+        },
+        "profile": {
+          "baseServiceMs": 30,
+          "degradedFactor": 2.4,
+          "durationScale": 1.0,
+          "loadScale": 1.0,
+          "name": "slow-dependency",
+          "profileVersion": 1
+        },
+        "runtime": {
+          "arch": "aarch64",
+          "availableProcessors": 10,
+          "javaVersion": "17.0.16",
+          "os": "Mac OS X"
+        },
+        "sloMs": 150.0
+      },
+      "split": "test"
+    }
+  },
+  "historyWindows": 4,
+  "preparationVersion": 1,
+  "prototypeAllowsDirtySource": false,
+  "sampleCounts": {
+    "test": 160,
+    "train": 260,
+    "validation": 160
+  },
+  "splitSeed": 42,
+  "testScenarios": [
+    "slow-dependency"
+  ],
+  "validation": {
+    "details": [
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "ramp/explore/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 8,
+        "episodeId": "ramp/explore/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 5,
+        "episodeId": "ramp/explore/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "ramp/explore/4",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 5,
+        "episodeId": "slow-dependency/explore/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 5,
+        "episodeId": "slow-dependency/explore/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 5,
+        "episodeId": "slow-dependency/explore/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 53,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 7,
+        "episodeId": "slow-dependency/explore/4",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 7,
+        "episodeId": "spike/explore/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 7,
+        "episodeId": "spike/explore/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "spike/explore/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 7,
+        "episodeId": "spike/explore/4",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 5,
+        "episodeId": "steady/explore/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 28,
+        "records": 38,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "steady/explore/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 28,
+        "records": 37,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "steady/explore/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 28,
+        "records": 37,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 5,
+        "episodeId": "steady/explore/4",
+        "irregularTransitions": 0,
+        "measurementTransitions": 28,
+        "records": 37,
+        "sourceDirty": false
+      }
+    ],
+    "episodes": 16,
+    "measurementTransitions": 628,
+    "records": 774
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "mode" : "explore",
+  "scenario" : "ramp",
+  "durationMs" : 45000,
+  "dispatched" : 12599,
+  "succeeded" : 7415,
+  "rejected429" : 5184,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 164.8,
+  "p50Ms" : 211.0,
+  "p95Ms" : 240.0,
+  "p99Ms" : 247.0,
+  "maxMs" : 411.0,
+  "sloBreachPercent" : 74.5,
+  "rejectionRatePercent" : 41.1,
+  "failureRatePercent" : 0.0
+}

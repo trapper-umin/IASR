@@ -1,0 +1,135 @@
+{
+  "episodes": 16,
+  "records": 774,
+  "measurementTransitions": 628,
+  "details": [
+    {
+      "episodeId": "ramp/explore/1",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 6,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "ramp/explore/2",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 8,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "ramp/explore/3",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 5,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "ramp/explore/4",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 6,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "slow-dependency/explore/1",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 5,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "slow-dependency/explore/2",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 5,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "slow-dependency/explore/3",
+      "records": 53,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 5,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "slow-dependency/explore/4",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 7,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "spike/explore/1",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 7,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "spike/explore/2",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 7,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "spike/explore/3",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 6,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "spike/explore/4",
+      "records": 52,
+      "measurementTransitions": 43,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 7,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/explore/1",
+      "records": 38,
+      "measurementTransitions": 28,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 5,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/explore/2",
+      "records": 37,
+      "measurementTransitions": 28,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 6,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/explore/3",
+      "records": 37,
+      "measurementTransitions": 28,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 6,
+      "sourceDirty": false
+    },
+    {
+      "episodeId": "steady/explore/4",
+      "records": 37,
+      "measurementTransitions": 28,
+      "irregularTransitions": 0,
+      "distinctAppliedChanges": 5,
+      "sourceDirty": false
+    }
+  ]
+}
