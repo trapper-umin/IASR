@@ -28,15 +28,20 @@ import java.util.Map;
 @Getter
 public final class DatasetRecord {
 
-    /** v2: successful-request latency includes admission wait; goodput excludes rejections. */
-    public static final int SCHEMA_VERSION = 2;
+    /** v3 adds pre-action resources, cooldowns and explicit transition timing to v2 metrics. */
+    public static final int SCHEMA_VERSION = 3;
 
     private final Instant timestamp;
+    private final long sequence;
+    private final Instant stateWindowStartedAt;
+    private Instant outcomeTimestamp;
     private final double windowSec;
     private final Map<String, Double> state;
     private final Map<String, Integer> action;
     private final Map<String, Integer> intent;
     private final Map<String, String> reasons;
+    private final Map<String, Integer> resourcesBefore;
+    private final Map<String, Integer> cooldownRemaining;
     private Map<String, Double> outcome; // mutable — filled at t+1
 
     public DatasetRecord(Instant timestamp,
@@ -52,12 +57,24 @@ public final class DatasetRecord {
                          Map<String, Integer> action,
                          Map<String, Integer> intent,
                          Map<String, String> reasons) {
+        this(timestamp, windowSec, state, action, intent, reasons, 0, null, Map.of(), Map.of());
+    }
+
+    public DatasetRecord(Instant timestamp, double windowSec,
+                         Map<String, Double> state, Map<String, Integer> action,
+                         Map<String, Integer> intent, Map<String, String> reasons,
+                         long sequence, Instant stateWindowStartedAt,
+                         Map<String, Integer> resourcesBefore, Map<String, Integer> cooldownRemaining) {
         this.timestamp = timestamp;
+        this.sequence = sequence;
+        this.stateWindowStartedAt = stateWindowStartedAt;
         this.windowSec = windowSec;
         this.state = new LinkedHashMap<>(state);
         this.action = new LinkedHashMap<>(action);
         this.intent = new LinkedHashMap<>(intent);
         this.reasons = new LinkedHashMap<>(reasons);
+        this.resourcesBefore = new LinkedHashMap<>(resourcesBefore);
+        this.cooldownRemaining = new LinkedHashMap<>(cooldownRemaining);
     }
 
     public boolean hasOutcome() { return outcome != null; }
@@ -70,6 +87,11 @@ public final class DatasetRecord {
         this.outcome = outcome != null ? new LinkedHashMap<>(outcome) : null;
     }
 
+    public void completeOutcome(Map<String, Double> outcome, Instant observedAt) {
+        setOutcome(outcome);
+        this.outcomeTimestamp = observedAt;
+    }
+
     /**
      * Serialize to a single-line JSON string.
      * <p>
@@ -80,9 +102,18 @@ public final class DatasetRecord {
         StringBuilder sb = new StringBuilder(512);
         sb.append('{');
         sb.append("\"schemaVersion\":").append(SCHEMA_VERSION).append(',');
+        sb.append("\"sequence\":").append(sequence).append(',');
         appendString(sb, "timestamp", timestamp.toString());
         sb.append(',');
+        appendInstant(sb, "stateWindowStartedAt", stateWindowStartedAt);
+        sb.append(',');
+        appendInstant(sb, "outcomeTimestamp", outcomeTimestamp);
+        sb.append(',');
         appendNumber(sb, "windowSec", windowSec);
+        sb.append(',');
+        appendIntMap(sb, "resourcesBefore", resourcesBefore);
+        sb.append(',');
+        appendIntMap(sb, "cooldownRemaining", cooldownRemaining);
         sb.append(',');
         appendDoubleMap(sb, "state", state);
         sb.append(',');
@@ -102,6 +133,11 @@ public final class DatasetRecord {
     }
 
     // ── JSON helpers (no external deps) ──────────────────────────────────
+
+    private static void appendInstant(StringBuilder sb, String key, Instant value) {
+        if (value == null) sb.append('"').append(key).append("\":null");
+        else appendString(sb, key, value.toString());
+    }
 
     private static void appendString(StringBuilder sb, String key, String value) {
         sb.append('"').append(key).append("\":\"").append(value).append('"');

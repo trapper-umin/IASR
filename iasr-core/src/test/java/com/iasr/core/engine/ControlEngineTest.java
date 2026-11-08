@@ -88,6 +88,37 @@ class ControlEngineTest {
     }
 
     @Test
+    void datasetCapturesResourcesBeforeEnforcementAndTheTerminalRecord() throws Exception {
+        var logger = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory.getLogger(
+                com.iasr.core.dataset.DatasetLogger.LOGGER_NAME);
+        var oldLevel = logger.getLevel();
+        var appender = new ch.qos.logback.core.read.ListAppender<ch.qos.logback.classic.spi.ILoggingEvent>();
+        appender.start();
+        logger.setLevel(ch.qos.logback.classic.Level.INFO);
+        logger.addAppender(appender);
+        try {
+            CountingProvider provider = new CountingProvider(2);
+            TestActuator actuator = new TestActuator(NAME, 100, 1, 500);
+            ControlEngine engine = new ControlEngine(config(provider)
+                    .datasetLoggingEnabled(true).controller(alwaysWants(120)).addActuator(actuator)
+                    .addGuardrail(new ActuatorGuardrail(NAME, 1, 500, 50, 2)).build());
+            runFor(engine, provider);
+            List<String> lines = appender.list.stream().map(
+                    ch.qos.logback.classic.spi.ILoggingEvent::getFormattedMessage).toList();
+            assertThat(lines.get(0)).contains("\"resourcesBefore\":{\"concurrency_limit\":100}",
+                    "\"action\":{\"concurrency_limit\":120}",
+                    "\"cooldownRemaining\":{\"concurrency_limit\":0}");
+            assertThat(lines.get(1)).contains("\"resourcesBefore\":{\"concurrency_limit\":120}",
+                    "\"cooldownRemaining\":{\"concurrency_limit\":2}");
+            assertThat(lines.get(lines.size() - 1)).contains("\"outcome\":null");
+        } finally {
+            logger.detachAppender(appender);
+            logger.setLevel(oldLevel);
+            appender.stop();
+        }
+    }
+
+    @Test
     @DisplayName("observe-only mode keeps collecting metrics but never touches an actuator")
     void observeOnlyModeDoesNotApplyActions() throws Exception {
         CountingProvider provider = new CountingProvider(3);

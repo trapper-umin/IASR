@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -127,5 +129,24 @@ class DatasetLoggerTest {
             assertThat(line).doesNotContain("\n");
             assertThat(line).startsWith("{").endsWith("}");
         });
+    }
+
+    @Test
+    void recordsPreActionContextAndExactWindowBoundaries() {
+        DatasetLogger logger = new DatasetLogger(5.0);
+        Instant first = Instant.parse("2026-11-08T10:00:00Z");
+        Instant second = first.plusSeconds(6);
+        logger.recordTick(state(10), action(105), action(120),
+                Map.of("concurrency_limit", 100), Map.of("concurrency_limit", 0), first);
+        logger.recordTick(state(20), action(105), action(120),
+                Map.of("concurrency_limit", 105), Map.of("concurrency_limit", 2), second);
+        logger.flush();
+
+        assertThat(lines().get(0)).contains("\"sequence\":0", "\"stateWindowStartedAt\":null",
+                "\"outcomeTimestamp\":\"2026-11-08T10:00:06Z\"",
+                "\"resourcesBefore\":{\"concurrency_limit\":100}");
+        assertThat(lines().get(1)).contains("\"sequence\":1",
+                "\"stateWindowStartedAt\":\"2026-11-08T10:00:00Z\"",
+                "\"cooldownRemaining\":{\"concurrency_limit\":2}", "\"outcome\":null");
     }
 }

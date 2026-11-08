@@ -30,7 +30,7 @@ import java.util.concurrent.locks.LockSupport;
  * discarded — otherwise the reported percentiles improve exactly when the
  * system gets worse.
  */
-public class LoadGenerator {
+public class LoadGenerator implements AutoCloseable {
 
     /** How long a client waits before giving up, as a real user would. */
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(3);
@@ -116,6 +116,7 @@ public class LoadGenerator {
         }
     }
 
+    @Override
     public void close() {
         clientExecutor.shutdownNow();
         try {

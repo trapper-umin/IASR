@@ -12,6 +12,9 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.time.Instant;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -117,6 +120,12 @@ public class ControlEngine {
                 log.warn("MetricsProvider returned null snapshot, skipping tick");
                 return;
             }
+            Instant observedAt = Instant.now();
+            Map<String, Integer> resourcesBefore = new LinkedHashMap<>();
+            for (Actuator actuator : actuators) {
+                resourcesBefore.put(actuator.name(), actuator.currentValue());
+            }
+            Map<String, Integer> cooldownRemaining = guardrails.remainingCooldowns();
 
             ControlAction action = ControlAction.NONE;
             ControlAction intent = null;
@@ -146,7 +155,8 @@ public class ControlEngine {
                 for (Actuator actuator : actuators) {
                     absoluteAction.set(actuator.name(), actuator.currentValue());
                 }
-                datasetLogger.recordTick(snapshot, absoluteAction.build(), intent);
+                datasetLogger.recordTick(snapshot, absoluteAction.build(), intent,
+                        resourcesBefore, cooldownRemaining, observedAt);
             }
 
         } catch (Exception e) {

@@ -35,6 +35,8 @@ public class DatasetLogger {
 
     /** Previous tick record waiting for its outcome. */
     private volatile DatasetRecord pending;
+    private long nextSequence;
+    private Instant previousObservation;
 
     /**
      * Record state and action for the current tick.
@@ -63,11 +65,17 @@ public class DatasetLogger {
     public synchronized void recordTick(MetricsSnapshot snapshot,
                                         ControlAction action,
                                         ControlAction intent) {
+        recordTick(snapshot, action, intent, Map.of(), Map.of(), Instant.now());
+    }
+
+    public synchronized void recordTick(MetricsSnapshot snapshot, ControlAction action,
+                                        ControlAction intent, Map<String, Integer> resourcesBefore,
+                                        Map<String, Integer> cooldownRemaining, Instant observedAt) {
         Map<String, Double> stateMap = snapshot.asMap();
 
         // Complete the previous record
         if (pending != null) {
-            pending.setOutcome(stateMap);
+            pending.completeOutcome(stateMap, observedAt);
             writeLine(pending);
         }
 
@@ -75,8 +83,9 @@ public class DatasetLogger {
         Map<String, Integer> actionMap = action != null ? action.desiredValues() : Map.of();
         Map<String, Integer> intentMap = intent != null ? intent.desiredValues() : Map.of();
         Map<String, String> reasons = intent != null ? intent.reasons() : Map.of();
-        pending = new DatasetRecord(Instant.now(), windowSec, stateMap, actionMap,
-                intentMap, reasons);
+        pending = new DatasetRecord(observedAt, windowSec, stateMap, actionMap,
+                intentMap, reasons, nextSequence++, previousObservation, resourcesBefore, cooldownRemaining);
+        previousObservation = observedAt;
     }
 
     /**

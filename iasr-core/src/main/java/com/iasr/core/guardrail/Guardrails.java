@@ -52,6 +52,14 @@ public class Guardrails {
         }
     }
 
+    /** Remaining blocked ticks before the next enforcement, without advancing time. */
+    public Map<String, Integer> remainingCooldowns() {
+        Map<String, Integer> remaining = new HashMap<>();
+        rules.forEach((name, rule) -> remaining.put(name,
+                Math.max(0, rule.cooldownTicks() - ticksSinceChange.getOrDefault(name, NEVER_CHANGED))));
+        return Map.copyOf(remaining);
+    }
+
     /**
      * Filter and clamp the controller's raw action.
      *

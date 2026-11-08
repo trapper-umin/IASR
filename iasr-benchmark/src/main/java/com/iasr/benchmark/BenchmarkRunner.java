@@ -9,8 +9,11 @@ import com.iasr.benchmark.app.BenchmarkApplication;
 import com.iasr.benchmark.load.LoadGenerator;
 import com.iasr.benchmark.load.Scenario;
 import com.iasr.benchmark.report.ReportWriter;
+import com.iasr.benchmark.report.EpisodeWriter;
 import com.iasr.benchmark.report.RunResult;
 import com.iasr.core.actuator.ConcurrencyLimiter;
+import com.iasr.core.engine.ControlEngine;
+import com.iasr.spring.IasrProperties;
 import com.iasr.core.dataset.DatasetLogger;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,9 @@ import org.springframework.boot.web.servlet.context.ServletWebServerApplicationC
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.nio.file.Path;
+import java.time.Instant;
+import java.util.UUID;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -64,6 +70,18 @@ public class BenchmarkRunner {
         List<Scenario> scenarios = selectScenarios();
         List<String> modes = selectModes();
         int repeats = Integer.getInteger("bench.repeat", 1);
+        if (repeats < 1) throw new IllegalArgumentException("bench.repeat must be positive");
+        if (scenarios.isEmpty() || modes.isEmpty() || Set.copyOf(modes).size() != modes.size()) {
+            throw new IllegalArgumentException("Select nonempty scenarios and unique modes");
+        }
+        for (String mode : modes) {
+            if (!Set.of("off", "fixed", "adaptive", "gradient", "bottleneck").contains(baseMode(mode))) {
+                throw new IllegalArgumentException("Unknown mode: " + mode);
+            }
+        }
+        long orderSeed = Long.getLong("bench.orderSeed", 42L);
+        EpisodeWriter episodeWriter = new EpisodeWriter(outputDir,
+                System.getProperty("bench.runId", UUID.randomUUID().toString()), orderSeed, sourceVersion());
 
         quietenLogging();
 
@@ -90,12 +108,14 @@ public class BenchmarkRunner {
                 byMode.put(mode, new ArrayList<>());
             }
             for (int i = 0; i < repeats; i++) {
-                for (String mode : modes) {
+                for (String mode : RunOrder.forRepetition(modes, scenario.name(), orderSeed, i)) {
                     // One header per run keeps the log parseable by
                     // tools/analyse.py, which attributes each result line to the
                     // most recent header rather than assuming contiguous blocks.
                     System.out.printf("%n=== %s / %s ===%n", scenario.name(), mode);
-                    RunResult result = runOnce(mode, scenario);
+                    MeasuredRun measured = runOnce(mode, scenario);
+                    RunResult result = measured.result();
+                    episodeWriter.write(result, i + 1, measured.details());
                     byMode.get(mode).add(result);
                     System.out.printf(
                             "   [%d/%d] goodput=%.1f rps  p95=%.1f ms  p99=%.1f ms  429=%.1f%%  hard-fail=%.1f%%%n",
@@ -119,6 +139,7 @@ public class BenchmarkRunner {
 
         new ReportWriter(outputDir, SLO_MS).write(scenarios, results);
         System.out.println("\nReport written to " + outputDir.toAbsolutePath());
+        System.out.println("All repetitions saved to " + episodeWriter.directory().toAbsolutePath());
     }
 
     private static List<Scenario> selectScenarios() {
@@ -138,43 +159,102 @@ public class BenchmarkRunner {
         return List.of(only.split(","));
     }
 
-    private static RunResult runOnce(String mode, Scenario scenario) throws Exception {
+    private record MeasuredRun(RunResult result, Map<String, Object> details) { }
+
+    private static MeasuredRun runOnce(String mode, Scenario scenario) throws Exception {
         ConfigurableApplicationContext context = boot(mode);
         ListAppender<ILoggingEvent> datasetAppender = captureDataset();
         try {
-            int port = ((ServletWebServerApplicationContext) context).getWebServer().getPort();
-            BackendModel backend = context.getBean(BackendModel.class);
-            HikariDataSource dataSource = context.getBean(HikariDataSource.class);
-            ConcurrencyLimiter limiter = context.getBeanProvider(ConcurrencyLimiter.class).getIfAvailable();
-
-            LoadGenerator generator = new LoadGenerator("http://localhost:" + port + "/api/work");
+            Map<String, Object> details = new LinkedHashMap<>();
+            Map<String, String> timing = new LinkedHashMap<>();
+            timing.put("captureStartedAt", Instant.now().toString());
             List<RunResult.ActuatorSample> trace = new ArrayList<>();
-
-            warmUp(generator, backend);
-
-            LoadGenerator.Outcomes outcomes = generator.run(
-                    scenario.rate(),
-                    scenario.durationMs(),
-                    elapsed -> {
-                        scenario.dependency().applyAt(elapsed, backend);
-                        trace.add(new RunResult.ActuatorSample(
-                                Math.round(elapsed * 10) / 10.0,
-                                limiter != null ? limiter.currentValue() : -1,
-                                dataSource.getMaximumPoolSize(),
-                                limiter != null ? limiter.getInflight() : -1));
-                    });
-
-            generator.close();
+            LoadGenerator.Outcomes outcomes;
+            try (context) {
+                int port = ((ServletWebServerApplicationContext) context).getWebServer().getPort();
+                BackendModel backend = context.getBean(BackendModel.class);
+                HikariDataSource dataSource = context.getBean(HikariDataSource.class);
+                ConcurrencyLimiter limiter = context.getBeanProvider(ConcurrencyLimiter.class).getIfAvailable();
+                details.put("initialResources", resources(limiter, dataSource));
+                details.put("configuration", effectiveConfiguration(context, backend, dataSource, scenario));
+                try (LoadGenerator generator = new LoadGenerator("http://localhost:" + port + "/api/work")) {
+                    timing.put("warmupStartedAt", Instant.now().toString());
+                    warmUp(generator, backend);
+                    details.put("measurementInitialResources", resources(limiter, dataSource));
+                    Instant measurementStart = Instant.now();
+                    timing.put("measurementStartedAt", measurementStart.toString());
+                    timing.put("measurementScheduledEndAt", measurementStart.plusMillis(scenario.durationMs()).toString());
+                    outcomes = generator.run(scenario.rate(), scenario.durationMs(), elapsed -> {
+                            scenario.dependency().applyAt(elapsed, backend);
+                            trace.add(new RunResult.ActuatorSample(
+                                    Math.round(elapsed * 10) / 10.0,
+                                    limiter != null ? limiter.currentValue() : -1,
+                                    dataSource.getMaximumPoolSize(),
+                                    limiter != null ? limiter.getInflight() : -1));
+                        });
+                    timing.put("drainCompletedAt", Instant.now().toString());
+                }
+            } // Stop the engine and flush its terminal record while capture is still attached.
+            timing.put("captureEndedAt", Instant.now().toString());
+            details.put("timing", timing);
 
             List<String> datasetLines = datasetAppender.list.stream()
                     .map(ILoggingEvent::getFormattedMessage)
                     .toList();
 
-            return RunResult.from(mode, scenario.name(), scenario.durationMs(),
-                    SLO_MS, outcomes, trace, datasetLines);
+            return new MeasuredRun(RunResult.from(mode, scenario.name(), scenario.durationMs(),
+                    SLO_MS, outcomes, trace, datasetLines), details);
         } finally {
             releaseDataset(datasetAppender);
-            context.close();
+        }
+    }
+
+    private static Map<String, Integer> resources(ConcurrencyLimiter limiter, HikariDataSource dataSource) {
+        Map<String, Integer> values = new LinkedHashMap<>();
+        if (limiter != null) values.put("concurrency_limit", limiter.currentValue());
+        values.put("hikari_max_pool", dataSource.getMaximumPoolSize());
+        return values;
+    }
+
+    private static Map<String, Object> effectiveConfiguration(ConfigurableApplicationContext context,
+                                                              BackendModel backend, HikariDataSource pool,
+                                                              Scenario scenario) {
+        Map<String, Object> config = new LinkedHashMap<>();
+        ControlEngine engine = context.getBeanProvider(ControlEngine.class).getIfAvailable();
+        if (engine != null) {
+            config.put("iasr", context.getBean(IasrProperties.class));
+            config.put("controllerClass", engine.getConfig().controller().getClass().getName());
+            config.put("guardrails", engine.getConfig().guardrails());
+        }
+        config.put("backend", Map.of("kind", backend.isReal() ? "postgres" : "synthetic",
+                "workers", backend.workerCount(), "serviceMs", backend.serviceTimeMs(),
+                "appMs", backend.appTimeMs(), "thrash", backend.thrashFactor(),
+                "rowsPerMs", Long.getLong("bench.db.rowsPerMs", 9_200L)));
+        config.put("pool", Map.of("maximum", pool.getMaximumPoolSize(),
+                "minimumIdle", pool.getMinimumIdle(), "connectionTimeoutMs", pool.getConnectionTimeout()));
+        config.put("load", Map.of("scenario", scenario.name(), "durationMs", scenario.durationMs(),
+                "warmupMs", 6_000, "warmupRps", 60, "clientThreads", 64, "requestTimeoutMs", 3_000));
+        config.put("runtime", Map.of("javaVersion", System.getProperty("java.version"),
+                "os", System.getProperty("os.name"), "arch", System.getProperty("os.arch"),
+                "availableProcessors", Runtime.getRuntime().availableProcessors()));
+        config.put("sloMs", SLO_MS);
+        return config;
+    }
+
+    private static Map<String, Object> sourceVersion() {
+        try {
+            Process revision = new ProcessBuilder("git", "rev-parse", "HEAD").redirectErrorStream(true).start();
+            String commit = new String(revision.getInputStream().readAllBytes(), java.nio.charset.StandardCharsets.UTF_8).trim();
+            if (revision.waitFor() != 0) return Map.of("commit", "unknown", "dirty", true);
+            Process status = new ProcessBuilder("git", "status", "--porcelain").redirectErrorStream(true).start();
+            boolean dirty = status.getInputStream().readAllBytes().length > 0;
+            if (status.waitFor() != 0) return Map.of("commit", commit, "dirty", true);
+            return Map.of("commit", commit, "dirty", dirty);
+        } catch (java.io.IOException e) {
+            return Map.of("commit", "unknown", "dirty", true);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Interrupted while recording source version", e);
         }
     }
 

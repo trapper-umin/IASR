@@ -24,7 +24,9 @@ class DatasetRecordTest {
 
         String json = r.toJsonLine();
 
-        assertThat(json).isEqualTo("{\"schemaVersion\":2,\"timestamp\":\"2026-02-14T11:20:05.123Z\",\"windowSec\":5,"
+        assertThat(json).isEqualTo("{\"schemaVersion\":3,\"sequence\":0,\"timestamp\":\"2026-02-14T11:20:05.123Z\","
+                + "\"stateWindowStartedAt\":null,\"outcomeTimestamp\":null,\"windowSec\":5,"
+                + "\"resourcesBefore\":{},\"cooldownRemaining\":{},"
                 + "\"state\":{\"latency_p95_ms\":42.5},"
                 + "\"action\":{\"concurrency_limit\":140},"
                 + "\"intent\":{},\"reasons\":{},"

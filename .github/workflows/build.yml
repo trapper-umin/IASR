@@ -22,6 +22,9 @@ jobs:
       - name: Build and test
         run: mvn --batch-mode --no-transfer-progress clean verify
 
+      - name: Validate dataset tooling
+        run: python3 -m unittest discover -s docs/benchmark/tools -p 'test_*.py'
+
       - name: Publish test report
         if: always()
         uses: actions/upload-artifact@v4

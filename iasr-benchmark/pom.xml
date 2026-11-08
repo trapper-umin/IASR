@@ -28,6 +28,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.iasr</groupId>
             <artifactId>iasr-spring-boot-starter</artifactId>
             <version>${project.version}</version>

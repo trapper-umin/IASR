@@ -2,7 +2,7 @@
 
 Runtime-контур управления (control loop) для динамической адаптации мягких ресурсов JVM-приложения **без перезапуска**.
 
-План развития в рамках магистерской диссертации — [docs/dissertation/plan.md](docs/dissertation/plan.md). Текущая семантика метрик и переход от архивных данных к `schemaVersion: 2` описаны в [контракте метрик](docs/dissertation/metrics-contract.md).
+План развития в рамках магистерской диссертации — [docs/dissertation/plan.md](docs/dissertation/plan.md), постановка обучаемой политики — [спецификация обучения](docs/dissertation/learning-spec.md). Семантика метрик описана в [контракте](docs/dissertation/metrics-contract.md), сохранение всех повторов и `schemaVersion: 3` — в [формате эпизодов](docs/benchmark/episodes.md).
 
 ## Архитектура
 
@@ -398,9 +398,14 @@ engine.stop();
 
 ```json
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
+  "sequence": 1,
   "timestamp": "2026-02-14T11:20:05.123Z",
+  "stateWindowStartedAt": "2026-02-14T11:20:00.123Z",
+  "outcomeTimestamp": "2026-02-14T11:20:10.123Z",
   "windowSec": 5,
+  "resourcesBefore": { "concurrency_limit": 120, "hikari_max_pool": 28 },
+  "cooldownRemaining": { "concurrency_limit": 0, "hikari_max_pool": 0 },
   "state": {
     "latency_p95_ms": 42.1,
     "latency_p99_ms": 88.7,

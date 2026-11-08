@@ -133,9 +133,10 @@ public class ReportWriter {
         }
 
         md.append("## Файлы\n\n");
-        md.append("- `results.csv` — сводка по всем прогонам\n");
+        md.append("- `results.csv` — сводка по представительным прогонам\n");
         md.append("- `raw/actuator-trace.csv` — значения актюаторов во времени\n");
-        md.append("- `raw/dataset-<сценарий>-<режим>.jsonl` — датасет IASR, тот самый формат `state → action → outcome`\n\n");
+        md.append("- `raw/dataset-<сценарий>-<режим>.jsonl` — журнал представительного прогона\n");
+        md.append("- `episodes/<runId>/` — все повторы отдельно, с конфигурацией и границами прогрева\n\n");
 
         md.append("## Воспроизведение\n\n");
         md.append("```bash\n");
