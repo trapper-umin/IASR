@@ -6,6 +6,8 @@ Runtime-контур управления (control loop) для динамиче
 
 Исследующая политика `explore`, матрица условий, разбиение train/validation/test и аудит покрытия описаны в [конвейере данных](docs/dissertation/data-pipeline.md).
 
+Offline обучение Q-функции и экспорт переносимой JSON-модели — в [описании прототипа FQI](docs/dissertation/fqi-prototype.md).
+
 ## Архитектура
 
 ```
