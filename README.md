@@ -4,6 +4,8 @@ Runtime-контур управления (control loop) для динамиче
 
 План развития в рамках магистерской диссертации — [docs/dissertation/plan.md](docs/dissertation/plan.md), постановка обучаемой политики — [спецификация обучения](docs/dissertation/learning-spec.md). Семантика метрик описана в [контракте](docs/dissertation/metrics-contract.md), сохранение всех повторов и `schemaVersion: 3` — в [формате эпизодов](docs/benchmark/episodes.md).
 
+Исследующая политика `explore`, матрица условий, разбиение train/validation/test и аудит покрытия описаны в [конвейере данных](docs/dissertation/data-pipeline.md).
+
 ## Архитектура
 
 ```

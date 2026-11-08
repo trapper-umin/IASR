@@ -75,7 +75,7 @@ public class BenchmarkRunner {
             throw new IllegalArgumentException("Select nonempty scenarios and unique modes");
         }
         for (String mode : modes) {
-            if (!Set.of("off", "fixed", "adaptive", "gradient", "bottleneck").contains(baseMode(mode))) {
+            if (!Set.of("off", "fixed", "adaptive", "gradient", "bottleneck", "explore").contains(baseMode(mode))) {
                 throw new IllegalArgumentException("Unknown mode: " + mode);
             }
         }
@@ -113,7 +113,9 @@ public class BenchmarkRunner {
                     // tools/analyse.py, which attributes each result line to the
                     // most recent header rather than assuming contiguous blocks.
                     System.out.printf("%n=== %s / %s ===%n", scenario.name(), mode);
-                    MeasuredRun measured = runOnce(mode, scenario);
+                    long policySeed = Long.getLong("bench.policySeed", 20261108L)
+                            ^ ((long) scenario.name().hashCode() << 32) ^ (i + 1L);
+                    MeasuredRun measured = runOnce(mode, scenario, policySeed);
                     RunResult result = measured.result();
                     episodeWriter.write(result, i + 1, measured.details());
                     byMode.get(mode).add(result);
@@ -147,8 +149,13 @@ public class BenchmarkRunner {
         if (only == null || only.isBlank()) {
             return Scenario.all();
         }
-        List<String> wanted = List.of(only.split(","));
-        return Scenario.all().stream().filter(s -> wanted.contains(s.name())).toList();
+        List<String> wanted = java.util.Arrays.stream(only.split(",", -1)).map(String::trim).toList();
+        Map<String, Scenario> available = Scenario.all().stream().collect(
+                java.util.stream.Collectors.toMap(Scenario::name, java.util.function.Function.identity()));
+        if (Set.copyOf(wanted).size() != wanted.size() || !available.keySet().containsAll(wanted)) {
+            throw new IllegalArgumentException("Unknown or duplicate scenario selection: " + only);
+        }
+        return wanted.stream().map(available::get).toList();
     }
 
     private static List<String> selectModes() {
@@ -156,13 +163,13 @@ public class BenchmarkRunner {
         if (only == null || only.isBlank()) {
             return List.of("off", "fixed", "adaptive", "gradient", "bottleneck");
         }
-        return List.of(only.split(","));
+        return java.util.Arrays.stream(only.split(",", -1)).map(String::trim).toList();
     }
 
     private record MeasuredRun(RunResult result, Map<String, Object> details) { }
 
-    private static MeasuredRun runOnce(String mode, Scenario scenario) throws Exception {
-        ConfigurableApplicationContext context = boot(mode);
+    private static MeasuredRun runOnce(String mode, Scenario scenario, long policySeed) throws Exception {
+        ConfigurableApplicationContext context = boot(mode, policySeed);
         ListAppender<ILoggingEvent> datasetAppender = captureDataset();
         try {
             Map<String, Object> details = new LinkedHashMap<>();
@@ -225,6 +232,9 @@ public class BenchmarkRunner {
             config.put("iasr", context.getBean(IasrProperties.class));
             config.put("controllerClass", engine.getConfig().controller().getClass().getName());
             config.put("guardrails", engine.getConfig().guardrails());
+            if (engine.getConfig().controller() instanceof ExplorationController exploring) {
+                config.put("exploration", exploring.parameters());
+            }
         }
         config.put("backend", Map.of("kind", backend.isReal() ? "postgres" : "synthetic",
                 "workers", backend.workerCount(), "serviceMs", backend.serviceTimeMs(),
@@ -238,6 +248,17 @@ public class BenchmarkRunner {
                 "os", System.getProperty("os.name"), "arch", System.getProperty("os.arch"),
                 "availableProcessors", Runtime.getRuntime().availableProcessors()));
         config.put("sloMs", SLO_MS);
+        // Object conditions are invariant across policies, repetitions and seeds.
+        // They define leakage-safe partition groups, including pinned ablations.
+        Map<String, Object> conditions = new LinkedHashMap<>();
+        conditions.put("profile", scenario.definition());
+        conditions.put("backend", config.get("backend"));
+        conditions.put("load", config.get("load"));
+        conditions.put("runtime", config.get("runtime"));
+        conditions.put("initialPool", Integer.getInteger("bench.poolSize", 10));
+        conditions.put("initialLimit", Integer.getInteger("bench.initialLimit", 100));
+        conditions.put("sloMs", SLO_MS);
+        config.put("conditions", conditions);
         return config;
     }
 
@@ -267,7 +288,7 @@ public class BenchmarkRunner {
         generator.run(t -> 60, 6_000, t -> { });
     }
 
-    private static ConfigurableApplicationContext boot(String mode) {
+    private static ConfigurableApplicationContext boot(String mode, long policySeed) {
         Map<String, Object> props = new LinkedHashMap<>();
         props.put("server.port", 0);
         props.put("server.tomcat.threads.max", 400);
@@ -302,6 +323,7 @@ public class BenchmarkRunner {
         props.put("logging.level.com.zaxxer", "WARN");
 
         props.putAll(iasrProperties(mode));
+        props.put("bench.exploration.seed", policySeed);
 
         String base = baseMode(mode);
         SpringApplicationBuilder builder;
@@ -309,6 +331,8 @@ public class BenchmarkRunner {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, GradientBaselineConfig.class);
         } else if ("bottleneck".equals(base)) {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, BottleneckConfig.class);
+        } else if ("explore".equals(base)) {
+            builder = new SpringApplicationBuilder(BenchmarkApplication.class, ExplorationConfig.class);
         } else {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class);
         }
@@ -346,6 +370,31 @@ public class BenchmarkRunner {
                     props.getController().getHikariStep(),
                     props.getController().getMinGradient(),
                     Integer.getInteger("bench.poolPeriod", 5));
+        }
+    }
+
+    @org.springframework.context.annotation.Configuration(proxyBeanMethods = false)
+    static class ExplorationConfig {
+        @org.springframework.context.annotation.Bean
+        public com.iasr.core.controller.Controller explorationController(
+                IasrProperties props,
+                @org.springframework.beans.factory.annotation.Value("${bench.exploration.seed}") long seed) {
+            var c = props.getConcurrency();
+            var h = props.getHikari();
+            var cp = props.getController();
+            var rules = List.of(
+                    new com.iasr.core.guardrail.ActuatorGuardrail("concurrency_limit", c.getMinLimit(), c.getMaxLimit(),
+                            c.getMaxStep(), c.getCooldownTicks(), c.isBlockIncreaseOnSloViolation(), c.getMaxStepDown()),
+                    new com.iasr.core.guardrail.ActuatorGuardrail("hikari_max_pool", h.getMinPoolSize(), h.getMaxPoolSize(),
+                            h.getMaxStep(), h.getCooldownTicks(), h.isBlockIncreaseOnSloViolation()));
+            var baseline = new com.iasr.core.controller.BaselineController(props.getSloLatencyMs(),
+                    cp.getComfortFactor(), cp.getConcurrencyIncreaseStep(), cp.getConcurrencyDecreaseFactor(),
+                    cp.getErrorRateThreshold(), cp.getTimeoutRateThreshold(), cp.getHikariStep(),
+                    cp.getHikariPendingThreshold(), cp.getHikariAcquireTimeThresholdMs(), cp.getUtilizationGate(),
+                    cp.getSloTargetHeadroom(), cp.getMinGradient(), cp.getHikariIdleShrinkThreshold());
+            return new ExplorationController(new com.iasr.core.controller.JointActionSpace(rules,
+                    props.getSloLatencyMs(), props.getWindowMs() / 1000.0, Integer.getInteger("bench.poolPeriod", 5)),
+                    baseline, Double.parseDouble(System.getProperty("bench.epsilon", "0.5")), seed);
         }
     }
 

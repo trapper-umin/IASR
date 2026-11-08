@@ -11,6 +11,14 @@ public final class MetricNames {
 
     private MetricNames() {}
 
+    /** Engine decision index, including warmup. Independent of wall-clock time. */
+    public static final String CONTROL_TICK = "control_tick";
+    public static final String CONTROL_WINDOW_SEC = "control_window_sec";
+
+    public static String cooldownRemaining(String actuatorName) {
+        return "cooldown_remaining." + actuatorName;
+    }
+
     // Successful-request latency from admission entry to response completion.
     // Includes admission wait; excludes client/network and server accept queues.
     public static final String LATENCY_P95_MS       = "latency_p95_ms";

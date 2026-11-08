@@ -8,6 +8,7 @@ import com.iasr.core.dataset.DatasetLogger;
 import com.iasr.core.guardrail.Guardrails;
 import com.iasr.core.metrics.MetricsProvider;
 import com.iasr.core.metrics.MetricsSnapshot;
+import com.iasr.core.metrics.MetricNames;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,6 +53,7 @@ public class ControlEngine {
     private final ScheduledExecutorService scheduler;
     private final AtomicBoolean running = new AtomicBoolean(false);
     private volatile ScheduledFuture<?> tickFuture;
+    private long controlTick;
 
     public ControlEngine(ControlEngineConfig config) {
         this.config = config;
@@ -126,6 +128,12 @@ public class ControlEngine {
                 resourcesBefore.put(actuator.name(), actuator.currentValue());
             }
             Map<String, Integer> cooldownRemaining = guardrails.remainingCooldowns();
+            MetricsSnapshot.Builder observation = MetricsSnapshot.builder().putAll(snapshot.asMap())
+                    .put(MetricNames.CONTROL_TICK, controlTick++)
+                    .put(MetricNames.CONTROL_WINDOW_SEC, config.windowSec());
+            cooldownRemaining.forEach((name, remaining) ->
+                    observation.put(MetricNames.cooldownRemaining(name), remaining));
+            snapshot = observation.build();
 
             ControlAction action = ControlAction.NONE;
             ControlAction intent = null;

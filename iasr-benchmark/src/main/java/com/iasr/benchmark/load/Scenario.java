@@ -3,6 +3,7 @@ package com.iasr.benchmark.load;
 import com.iasr.benchmark.app.BackendModel;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * A load profile plus the dependency behaviour that goes with it.
@@ -16,8 +17,17 @@ public record Scenario(
         String question,
         long durationMs,
         LoadGenerator.RateSchedule rate,
-        DependencySchedule dependency
+    DependencySchedule dependency,
+    Map<String, Object> definition
 ) {
+    public Scenario {
+        definition = Map.copyOf(definition);
+    }
+
+    public Scenario(String name, String question, long durationMs,
+                    LoadGenerator.RateSchedule rate, DependencySchedule dependency) {
+        this(name, question, durationMs, rate, dependency, Map.of());
+    }
 
     /** How the downstream dependency behaves over time. */
     @FunctionalInterface
@@ -29,7 +39,29 @@ public record Scenario(
     private static final long BASE_SERVICE_MS = Long.getLong("bench.db.serviceMs", 50L);
 
     /** Factor by which the dependency slows down in the degradation scenario. */
-    private static final double DEGRADED_FACTOR = 2.4;
+    private static final double DEGRADED_FACTOR = positiveProperty("bench.degradedFactor", 2.4);
+    private static final double LOAD_SCALE = positiveProperty("bench.loadScale", 1.0);
+    private static final double DURATION_SCALE = positiveProperty("bench.durationScale", 1.0);
+
+    private static double positiveProperty(String name, double fallback) {
+        double value = Double.parseDouble(System.getProperty(name, Double.toString(fallback)));
+        if (!Double.isFinite(value) || value <= 0) throw new IllegalArgumentException(name + " must be finite and positive");
+        return value;
+    }
+
+    private static Scenario scaled(String name, String question, long durationMs,
+                                   LoadGenerator.RateSchedule rate, DependencySchedule dependency) {
+        long duration = Math.round(durationMs * DURATION_SCALE);
+        if (duration < 1000 || durationMs * DURATION_SCALE > Long.MAX_VALUE) {
+            throw new IllegalArgumentException("Scenario duration must be at least 1 second and fit a long");
+        }
+        return new Scenario(name, question, duration,
+                t -> LOAD_SCALE * rate.ratePerSecondAt(t / DURATION_SCALE),
+                (t, backend) -> dependency.applyAt(t / DURATION_SCALE, backend),
+                Map.of("profileVersion", 1, "name", name, "loadScale", LOAD_SCALE,
+                        "durationScale", DURATION_SCALE, "degradedFactor", DEGRADED_FACTOR,
+                        "baseServiceMs", BASE_SERVICE_MS));
+    }
 
     /** Dependency keeps its baseline latency for the whole run. */
     private static DependencySchedule steadyDependency() {
@@ -46,7 +78,7 @@ public record Scenario(
      * worth running, so this scenario exists to catch that.
      */
     public static Scenario steady() {
-        return new Scenario(
+        return scaled(
                 "steady",
                 "Does the loop do any harm when load is comfortably within capacity?",
                 30_000,
@@ -59,7 +91,7 @@ public record Scenario(
      * Tests both shedding under overload and giving capacity back afterwards.
      */
     public static Scenario spike() {
-        return new Scenario(
+        return scaled(
                 "spike",
                 "Under a sudden 3x burst, does the loop protect latency, and does it recover after?",
                 45_000,
@@ -69,7 +101,7 @@ public record Scenario(
 
     /** A slow climb from far below to far above capacity. */
     public static Scenario ramp() {
-        return new Scenario(
+        return scaled(
                 "ramp",
                 "As load crosses capacity, where does each configuration start to break?",
                 45_000,
@@ -84,7 +116,7 @@ public record Scenario(
      * limit before and after the degradation differ by more than a factor of two.
      */
     public static Scenario slowDependency() {
-        return new Scenario(
+        return scaled(
                 "slow-dependency",
                 "When the dependency degrades under steady load, does the loop adapt to the new capacity?",
                 45_000,

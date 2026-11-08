@@ -1,0 +1,9 @@
+{
+  "matrixVersion": 1,
+  "cases": [
+    {"id": "small-fast", "properties": {"bench.db.workers": 8, "bench.db.serviceMs": 30, "bench.poolSize": 4, "bench.poolMin": 2, "bench.initialLimit": 20, "bench.loadScale": 0.8}},
+    {"id": "medium", "properties": {"bench.db.workers": 12, "bench.db.serviceMs": 50, "bench.poolSize": 10, "bench.poolMin": 2, "bench.initialLimit": 60, "bench.loadScale": 1.0}},
+    {"id": "slow", "properties": {"bench.db.workers": 8, "bench.db.serviceMs": 60, "bench.poolSize": 6, "bench.poolMin": 2, "bench.initialLimit": 40, "bench.loadScale": 1.1}},
+    {"id": "ample-pool", "properties": {"bench.db.workers": 12, "bench.db.serviceMs": 40, "bench.poolSize": 18, "bench.poolMin": 2, "bench.initialLimit": 30, "bench.loadScale": 0.9}}
+  ]
+}
