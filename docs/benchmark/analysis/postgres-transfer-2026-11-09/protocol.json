@@ -1,0 +1,60 @@
+{
+  "protocolVersion": 1,
+  "purpose": "first_held_out_postgresql_comparison",
+  "model": "docs/benchmark/models/fqi-action-conditioned-2026-11-08/per-action/model.json",
+  "modelSha256": "2f4e3907b48616caba5d94d9682a47c8e0a04c2fea922ad2e468398851910aff",
+  "postgresVersion": "postgres (PostgreSQL) 17.10 (Homebrew)",
+  "calibration": {
+    "file": "calibration.csv",
+    "seriesRows": 500000,
+    "msPerLevel": 1500,
+    "sha256": "eac04cddecbc894179bd2238e90bb5e165c1f7d603e9e05a0464307dda3a1858"
+  },
+  "scenarios": [
+    "slow-dependency"
+  ],
+  "modes": [
+    "fixed",
+    "adaptive",
+    "gradient",
+    "learned"
+  ],
+  "repeats": 4,
+  "orderSeed": 20261109,
+  "properties": {
+    "bench.db.real": true,
+    "bench.db.serviceMs": 25,
+    "bench.db.rowsPerMs": 20000,
+    "bench.degradedFactor": 2.0,
+    "bench.loadScale": 0.5,
+    "bench.poolSize": 4,
+    "bench.poolMin": 2,
+    "bench.poolMax": 12,
+    "bench.initialLimit": 20,
+    "bench.sloMs": 150,
+    "bench.poolPeriod": 5,
+    "bench.inferenceBudgetMs": 20,
+    "bench.allowPrototype": true
+  },
+  "analysis": {
+    "reference": "adaptive",
+    "pairedBy": "repetition",
+    "primary": [
+      "goodputRps",
+      "p95Ms"
+    ],
+    "secondary": [
+      "p99Ms",
+      "sloBreachPercent",
+      "rejectionRatePercent",
+      "failureRatePercent"
+    ],
+    "interval": "paired_t_95_unadjusted_exploratory",
+    "recovery": {
+      "disturbanceEndSec": 35,
+      "offeredRps": 75,
+      "minGoodputFraction": 0.9,
+      "consecutiveWindows": 3
+    }
+  }
+}
