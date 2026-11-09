@@ -1,0 +1,169 @@
+{
+  "config": {
+    "allowsIncompleteJointSupport": false,
+    "backfitSweeps": 4,
+    "depth": 6,
+    "gammaPerSecond": 0.95,
+    "iterationSelection": "fixed_budget_no_test_selection",
+    "iterations": 8,
+    "jointSupport": {
+      "actions": {
+        "-1,-1": 13,
+        "-1,0": 136,
+        "-1,1": 13,
+        "0,-1": 30,
+        "0,0": 645,
+        "0,1": 41,
+        "1,-1": 7,
+        "1,0": 35,
+        "1,1": 9
+      },
+      "established": true,
+      "poolGrowth": 63,
+      "poolShrinkage": 50,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 42
+    },
+    "maxFeatures": 1.0,
+    "minLeaf": 3,
+    "nJobs": 1,
+    "regressor": "additive",
+    "seed": 42,
+    "testEvaluated": false,
+    "trees": 32,
+    "treesPerHead": 16,
+    "uniqueTrees": 96
+  },
+  "counts": {
+    "train": {
+      "excluded": {
+        "unsupported_behavior_action": 33,
+        "unsupported_continuation": 12
+      },
+      "input": 974,
+      "scored": 929
+    },
+    "validation": {
+      "excluded": {
+        "unsupported_behavior_action": 3,
+        "unsupported_continuation": 3
+      },
+      "input": 160,
+      "scored": 154
+    }
+  },
+  "diagnosticOnly": true,
+  "policyPerformanceEstablished": false,
+  "portableExportMaxError": 4.263256414560601e-14,
+  "reportVersion": 1,
+  "selectionBiasNote": "conditional diagnostics exclude unsupported states/actions; not an off-policy value estimate",
+  "test": {
+    "evaluated": false
+  },
+  "trace": [
+    {
+      "iteration": 1,
+      "train": {
+        "bellmanRmse": 4.140138300612718,
+        "meanObservedBehaviorReward": -1.7718024247217525,
+        "scored": 929
+      },
+      "validation": {
+        "bellmanRmse": 10.040611835679215,
+        "meanObservedBehaviorReward": -7.064625779845091,
+        "scored": 154
+      }
+    },
+    {
+      "iteration": 2,
+      "train": {
+        "bellmanRmse": 3.4709537841194225,
+        "meanObservedBehaviorReward": -1.7718024247217525,
+        "scored": 929
+      },
+      "validation": {
+        "bellmanRmse": 8.711052549514541,
+        "meanObservedBehaviorReward": -7.064625779845091,
+        "scored": 154
+      }
+    },
+    {
+      "iteration": 3,
+      "train": {
+        "bellmanRmse": 3.2841083210983366,
+        "meanObservedBehaviorReward": -1.7718024247217525,
+        "scored": 929
+      },
+      "validation": {
+        "bellmanRmse": 8.218829629666626,
+        "meanObservedBehaviorReward": -7.064625779845091,
+        "scored": 154
+      }
+    },
+    {
+      "iteration": 4,
+      "train": {
+        "bellmanRmse": 3.053211520301778,
+        "meanObservedBehaviorReward": -1.7718024247217525,
+        "scored": 929
+      },
+      "validation": {
+        "bellmanRmse": 7.7556178612977495,
+        "meanObservedBehaviorReward": -7.064625779845091,
+        "scored": 154
+      }
+    },
+    {
+      "iteration": 5,
+      "train": {
+        "bellmanRmse": 2.977783346229202,
+        "meanObservedBehaviorReward": -1.7718024247217525,
+        "scored": 929
+      },
+      "validation": {
+        "bellmanRmse": 7.384792682920245,
+        "meanObservedBehaviorReward": -7.064625779845091,
+        "scored": 154
+      }
+    },
+    {
+      "iteration": 6,
+      "train": {
+        "bellmanRmse": 3.0658998935020483,
+        "meanObservedBehaviorReward": -1.7718024247217525,
+        "scored": 929
+      },
+      "validation": {
+        "bellmanRmse": 7.25657812729564,
+        "meanObservedBehaviorReward": -7.064625779845091,
+        "scored": 154
+      }
+    },
+    {
+      "iteration": 7,
+      "train": {
+        "bellmanRmse": 2.986898016374928,
+        "meanObservedBehaviorReward": -1.7718024247217525,
+        "scored": 929
+      },
+      "validation": {
+        "bellmanRmse": 7.357329249639436,
+        "meanObservedBehaviorReward": -7.064625779845091,
+        "scored": 154
+      }
+    },
+    {
+      "iteration": 8,
+      "train": {
+        "bellmanRmse": 2.898860962591122,
+        "meanObservedBehaviorReward": -1.7718024247217525,
+        "scored": 929
+      },
+      "validation": {
+        "bellmanRmse": 7.223099981007172,
+        "meanObservedBehaviorReward": -7.064625779845091,
+        "scored": 154
+      }
+    }
+  ]
+}

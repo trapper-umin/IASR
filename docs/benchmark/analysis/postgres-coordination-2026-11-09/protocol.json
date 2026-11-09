@@ -4,7 +4,7 @@
   "model": "docs/benchmark/models/fqi-postgres-joint-pilot-2026-11-09/model.json",
   "modelSha256": "3fe3abdff980972971e2997e85f931cdb042a82e4455d15a146abd3e955108f7",
   "additiveModel": "docs/benchmark/models/fqi-postgres-additive-2026-11-09/model.json",
-  "additiveModelSha256": null,
+  "additiveModelSha256": "e45604918f3ff522657548b7544b2d963b1e0ec1d1376885daa6332dd9a40e0c",
   "reservedEvaluationGroup": "269bf4da65f403b54fe1cdf16db475916392a4c7bd724a81d4fba1f3367864d8",
   "postgresVersion": "postgres (PostgreSQL) 17.10 (Homebrew)",
   "calibration": {

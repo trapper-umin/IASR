@@ -19,3 +19,25 @@
 Четыре блока по одному эпизоду каждого режима. Циклическая ротация даёт каждому режиму каждую позицию один раз. Основные метрики — goodput и клиентский p95 успешных ответов. Сохраняются также p99, нарушения SLO, 429, жёсткие отказы, восстановление, движения ресурсов и причины fallback. Восстановление отмечается после трёх подряд полных окон с серверным p95 ≤ 150 мс и goodput ≥ 56,7 запроса/с. Парные интервалы Стьюдента описательные, без поправки на множественные сравнения. Один общий хост и четыре блока ограничивают выводы.
 
 Параметры и метрики сохранены в [протоколе](protocol.json).
+
+## Воспроизведение
+
+Из чистого checkout с зависимостями [стенда PostgreSQL](../postgres-transfer-2026-11-09/README.md) восстановите `combined` по [протоколу целевого пилота](../postgres-joint-pilot-2026-11-09/README.md). Для точного воспроизведения артефакта обучения с исходной меткой коммита используйте `70a02c5`.
+
+```bash
+python3 docs/benchmark/tools/train_fqi.py /tmp/iasr-postgres-joint-fit/combined \
+  --development-only --regressor additive --out /tmp/iasr-postgres-additive
+```
+
+Для замеров используйте ревизию с SHA обеих сохранённых моделей и соберите стенд командой `mvn --offline clean verify`.
+
+```bash
+protocol=docs/benchmark/analysis/postgres-coordination-2026-11-09/protocol.json
+python3 docs/benchmark/tools/run_postgres_transfer.py "$protocol" \
+  --out /tmp/iasr-postgres-coordination
+python3 docs/benchmark/tools/audit_postgres_transfer.py \
+  /tmp/iasr-postgres-coordination "$protocol" \
+  docs/benchmark/models/fqi-postgres-joint-pilot-2026-11-09/model.json \
+  --additive-model docs/benchmark/models/fqi-postgres-additive-2026-11-09/model.json \
+  --out /tmp/iasr-postgres-coordination-analysis.json
+```
