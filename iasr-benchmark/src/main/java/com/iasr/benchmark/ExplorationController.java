@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
-/** Opt-in collector: epsilon exploration with uniform or state-balanced admissible actions, otherwise hold. */
+/** Opt-in collector with uniform, balanced or joint-focused exploration of admissible actions. */
 public final class ExplorationController implements Controller {
     private final JointActionSpace space;
     private final Controller baseline;
@@ -21,7 +21,7 @@ public final class ExplorationController implements Controller {
     private final long seed;
     private final Random random;
     private int activeWindows;
-    public enum Sampling { UNIFORM, BALANCED }
+    public enum Sampling { UNIFORM, BALANCED, JOINT }
     private final Sampling sampling;
     private final double sloMs;
     private final Map<String, Map<JointActionSpace.Delta, Long>> visits = new HashMap<>();
@@ -59,9 +59,15 @@ public final class ExplorationController implements Controller {
             return baseline.decide(state, actuators);
         }
         if (++activeWindows < 4) return baseline.decide(state, actuators);
-        if (random.nextDouble() < epsilon) {
+        boolean exploreTick = sampling != Sampling.JOINT
+                || (long) state.get(MetricNames.CONTROL_TICK) % space.poolPeriodTicks() == 0;
+        if (exploreTick && random.nextDouble() < epsilon) {
             if (sampling == Sampling.UNIFORM) {
                 return space.action(candidates.get(random.nextInt(candidates.size())), actuators, "explore_uniform");
+            }
+            if (sampling == Sampling.JOINT) {
+                var joint = candidates.stream().filter(delta -> delta.concurrency() != 0 && delta.pool() != 0).toList();
+                if (!joint.isEmpty()) candidates = joint;
             }
             String bucket = bucket(state, actuators);
             Map<JointActionSpace.Delta, Long> counts = visits.computeIfAbsent(bucket, ignored -> new HashMap<>());
@@ -70,7 +76,7 @@ public final class ExplorationController implements Controller {
             for (var candidate : candidates) if (counts.getOrDefault(candidate, 0L) == least) tied.add(candidate);
             var chosen = tied.get(random.nextInt(tied.size()));
             counts.merge(chosen, 1L, Long::sum);
-            return space.action(chosen, actuators, "explore_balanced");
+            return space.action(chosen, actuators, sampling == Sampling.JOINT ? "explore_joint" : "explore_balanced");
         }
         return candidates.contains(JointActionSpace.HOLD)
                 ? space.action(JointActionSpace.HOLD, actuators, "explore_hold")

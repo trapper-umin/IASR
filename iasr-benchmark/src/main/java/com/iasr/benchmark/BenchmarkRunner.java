@@ -75,7 +75,7 @@ public class BenchmarkRunner {
             throw new IllegalArgumentException("Select nonempty scenarios and unique modes");
         }
         for (String mode : modes) {
-            if (!Set.of("off", "fixed", "adaptive", "gradient", "bottleneck", "explore", "explore-balanced", "learned").contains(baseMode(mode))) {
+            if (!Set.of("off", "fixed", "adaptive", "gradient", "bottleneck", "explore", "explore-balanced", "explore-joint", "learned").contains(baseMode(mode))) {
                 throw new IllegalArgumentException("Unknown mode: " + mode);
             }
         }
@@ -330,8 +330,6 @@ public class BenchmarkRunner {
 
         props.putAll(iasrProperties(mode));
         props.put("bench.exploration.seed", policySeed);
-        props.put("bench.exploration.balanced", "explore-balanced".equals(baseMode(mode)));
-
         String base = baseMode(mode);
         SpringApplicationBuilder builder;
         if ("gradient".equals(base)) {
@@ -340,7 +338,12 @@ public class BenchmarkRunner {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, BottleneckConfig.class);
         } else if ("learned".equals(base)) {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, LearnedConfig.class);
-        } else if ("explore".equals(base) || "explore-balanced".equals(base)) {
+        } else if (base.startsWith("explore")) {
+            props.put("bench.exploration.sampling", switch (base) {
+                case "explore-balanced" -> "BALANCED";
+                case "explore-joint" -> "JOINT";
+                default -> "UNIFORM";
+            });
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, ExplorationConfig.class);
         } else {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class);
@@ -388,13 +391,13 @@ public class BenchmarkRunner {
         public com.iasr.core.controller.Controller explorationController(
                 IasrProperties props,
                 @org.springframework.beans.factory.annotation.Value("${bench.exploration.seed}") long seed,
-                @org.springframework.beans.factory.annotation.Value("${bench.exploration.balanced:false}") boolean balanced) {
+                @org.springframework.beans.factory.annotation.Value("${bench.exploration.sampling}") ExplorationController.Sampling sampling) {
             var rules = policyRules(props);
             var baseline = policyBaseline(props);
             return new ExplorationController(new com.iasr.core.controller.JointActionSpace(rules,
                     props.getSloLatencyMs(), props.getWindowMs() / 1000.0, Integer.getInteger("bench.poolPeriod", 5)),
                     baseline, Double.parseDouble(System.getProperty("bench.epsilon", "0.5")), seed,
-                    balanced ? ExplorationController.Sampling.BALANCED : ExplorationController.Sampling.UNIFORM, props.getSloLatencyMs());
+                    sampling, props.getSloLatencyMs());
         }
     }
 

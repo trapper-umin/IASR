@@ -1,0 +1,36 @@
+{
+  "protocolVersion": 1,
+  "purpose": "postgresql_joint_action_development_pilot",
+  "model": "docs/benchmark/models/fqi-postgres-development-2026-11-09/model.json",
+  "modelSha256": "d13557458a62b7ec5991b83f7752f5e3ed1fe4dfaa6d69c570285b77679ea2b4",
+  "postgresVersion": "postgres (PostgreSQL) 17.10 (Homebrew)",
+  "calibration": {
+    "file": "../postgres-transfer-2026-11-09/calibration.csv",
+    "sha256": "eac04cddecbc894179bd2238e90bb5e165c1f7d603e9e05a0464307dda3a1858"
+  },
+  "scenarios": ["steady"],
+  "modes": ["explore-joint"],
+  "repeats": 8,
+  "orderSeed": 20261111,
+  "properties": {
+    "bench.db.real": true,
+    "bench.db.serviceMs": 12,
+    "bench.db.rowsPerMs": 20000,
+    "bench.degradedFactor": 2.25,
+    "bench.loadScale": 0.4,
+    "bench.durationScale": 1.0,
+    "bench.poolSize": 5,
+    "bench.poolMin": 2,
+    "bench.poolMax": 12,
+    "bench.initialLimit": 10,
+    "bench.sloMs": 150,
+    "bench.poolPeriod": 5,
+    "bench.epsilon": 0.75,
+    "bench.policySeed": 20261111
+  },
+  "development": {
+    "reservedEvaluationGroup": "269bf4da65f403b54fe1cdf16db475916392a4c7bd724a81d4fba1f3367864d8",
+    "minJointSamples": 3,
+    "minJointEpisodes": 2
+  }
+}

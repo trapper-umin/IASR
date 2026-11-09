@@ -90,4 +90,32 @@ class ExplorationControllerTest {
         }
     }
 
+    @Test
+    void jointSamplingHoldsBetweenPoolTicksAndBalancesLegalPairs() {
+        var space = balancedSpace();
+        var controller = new ExplorationController(space, (s, a) -> ControlAction.NONE,
+                1, 42, ExplorationController.Sampling.JOINT, 150);
+        for (int i = 0; i < 3; i++) controller.decide(state(i, 120), ACTUATORS);
+        var pairs = new java.util.HashSet<java.util.Map<String, Integer>>();
+        for (int i = 3; i <= 20; i++) {
+            var action = controller.decide(state(i, 120), ACTUATORS);
+            if (i % 5 == 0) {
+                assertThat(action.reason("concurrency_limit")).isEqualTo("explore_joint");
+                assertThat(action.desiredValues().get("concurrency_limit")).isNotEqualTo(10);
+                assertThat(action.desiredValues().get("hikari_max_pool")).isNotEqualTo(5);
+                pairs.add(action.desiredValues());
+            } else {
+                assertThat(action.desiredValues()).isEqualTo(java.util.Map.of("concurrency_limit", 10, "hikari_max_pool", 5));
+            }
+        }
+        assertThat(pairs).hasSize(4);
+        var cooldown = MetricsSnapshot.builder().putAll(state(25, 120).asMap())
+                .put(MetricNames.cooldownRemaining("concurrency_limit"), 1).build();
+        var action = controller.decide(cooldown, ACTUATORS);
+        var delta = new JointActionSpace.Delta(action.desiredValues().get("concurrency_limit") - 10,
+                action.desiredValues().get("hikari_max_pool") - 5);
+        assertThat(delta.concurrency()).isZero();
+        assertThat(space.candidates(cooldown, ACTUATORS)).contains(delta);
+    }
+
 }
