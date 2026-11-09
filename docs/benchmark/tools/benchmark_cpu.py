@@ -37,13 +37,15 @@ def cpu_delta(previous, current):
     return sum(cpu - previous.get(pid, 0) for pid, cpu in current.items() if cpu >= previous.get(pid, 0))
 
 
-def run_sampled(command, cwd, log, output, postgres_pid, interval):
+def run_sampled(command, cwd, log, output, postgres_pid, interval, pressure_pid=None):
     require(type(interval) in (float, int) and math.isfinite(interval) and 0.5 <= interval <= 5,
             "CPU sampling interval must be between 0.5 and 5 seconds")
     with output.open("x", encoding="utf-8") as trace, subprocess.Popen(
             command, cwd=cwd, stdout=log, stderr=subprocess.STDOUT, start_new_session=True) as process:
         try:
             roots = {"jvm": process.pid, "postgres": postgres_pid}
+            if pressure_pid is not None:
+                roots["pressure"] = pressure_pid
 
             def snapshot():
                 output = subprocess.check_output(["ps", "-A", "-o", "pid=,ppid=,time="], text=True)
@@ -58,7 +60,7 @@ def run_sampled(command, cwd, log, output, postgres_pid, interval):
                     end, next_tick, current = snapshot()
                     if process.poll() is not None:
                         break
-                    require(current["jvm"] and current["postgres"], "sampled process tree is missing")
+                    require(all(current.values()), "sampled process tree is missing")
                     sample = {"startedAt": start, "endedAt": end, "elapsedSec": next_tick - tick}
                     for label in roots:
                         sample[label] = {"cpuSec": cpu_delta(before[label], current[label]),
@@ -86,13 +88,15 @@ def read_cpu_trace(path):
             start, end = timestamp(row["startedAt"]), timestamp(row["endedAt"])
             require(start < end and (not samples or samples[-1][1] == start), "invalid CPU sample timing")
             require(math.isfinite(row["elapsedSec"]) and row["elapsedSec"] > 0, "invalid CPU sample duration")
-            for label in ("jvm", "postgres"):
+            for label in ("jvm", "postgres", *(("pressure",) if "pressure" in row else ())):
                 sample = row[label]
                 require(math.isfinite(sample["cpuSec"]) and sample["cpuSec"] >= 0, "invalid process CPU delta")
                 require(all(type(sample[key]) is int and sample[key] >= 0 for key in ("started", "exited")),
                         "invalid process turnover")
             samples.append((start, end, row))
     require(samples, "missing CPU samples")
+    require(all(("pressure" in row) == ("pressure" in samples[0][2]) for _, _, row in samples),
+            "CPU pressure samples are inconsistent")
     return samples
 
 
@@ -100,7 +104,8 @@ def summarize_cpu(samples, start, end, interval):
     rows = [row for left, right, row in samples if start <= left and right <= end and row["elapsedSec"] <= 2.5 * interval]
     seconds = sum(row["elapsedSec"] for row in rows)
     require(seconds > 0, "no CPU samples within the measurement phase")
+    labels = ("jvm", "postgres", "pressure") if "pressure" in rows[0] else ("jvm", "postgres")
     return {"samples": len(rows), "sampledSeconds": seconds, "fractionCovered": seconds / (end - start).total_seconds(),
             **{label: {"meanCores": sum(row[label]["cpuSec"] for row in rows) / seconds,
                        "started": sum(row[label]["started"] for row in rows),
-                       "exited": sum(row[label]["exited"] for row in rows)} for label in ("jvm", "postgres")}}
+                       "exited": sum(row[label]["exited"] for row in rows)} for label in labels}}

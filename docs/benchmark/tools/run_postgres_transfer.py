@@ -14,6 +14,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from benchmark_cpu import run_sampled
+from cpu_pressure import cpu_pressure
 from validate_episodes import read_json, require
 
 
@@ -21,11 +22,18 @@ def now():
     return datetime.now(timezone.utc).isoformat()
 
 
-def run(plan_path, output):
+def run(plan_path, output, *, trial=None):
     repo = Path(__file__).resolve().parents[3]
     plan_path, output = Path(plan_path).resolve(), Path(output).resolve()
     plan = read_json(plan_path)
     require(plan["protocolVersion"] == 1 and plan["properties"]["bench.db.real"] is True, "expected a PostgreSQL protocol")
+    workers = 0
+    if trial is not None or "blocks" in plan:
+        require(trial is not None and "blocks" in plan, "run the CPU pressure study to execute its frozen trial order")
+        block, position = trial
+        mode, workers = plan["blocks"][block - 1][position - 1]
+        plan["modes"], plan["repeats"] = [mode], 1
+        require("cpuSamplingSec" in plan, "CPU pressure requires process sampling")
     require(not output.is_relative_to(repo), "use an output directory outside the repository")
     require(not subprocess.check_output(["git", "status", "--porcelain"], cwd=repo).strip(), "working tree must be clean")
     model = (repo / plan["model"]).resolve()
@@ -55,6 +63,8 @@ def run(plan_path, output):
                  "startedAt": now(), "status": "running"}
     if "cpuSamplingSec" in plan:
         execution["cpuSamplingSec"] = plan["cpuSamplingSec"]
+    if trial is not None:
+        execution["trial"] = {"block": block, "position": position, "mode": mode, "cpuWorkers": workers}
     (output / "execution.json").write_text(json.dumps(execution, indent=2) + "\n")
     startup_attempted, finished = False, False
     try:
@@ -90,7 +100,10 @@ def run(plan_path, output):
             command = [*prefix, "java", *flags, "-cp", classpath, "com.iasr.benchmark.BenchmarkRunner"]
             if "cpuSamplingSec" in plan:
                 postgres_pid = int((data / "postmaster.pid").read_text().splitlines()[0])
-                run_sampled(command, repo, log, output / "cpu.jsonl", postgres_pid, plan["cpuSamplingSec"])
+                with cpu_pressure(workers) as pressure_pid:
+                    run_sampled(command, repo, log, output / "cpu.jsonl", postgres_pid, plan["cpuSamplingSec"], pressure_pid)
+                if trial is not None:
+                    execution["cpuPressureStopped"] = True
             else:
                 subprocess.run(command, cwd=repo, stdout=log, stderr=subprocess.STDOUT, check=True)
         finished = True

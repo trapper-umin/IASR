@@ -1,0 +1,132 @@
+{
+  "protocolVersion": 1,
+  "purpose": "held_out_postgresql_cpu_pressure",
+  "model": "docs/benchmark/models/fqi-postgres-joint-pilot-2026-11-09/model.json",
+  "modelSha256": "3fe3abdff980972971e2997e85f931cdb042a82e4455d15a146abd3e955108f7",
+  "postgresVersion": "postgres (PostgreSQL) 17.10 (Homebrew)",
+  "calibration": {
+    "file": "../postgres-transfer-2026-11-09/calibration.csv",
+    "sha256": "eac04cddecbc894179bd2238e90bb5e165c1f7d603e9e05a0464307dda3a1858"
+  },
+  "scenarios": [
+    "steady"
+  ],
+  "modes": [
+    "adaptive",
+    "learned"
+  ],
+  "repeats": 1,
+  "orderSeed": 20261115,
+  "properties": {
+    "bench.db.real": true,
+    "bench.db.serviceMs": 16,
+    "bench.db.rowsPerMs": 20000,
+    "bench.degradedFactor": 2.25,
+    "bench.loadScale": 0.6,
+    "bench.durationScale": 0.7,
+    "bench.poolSize": 12,
+    "bench.poolMin": 2,
+    "bench.poolMax": 16,
+    "bench.initialLimit": 10,
+    "bench.sloMs": 150,
+    "bench.poolPeriod": 5,
+    "bench.inferenceBudgetMs": 20,
+    "bench.allowPrototype": true
+  },
+  "analysis": {
+    "primary": [
+      "goodputRps",
+      "p95Ms"
+    ],
+    "secondary": [
+      "p99Ms",
+      "sloBreachPercent",
+      "rejectionRatePercent",
+      "failureRatePercent"
+    ],
+    "minCpuCoverage": 0.8,
+    "minPressureCores": 5.0
+  },
+  "reservedEvaluationGroups": [
+    "269bf4da65f403b54fe1cdf16db475916392a4c7bd724a81d4fba1f3367864d8",
+    "d628b568aa91034ad198da060e12d30c85f7f0bdc19ec604d91ba8fc49b81dea",
+    "ffc9fd6c3ce27d2457d721052dc0a49689a8ccbd0c7342915aa5383cf07011a8",
+    "5683bef86b980de22b12a96fe1b2f2dfadc7dc26247f4084f2f41641bec95fea"
+  ],
+  "cpuSamplingSec": 1.0,
+  "pressureWorkers": 8,
+  "blocks": [
+    [
+      [
+        "adaptive",
+        0
+      ],
+      [
+        "learned",
+        0
+      ],
+      [
+        "learned",
+        8
+      ],
+      [
+        "adaptive",
+        8
+      ]
+    ],
+    [
+      [
+        "learned",
+        0
+      ],
+      [
+        "adaptive",
+        8
+      ],
+      [
+        "adaptive",
+        0
+      ],
+      [
+        "learned",
+        8
+      ]
+    ],
+    [
+      [
+        "adaptive",
+        8
+      ],
+      [
+        "learned",
+        8
+      ],
+      [
+        "learned",
+        0
+      ],
+      [
+        "adaptive",
+        0
+      ]
+    ],
+    [
+      [
+        "learned",
+        8
+      ],
+      [
+        "adaptive",
+        0
+      ],
+      [
+        "adaptive",
+        8
+      ],
+      [
+        "learned",
+        0
+      ]
+    ]
+  ]
+}
