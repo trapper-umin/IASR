@@ -1,0 +1,114 @@
+{
+  "fullActions": {
+    "fallbackActions": {
+      "-1,0": 1,
+      "0,0": 3,
+      "1,1": 1
+    },
+    "fallbackReasons": {
+      "learned_fallback_invalid_observation": 1,
+      "learned_fallback_no_empirical_support": 1,
+      "learned_fallback_short_history": 3
+    },
+    "modelActions": {
+      "-1,0": 7,
+      "-1,1": 1,
+      "0,-1": 3,
+      "0,0": 29,
+      "0,1": 1,
+      "1,0": 7
+    },
+    "modelDecisions": 48,
+    "modelLimitChanges": 15,
+    "modelPoolChanges": 5,
+    "modelSimultaneousChanges": 1
+  },
+  "integrity": {
+    "details": [
+      {
+        "distinctAppliedChanges": 7,
+        "episodeId": "spike/learned/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 53,
+        "sourceDirty": false
+      }
+    ],
+    "episodes": 1,
+    "measurementTransitions": 43,
+    "records": 53
+  },
+  "measuredWindows": 44,
+  "measurementActions": {
+    "fallbackActions": {
+      "1,1": 1
+    },
+    "fallbackReasons": {
+      "learned_fallback_no_empirical_support": 1
+    },
+    "modelActions": {
+      "-1,0": 7,
+      "-1,1": 1,
+      "0,-1": 3,
+      "0,0": 27,
+      "0,1": 1,
+      "1,0": 4
+    },
+    "modelDecisions": 43,
+    "modelLimitChanges": 12,
+    "modelPoolChanges": 5,
+    "modelSimultaneousChanges": 1
+  },
+  "modelSha256": "d13557458a62b7ec5991b83f7752f5e3ed1fe4dfaa6d69c570285b77679ea2b4",
+  "performanceEstablished": false,
+  "replay": [
+    {
+      "counts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 1,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 48,
+        "matched_model_decisions": 48,
+        "matched_support_fallbacks": 1,
+        "unreplayable_initial_history": 3
+      },
+      "episodeId": "spike/learned/1",
+      "inference": {
+        "decisions": 53,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 49,
+        "maxInferenceMs": 2.734709,
+        "meanInferenceMs": 0.27990906122448983,
+        "modelDecisions": 48
+      },
+      "scenario": "spike"
+    }
+  ],
+  "result": {
+    "clientTimeouts": 0,
+    "dispatched": 6598,
+    "durationMs": 45000,
+    "failureRatePercent": 0.0,
+    "goodputRps": 85.7,
+    "maxMs": 840.0,
+    "mode": "learned",
+    "otherFailures": 0,
+    "p50Ms": 138.0,
+    "p95Ms": 169.0,
+    "p99Ms": 181.0,
+    "rejected429": 2741,
+    "rejectionRatePercent": 41.5,
+    "scenario": "spike",
+    "serverErrors": 0,
+    "sloBreachPercent": 14.5,
+    "succeeded": 3857
+  },
+  "source": {
+    "commit": "ddc0f7a602aadb7950b78035b7e021b23cbc4b53",
+    "dirty": false
+  }
+}

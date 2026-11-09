@@ -1,0 +1,12 @@
+
+=== spike / learned ===
+2026-11-09T12:00:12.717+03:00  WARN 27164 --- [-auto-1-exec-21] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=8, inflight=8, queue=24)
+2026-11-09T12:00:17.729+03:00  WARN 27164 --- [o-auto-1-exec-7] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 633 request(s) rejected in the last 5000 ms (limit=6, inflight=6, queue=24)
+2026-11-09T12:00:22.743+03:00  WARN 27164 --- [-auto-1-exec-31] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 746 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=24)
+2026-11-09T12:00:27.746+03:00  WARN 27164 --- [o-auto-1-exec-8] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 665 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=24)
+2026-11-09T12:00:33.006+03:00  WARN 27164 --- [-auto-1-exec-16] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 654 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=7)
+2026-11-09T12:00:47.128+03:00  WARN 27164 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-1-Acceptor] did not stop cleanly
+   [1/1] goodput=85,7 rps  p95=169,0 ms  p99=181,0 ms  429=41,5%  hard-fail=0,0%
+
+Report written to /private/tmp/iasr-postgres-development-smoke-20261109
+All repetitions saved to /private/tmp/iasr-postgres-development-smoke-20261109/episodes/d76d8285-f3c9-413f-8424-c39d2a81d10e
