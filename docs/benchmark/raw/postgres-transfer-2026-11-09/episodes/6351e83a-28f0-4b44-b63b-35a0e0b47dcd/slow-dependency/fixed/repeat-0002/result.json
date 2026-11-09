@@ -1,0 +1,19 @@
+{
+  "mode" : "fixed",
+  "scenario" : "slow-dependency",
+  "durationMs" : 45000,
+  "dispatched" : 3376,
+  "succeeded" : 1467,
+  "rejected429" : 1908,
+  "serverErrors" : 0,
+  "clientTimeouts" : 1,
+  "otherFailures" : 0,
+  "goodputRps" : 32.6,
+  "p50Ms" : 549.0,
+  "p95Ms" : 2020.0,
+  "p99Ms" : 2624.0,
+  "maxMs" : 2935.0,
+  "sloBreachPercent" : 93.0,
+  "rejectionRatePercent" : 56.5,
+  "failureRatePercent" : 0.0
+}

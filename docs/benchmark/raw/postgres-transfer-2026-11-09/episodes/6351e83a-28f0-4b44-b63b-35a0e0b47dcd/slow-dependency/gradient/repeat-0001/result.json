@@ -1,0 +1,19 @@
+{
+  "mode" : "gradient",
+  "scenario" : "slow-dependency",
+  "durationMs" : 45000,
+  "dispatched" : 3376,
+  "succeeded" : 2698,
+  "rejected429" : 678,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 60.0,
+  "p50Ms" : 53.0,
+  "p95Ms" : 500.0,
+  "p99Ms" : 593.0,
+  "maxMs" : 1150.0,
+  "sloBreachPercent" : 33.8,
+  "rejectionRatePercent" : 20.1,
+  "failureRatePercent" : 0.0
+}

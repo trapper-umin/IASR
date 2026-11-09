@@ -1,0 +1,1568 @@
+{
+  "analysisVersion": 1,
+  "cases": [
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/gradient/repeat-0001",
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 20,
+        "hikari_max_pool": 4
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 6,
+          "directionReversals": 0,
+          "maxTarget": 20,
+          "minTarget": 12,
+          "totalVariation": 8
+        },
+        "hikari_max_pool": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 4,
+          "minTarget": 4,
+          "totalVariation": 0
+        }
+      },
+      "mode": "gradient",
+      "recovery": {
+        "censored": false,
+        "seconds": 4.786236
+      },
+      "repetition": 1,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 60.0,
+        "maxMs": 1150.0,
+        "mode": "gradient",
+        "otherFailures": 0,
+        "p50Ms": 53.0,
+        "p95Ms": 500.0,
+        "p99Ms": 593.0,
+        "rejected429": 678,
+        "rejectionRatePercent": 20.1,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 33.8,
+        "succeeded": 2698
+      },
+      "startedAt": "2026-11-09T08:01:55.651259Z"
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/fixed/repeat-0001",
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 20,
+        "hikari_max_pool": 4
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 20,
+          "minTarget": 20,
+          "totalVariation": 0
+        },
+        "hikari_max_pool": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 4,
+          "minTarget": 4,
+          "totalVariation": 0
+        }
+      },
+      "mode": "fixed",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.932778,
+        "seconds": null
+      },
+      "repetition": 1,
+      "result": {
+        "clientTimeouts": 20,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.6,
+        "goodputRps": 46.7,
+        "maxMs": 2536.0,
+        "mode": "fixed",
+        "otherFailures": 0,
+        "p50Ms": 60.0,
+        "p95Ms": 1062.0,
+        "p99Ms": 1604.0,
+        "rejected429": 1256,
+        "rejectionRatePercent": 37.2,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 41.1,
+        "succeeded": 2100
+      },
+      "startedAt": "2026-11-09T08:02:48.648411Z"
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/learned/repeat-0001",
+      "inference": {
+        "decisions": 53,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 25,
+          "short_history": 3
+        },
+        "inferenceAttempts": 49,
+        "maxInferenceMs": 1.721375,
+        "meanInferenceMs": 0.28396179591836734,
+        "modelDecisions": 24
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "-1,0": 2,
+          "-2,0": 3,
+          "-2,1": 1,
+          "-3,0": 1,
+          "0,-1": 1,
+          "0,0": 19,
+          "0,1": 1,
+          "1,0": 1
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_no_empirical_support": 25,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,0": 4,
+          "0,-1": 1,
+          "0,0": 15,
+          "0,1": 2,
+          "1,0": 2
+        },
+        "modelDecisions": 24,
+        "modelLimitChanges": 6,
+        "modelPoolChanges": 3,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {
+          "-1,0": 2,
+          "-2,0": 3,
+          "-2,1": 1,
+          "0,-1": 1,
+          "0,0": 16,
+          "0,1": 1,
+          "1,0": 1
+        },
+        "fallbackReasons": {
+          "learned_fallback_no_empirical_support": 25
+        },
+        "modelActions": {
+          "-1,0": 4,
+          "0,-1": 1,
+          "0,0": 12,
+          "0,1": 2
+        },
+        "modelDecisions": 19,
+        "modelLimitChanges": 4,
+        "modelPoolChanges": 3,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 18,
+        "hikari_max_pool": 4
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 11,
+          "directionReversals": 1,
+          "maxTarget": 19,
+          "minTarget": 5,
+          "totalVariation": 15
+        },
+        "hikari_max_pool": {
+          "changes": 6,
+          "directionReversals": 2,
+          "maxTarget": 7,
+          "minTarget": 3,
+          "totalVariation": 6
+        }
+      },
+      "mode": "learned",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.935178,
+        "seconds": null
+      },
+      "repetition": 1,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 25,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 24,
+        "matched_model_decisions": 24,
+        "matched_support_fallbacks": 25,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 32.3,
+        "maxMs": 2717.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 202.0,
+        "p95Ms": 1353.0,
+        "p99Ms": 2062.0,
+        "rejected429": 1921,
+        "rejectionRatePercent": 56.9,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 70.8,
+        "succeeded": 1455
+      },
+      "startedAt": "2026-11-09T08:03:40.566286Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 24,
+          "noLegalActionWithBinCoverage": 21,
+          "outsideRadius": 4
+        },
+        "unsupportedBins": {
+          "comfortable/no_pending/binding/limit_tick": 3,
+          "comfortable/pending/binding/limit_tick": 1,
+          "over_slo/no_pending/binding/limit_tick": 11,
+          "over_slo/no_pending/binding/pool_tick": 4,
+          "over_slo/no_pending/headroom/limit_tick": 1,
+          "over_slo/pending/binding/limit_tick": 3,
+          "over_slo/pending/binding/pool_tick": 1,
+          "over_slo/pending/headroom/pool_tick": 1
+        }
+      }
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/adaptive/repeat-0001",
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 20,
+        "hikari_max_pool": 4
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 12,
+          "directionReversals": 2,
+          "maxTarget": 20,
+          "minTarget": 5,
+          "totalVariation": 17
+        },
+        "hikari_max_pool": {
+          "changes": 5,
+          "directionReversals": 1,
+          "maxTarget": 8,
+          "minTarget": 4,
+          "totalVariation": 5
+        }
+      },
+      "mode": "adaptive",
+      "recovery": {
+        "censored": false,
+        "seconds": 4.934582
+      },
+      "repetition": 1,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 45.8,
+        "maxMs": 2181.0,
+        "mode": "adaptive",
+        "otherFailures": 0,
+        "p50Ms": 181.0,
+        "p95Ms": 530.0,
+        "p99Ms": 1107.0,
+        "rejected429": 1313,
+        "rejectionRatePercent": 38.9,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 51.6,
+        "succeeded": 2063
+      },
+      "startedAt": "2026-11-09T08:04:33.486546Z"
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/fixed/repeat-0002",
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 20,
+        "hikari_max_pool": 4
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 20,
+          "minTarget": 20,
+          "totalVariation": 0
+        },
+        "hikari_max_pool": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 4,
+          "minTarget": 4,
+          "totalVariation": 0
+        }
+      },
+      "mode": "fixed",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.888055,
+        "seconds": null
+      },
+      "repetition": 2,
+      "result": {
+        "clientTimeouts": 1,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 32.6,
+        "maxMs": 2935.0,
+        "mode": "fixed",
+        "otherFailures": 0,
+        "p50Ms": 549.0,
+        "p95Ms": 2020.0,
+        "p99Ms": 2624.0,
+        "rejected429": 1908,
+        "rejectionRatePercent": 56.5,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 93.0,
+        "succeeded": 1467
+      },
+      "startedAt": "2026-11-09T08:05:24.945021Z"
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/learned/repeat-0002",
+      "inference": {
+        "decisions": 55,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 43,
+          "short_history": 3
+        },
+        "inferenceAttempts": 51,
+        "maxInferenceMs": 1.032167,
+        "meanInferenceMs": 0.17800001960784315,
+        "modelDecisions": 8
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "-1,0": 2,
+          "-2,0": 4,
+          "-2,1": 1,
+          "-3,1": 1,
+          "0,-1": 3,
+          "0,0": 36
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_no_empirical_support": 43,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "0,0": 6,
+          "0,1": 2
+        },
+        "modelDecisions": 8,
+        "modelLimitChanges": 0,
+        "modelPoolChanges": 2,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {
+          "-1,0": 2,
+          "-2,0": 2,
+          "-3,1": 1,
+          "0,-1": 3,
+          "0,0": 31
+        },
+        "fallbackReasons": {
+          "learned_fallback_no_empirical_support": 39
+        },
+        "modelActions": {
+          "0,0": 4,
+          "0,1": 1
+        },
+        "modelDecisions": 5,
+        "modelLimitChanges": 0,
+        "modelPoolChanges": 1,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 14,
+        "hikari_max_pool": 6
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 5,
+          "directionReversals": 0,
+          "maxTarget": 14,
+          "minTarget": 5,
+          "totalVariation": 9
+        },
+        "hikari_max_pool": {
+          "changes": 5,
+          "directionReversals": 1,
+          "maxTarget": 8,
+          "minTarget": 5,
+          "totalVariation": 5
+        }
+      },
+      "mode": "learned",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.066057,
+        "seconds": null
+      },
+      "repetition": 2,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 43,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 8,
+        "matched_model_decisions": 8,
+        "matched_support_fallbacks": 43,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 27.7,
+        "maxMs": 2320.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 211.0,
+        "p95Ms": 698.0,
+        "p99Ms": 2053.0,
+        "rejected429": 2129,
+        "rejectionRatePercent": 63.1,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 75.7,
+        "succeeded": 1247
+      },
+      "startedAt": "2026-11-09T08:06:16.843993Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 8,
+          "noLegalActionWithBinCoverage": 43
+        },
+        "unsupportedBins": {
+          "comfortable/no_pending/binding/limit_tick": 3,
+          "comfortable/pending/binding/limit_tick": 2,
+          "over_slo/no_pending/binding/limit_tick": 25,
+          "over_slo/no_pending/binding/pool_tick": 7,
+          "over_slo/no_pending/headroom/limit_tick": 5,
+          "over_slo/no_pending/headroom/pool_tick": 1
+        }
+      }
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/adaptive/repeat-0002",
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 15,
+        "hikari_max_pool": 6
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 6,
+          "directionReversals": 0,
+          "maxTarget": 15,
+          "minTarget": 5,
+          "totalVariation": 10
+        },
+        "hikari_max_pool": {
+          "changes": 4,
+          "directionReversals": 1,
+          "maxTarget": 8,
+          "minTarget": 6,
+          "totalVariation": 4
+        }
+      },
+      "mode": "adaptive",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.503552,
+        "seconds": null
+      },
+      "repetition": 2,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 25.8,
+        "maxMs": 1846.0,
+        "mode": "adaptive",
+        "otherFailures": 0,
+        "p50Ms": 195.0,
+        "p95Ms": 1227.0,
+        "p99Ms": 1665.0,
+        "rejected429": 2213,
+        "rejectionRatePercent": 65.6,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 60.8,
+        "succeeded": 1163
+      },
+      "startedAt": "2026-11-09T08:07:11.735505Z"
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/gradient/repeat-0002",
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 19,
+        "hikari_max_pool": 4
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 9,
+          "directionReversals": 0,
+          "maxTarget": 18,
+          "minTarget": 7,
+          "totalVariation": 11
+        },
+        "hikari_max_pool": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 4,
+          "minTarget": 4,
+          "totalVariation": 0
+        }
+      },
+      "mode": "gradient",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.884908,
+        "seconds": null
+      },
+      "repetition": 2,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 21.2,
+        "maxMs": 2488.0,
+        "mode": "gradient",
+        "otherFailures": 0,
+        "p50Ms": 387.0,
+        "p95Ms": 1850.0,
+        "p99Ms": 2276.0,
+        "rejected429": 2423,
+        "rejectionRatePercent": 71.8,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 97.2,
+        "succeeded": 953
+      },
+      "startedAt": "2026-11-09T08:08:03.448234Z"
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/learned/repeat-0003",
+      "inference": {
+        "decisions": 53,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 28,
+          "short_history": 3
+        },
+        "inferenceAttempts": 49,
+        "maxInferenceMs": 0.550917,
+        "meanInferenceMs": 0.16289887755102042,
+        "modelDecisions": 21
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "-1,0": 2,
+          "-1,1": 1,
+          "-2,0": 2,
+          "0,0": 26,
+          "0,1": 1
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_no_empirical_support": 28,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,-1": 1,
+          "-1,0": 7,
+          "0,-1": 2,
+          "0,0": 9,
+          "0,1": 2
+        },
+        "modelDecisions": 21,
+        "modelLimitChanges": 8,
+        "modelPoolChanges": 5,
+        "modelSimultaneousChanges": 1
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {
+          "-1,0": 2,
+          "-1,1": 1,
+          "0,0": 22,
+          "0,1": 1
+        },
+        "fallbackReasons": {
+          "learned_fallback_no_empirical_support": 26
+        },
+        "modelActions": {
+          "-1,-1": 1,
+          "-1,0": 6,
+          "0,-1": 1,
+          "0,0": 8,
+          "0,1": 2
+        },
+        "modelDecisions": 18,
+        "modelLimitChanges": 7,
+        "modelPoolChanges": 4,
+        "modelSimultaneousChanges": 1
+      },
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 17,
+        "hikari_max_pool": 3
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 10,
+          "directionReversals": 0,
+          "maxTarget": 15,
+          "minTarget": 5,
+          "totalVariation": 10
+        },
+        "hikari_max_pool": {
+          "changes": 6,
+          "directionReversals": 2,
+          "maxTarget": 6,
+          "minTarget": 2,
+          "totalVariation": 6
+        }
+      },
+      "mode": "learned",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.53031,
+        "seconds": null
+      },
+      "repetition": 3,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 28,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 21,
+        "matched_model_decisions": 21,
+        "matched_support_fallbacks": 28,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 23.3,
+        "maxMs": 2435.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 294.0,
+        "p95Ms": 1467.0,
+        "p99Ms": 2005.0,
+        "rejected429": 2327,
+        "rejectionRatePercent": 68.9,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 84.7,
+        "succeeded": 1049
+      },
+      "startedAt": "2026-11-09T08:08:56.205704Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 21,
+          "noLegalActionWithBinCoverage": 24,
+          "outsideRadius": 4
+        },
+        "unsupportedBins": {
+          "comfortable/no_pending/binding/limit_tick": 1,
+          "comfortable/no_pending/binding/pool_tick": 1,
+          "comfortable/pending/binding/limit_tick": 2,
+          "over_slo/no_pending/binding/limit_tick": 16,
+          "over_slo/no_pending/binding/pool_tick": 3,
+          "over_slo/no_pending/headroom/limit_tick": 1,
+          "over_slo/pending/binding/limit_tick": 3,
+          "over_slo/pending/binding/pool_tick": 1
+        }
+      }
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/adaptive/repeat-0003",
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 11,
+        "hikari_max_pool": 6
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 5,
+          "directionReversals": 0,
+          "maxTarget": 11,
+          "minTarget": 5,
+          "totalVariation": 6
+        },
+        "hikari_max_pool": {
+          "changes": 5,
+          "directionReversals": 1,
+          "maxTarget": 8,
+          "minTarget": 5,
+          "totalVariation": 5
+        }
+      },
+      "mode": "adaptive",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.580327,
+        "seconds": null
+      },
+      "repetition": 3,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 23.1,
+        "maxMs": 2078.0,
+        "mode": "adaptive",
+        "otherFailures": 0,
+        "p50Ms": 215.0,
+        "p95Ms": 858.0,
+        "p99Ms": 1954.0,
+        "rejected429": 2337,
+        "rejectionRatePercent": 69.2,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 83.7,
+        "succeeded": 1039
+      },
+      "startedAt": "2026-11-09T08:09:49.284964Z"
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/gradient/repeat-0003",
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 15,
+        "hikari_max_pool": 4
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 8,
+          "directionReversals": 0,
+          "maxTarget": 15,
+          "minTarget": 7,
+          "totalVariation": 8
+        },
+        "hikari_max_pool": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 4,
+          "minTarget": 4,
+          "totalVariation": 0
+        }
+      },
+      "mode": "gradient",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.835914,
+        "seconds": null
+      },
+      "repetition": 3,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 21.5,
+        "maxMs": 2838.0,
+        "mode": "gradient",
+        "otherFailures": 0,
+        "p50Ms": 336.0,
+        "p95Ms": 1790.0,
+        "p99Ms": 2555.0,
+        "rejected429": 2407,
+        "rejectionRatePercent": 71.3,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 87.4,
+        "succeeded": 969
+      },
+      "startedAt": "2026-11-09T08:10:43.094232Z"
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/fixed/repeat-0003",
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 20,
+        "hikari_max_pool": 4
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 20,
+          "minTarget": 20,
+          "totalVariation": 0
+        },
+        "hikari_max_pool": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 4,
+          "minTarget": 4,
+          "totalVariation": 0
+        }
+      },
+      "mode": "fixed",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.507134,
+        "seconds": null
+      },
+      "repetition": 3,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 22.2,
+        "maxMs": 2973.0,
+        "mode": "fixed",
+        "otherFailures": 0,
+        "p50Ms": 611.0,
+        "p95Ms": 2566.0,
+        "p99Ms": 2821.0,
+        "rejected429": 2379,
+        "rejectionRatePercent": 70.5,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 98.4,
+        "succeeded": 997
+      },
+      "startedAt": "2026-11-09T08:11:37.229412Z"
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/adaptive/repeat-0004",
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 15,
+        "hikari_max_pool": 6
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 6,
+          "directionReversals": 0,
+          "maxTarget": 13,
+          "minTarget": 5,
+          "totalVariation": 8
+        },
+        "hikari_max_pool": {
+          "changes": 5,
+          "directionReversals": 1,
+          "maxTarget": 9,
+          "minTarget": 6,
+          "totalVariation": 5
+        }
+      },
+      "mode": "adaptive",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.832018,
+        "seconds": null
+      },
+      "repetition": 4,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 22.0,
+        "maxMs": 2529.0,
+        "mode": "adaptive",
+        "otherFailures": 0,
+        "p50Ms": 234.0,
+        "p95Ms": 1092.0,
+        "p99Ms": 2192.0,
+        "rejected429": 2387,
+        "rejectionRatePercent": 70.7,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 80.5,
+        "succeeded": 989
+      },
+      "startedAt": "2026-11-09T08:12:29.891497Z"
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/gradient/repeat-0004",
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 17,
+        "hikari_max_pool": 4
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 9,
+          "directionReversals": 0,
+          "maxTarget": 17,
+          "minTarget": 7,
+          "totalVariation": 10
+        },
+        "hikari_max_pool": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 4,
+          "minTarget": 4,
+          "totalVariation": 0
+        }
+      },
+      "mode": "gradient",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.937724,
+        "seconds": null
+      },
+      "repetition": 4,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 25.6,
+        "maxMs": 2168.0,
+        "mode": "gradient",
+        "otherFailures": 0,
+        "p50Ms": 316.0,
+        "p95Ms": 1060.0,
+        "p99Ms": 2044.0,
+        "rejected429": 2226,
+        "rejectionRatePercent": 65.9,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 88.0,
+        "succeeded": 1150
+      },
+      "startedAt": "2026-11-09T08:13:23.423416Z"
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/fixed/repeat-0004",
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 20,
+        "hikari_max_pool": 4
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 20,
+          "minTarget": 20,
+          "totalVariation": 0
+        },
+        "hikari_max_pool": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 4,
+          "minTarget": 4,
+          "totalVariation": 0
+        }
+      },
+      "mode": "fixed",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.368994,
+        "seconds": null
+      },
+      "repetition": 4,
+      "result": {
+        "clientTimeouts": 15,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.4,
+        "goodputRps": 23.6,
+        "maxMs": 2900.0,
+        "mode": "fixed",
+        "otherFailures": 0,
+        "p50Ms": 611.0,
+        "p95Ms": 2261.0,
+        "p99Ms": 2736.0,
+        "rejected429": 2297,
+        "rejectionRatePercent": 68.0,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 100.0,
+        "succeeded": 1064
+      },
+      "startedAt": "2026-11-09T08:14:16.375773Z"
+    },
+    {
+      "episodePath": "episodes/6351e83a-28f0-4b44-b63b-35a0e0b47dcd/slow-dependency/learned/repeat-0004",
+      "inference": {
+        "decisions": 53,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 40,
+          "short_history": 3
+        },
+        "inferenceAttempts": 49,
+        "maxInferenceMs": 0.295709,
+        "meanInferenceMs": 0.11367514285714285,
+        "modelDecisions": 9
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "-1,0": 5,
+          "-2,0": 2,
+          "-2,1": 2,
+          "0,-1": 2,
+          "0,0": 32,
+          "0,1": 1
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_no_empirical_support": 40,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,-1": 1,
+          "-1,0": 1,
+          "0,0": 6,
+          "0,1": 1
+        },
+        "modelDecisions": 9,
+        "modelLimitChanges": 2,
+        "modelPoolChanges": 2,
+        "modelSimultaneousChanges": 1
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {
+          "-1,0": 5,
+          "-2,1": 1,
+          "0,-1": 2,
+          "0,0": 29,
+          "0,1": 1
+        },
+        "fallbackReasons": {
+          "learned_fallback_no_empirical_support": 38
+        },
+        "modelActions": {
+          "-1,0": 1,
+          "0,0": 4,
+          "0,1": 1
+        },
+        "modelDecisions": 6,
+        "modelLimitChanges": 1,
+        "modelPoolChanges": 1,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredWindows": 44,
+      "measurementInitialResources": {
+        "concurrency_limit": 15,
+        "hikari_max_pool": 4
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 7,
+          "directionReversals": 0,
+          "maxTarget": 13,
+          "minTarget": 5,
+          "totalVariation": 8
+        },
+        "hikari_max_pool": {
+          "changes": 5,
+          "directionReversals": 1,
+          "maxTarget": 7,
+          "minTarget": 4,
+          "totalVariation": 5
+        }
+      },
+      "mode": "learned",
+      "recovery": {
+        "censored": true,
+        "observedUntilSeconds": 9.448949,
+        "seconds": null
+      },
+      "repetition": 4,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 40,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 9,
+        "matched_model_decisions": 9,
+        "matched_support_fallbacks": 40,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 3376,
+        "durationMs": 45000,
+        "failureRatePercent": 0.0,
+        "goodputRps": 22.6,
+        "maxMs": 2226.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 284.0,
+        "p95Ms": 1195.0,
+        "p99Ms": 2047.0,
+        "rejected429": 2358,
+        "rejectionRatePercent": 69.8,
+        "scenario": "slow-dependency",
+        "serverErrors": 0,
+        "sloBreachPercent": 77.8,
+        "succeeded": 1018
+      },
+      "startedAt": "2026-11-09T08:15:10.726370Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 9,
+          "noLegalActionWithBinCoverage": 36,
+          "outsideRadius": 4
+        },
+        "unsupportedBins": {
+          "comfortable/no_pending/binding/limit_tick": 3,
+          "comfortable/no_pending/binding/pool_tick": 1,
+          "over_slo/no_pending/binding/limit_tick": 25,
+          "over_slo/no_pending/binding/pool_tick": 5,
+          "over_slo/no_pending/headroom/pool_tick": 1,
+          "over_slo/pending/binding/limit_tick": 3,
+          "over_slo/pending/binding/pool_tick": 1,
+          "over_slo/pending/headroom/limit_tick": 1
+        }
+      }
+    }
+  ],
+  "conditionGroup": "269bf4da65f403b54fe1cdf16db475916392a4c7bd724a81d4fba1f3367864d8",
+  "differenceDirection": "mode_minus_reference",
+  "heldOutConditions": true,
+  "integrity": {
+    "details": [
+      {
+        "distinctAppliedChanges": 8,
+        "episodeId": "slow-dependency/adaptive/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 5,
+        "episodeId": "slow-dependency/adaptive/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "slow-dependency/adaptive/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 54,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "slow-dependency/adaptive/4",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 54,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 1,
+        "episodeId": "slow-dependency/fixed/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 1,
+        "episodeId": "slow-dependency/fixed/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 52,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 1,
+        "episodeId": "slow-dependency/fixed/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 53,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 1,
+        "episodeId": "slow-dependency/fixed/4",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 55,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 3,
+        "episodeId": "slow-dependency/gradient/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 53,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 3,
+        "episodeId": "slow-dependency/gradient/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 53,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 2,
+        "episodeId": "slow-dependency/gradient/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 54,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 3,
+        "episodeId": "slow-dependency/gradient/4",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 53,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "slow-dependency/learned/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 53,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "slow-dependency/learned/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 55,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 6,
+        "episodeId": "slow-dependency/learned/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 53,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 5,
+        "episodeId": "slow-dependency/learned/4",
+        "irregularTransitions": 0,
+        "measurementTransitions": 43,
+        "records": 53,
+        "sourceDirty": false
+      }
+    ],
+    "episodes": 16,
+    "measurementTransitions": 688,
+    "records": 851
+  },
+  "intervalMethod": "paired_t_95_unadjusted_exploratory",
+  "modelSha256": "2f4e3907b48616caba5d94d9682a47c8e0a04c2fea922ad2e468398851910aff",
+  "observedModeOrder": [
+    [
+      "gradient",
+      "fixed",
+      "learned",
+      "adaptive"
+    ],
+    [
+      "fixed",
+      "learned",
+      "adaptive",
+      "gradient"
+    ],
+    [
+      "learned",
+      "adaptive",
+      "gradient",
+      "fixed"
+    ],
+    [
+      "adaptive",
+      "gradient",
+      "fixed",
+      "learned"
+    ]
+  ],
+  "pairedDifferences": {
+    "fixed": {
+      "failureRatePercent": {
+        "ci95": [
+          -0.22736694579263939,
+          0.7273669457926394
+        ],
+        "deltas": [
+          0.6,
+          0.0,
+          0.0,
+          0.4
+        ],
+        "mean": 0.25
+      },
+      "goodputRps": {
+        "ci95": [
+          -3.1598691036600592,
+          7.35986910366006
+        ],
+        "deltas": [
+          0.9,
+          6.8,
+          -0.9,
+          1.6
+        ],
+        "mean": 2.1
+      },
+      "p95Ms": {
+        "ci95": [
+          238.3539816259854,
+          1862.6460183740146
+        ],
+        "deltas": [
+          532.0,
+          793.0,
+          1708.0,
+          1169.0
+        ],
+        "mean": 1050.5
+      },
+      "p99Ms": {
+        "ci95": [
+          349.9707622051267,
+          1083.5292377948733
+        ],
+        "deltas": [
+          497.0,
+          959.0,
+          867.0,
+          544.0
+        ],
+        "mean": 716.75
+      },
+      "rejectionRatePercent": {
+        "ci95": [
+          -10.014517924280085,
+          3.9145179242800863
+        ],
+        "deltas": [
+          -1.7,
+          -9.1,
+          1.3,
+          -2.7
+        ],
+        "mean": -3.05
+      },
+      "sloBreachPercent": {
+        "ci95": [
+          -14.522669418552695,
+          42.4726694185527
+        ],
+        "deltas": [
+          -10.5,
+          32.2,
+          14.7,
+          19.5
+        ],
+        "mean": 13.975000000000001
+      }
+    },
+    "gradient": {
+      "failureRatePercent": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "deltas": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean": 0.0
+      },
+      "goodputRps": {
+        "ci95": [
+          -10.243413340903409,
+          16.04341334090341
+        ],
+        "deltas": [
+          14.2,
+          -4.6,
+          -1.6,
+          3.6
+        ],
+        "mean": 2.9
+      },
+      "p95Ms": {
+        "ci95": [
+          -396.1601462575521,
+          1142.6601462575522
+        ],
+        "deltas": [
+          -30.0,
+          623.0,
+          932.0,
+          -32.0
+        ],
+        "mean": 373.25
+      },
+      "p99Ms": {
+        "ci95": [
+          -755.5703618879943,
+          1030.5703618879943
+        ],
+        "deltas": [
+          -514.0,
+          611.0,
+          601.0,
+          -148.0
+        ],
+        "mean": 137.5
+      },
+      "rejectionRatePercent": {
+        "ci95": [
+          -21.275514668362323,
+          13.625514668362324
+        ],
+        "deltas": [
+          -18.8,
+          6.2,
+          2.1,
+          -4.8
+        ],
+        "mean": -3.825
+      },
+      "sloBreachPercent": {
+        "ci95": [
+          -28.00881711431209,
+          42.908817114312086
+        ],
+        "deltas": [
+          -17.8,
+          36.4,
+          3.7,
+          7.5
+        ],
+        "mean": 7.449999999999999
+      }
+    },
+    "learned": {
+      "failureRatePercent": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "deltas": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean": 0.0
+      },
+      "goodputRps": {
+        "ci95": [
+          -14.214857144696957,
+          8.814857144696955
+        ],
+        "deltas": [
+          -13.5,
+          1.9,
+          0.2,
+          0.6
+        ],
+        "mean": -2.7
+      },
+      "p95Ms": {
+        "ci95": [
+          -705.7284111002164,
+          1208.7284111002164
+        ],
+        "deltas": [
+          823.0,
+          -529.0,
+          609.0,
+          103.0
+        ],
+        "mean": 251.5
+      },
+      "p99Ms": {
+        "ci95": [
+          -454.29178530113415,
+          1078.791785301134
+        ],
+        "deltas": [
+          955.0,
+          388.0,
+          51.0,
+          -145.0
+        ],
+        "mean": 312.25
+      },
+      "rejectionRatePercent": {
+        "ci95": [
+          -11.798431017798894,
+          18.948431017798896
+        ],
+        "deltas": [
+          18.0,
+          -2.5,
+          -0.3,
+          -0.9
+        ],
+        "mean": 3.575
+      },
+      "sloBreachPercent": {
+        "ci95": [
+          -8.752448015903786,
+          24.952448015903784
+        ],
+        "deltas": [
+          19.2,
+          14.9,
+          1.0,
+          -2.7
+        ],
+        "mean": 8.1
+      }
+    }
+  },
+  "protocolSha256": "b9555e4b8048c0bad438d44542c18675011d82335966ace2939c4382d7aa15e4",
+  "reference": "adaptive",
+  "scenario": "slow-dependency",
+  "sourceCommit": "fea86bbe23aa0eb7407ebc178ebd18f4b14c83fb"
+}
