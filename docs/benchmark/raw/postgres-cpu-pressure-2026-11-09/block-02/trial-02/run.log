@@ -1,0 +1,6 @@
+
+=== steady / adaptive ===
+   [1/1] goodput=72,0 rps  p95=72,0 ms  p99=83,0 ms  429=0,0%  hard-fail=0,0%
+
+Report written to /private/tmp/iasr-pressure.rCIldE/episodes/block-02/trial-02
+All repetitions saved to /private/tmp/iasr-pressure.rCIldE/episodes/block-02/trial-02/episodes/8fa94e4b-67c0-41d8-8e96-6b176974dff9

@@ -1,0 +1,8 @@
+
+=== steady / learned ===
+2026-11-09T20:14:59.719+03:00  WARN 45553 --- [-auto-1-exec-13] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 3 request(s) rejected in the last 5000 ms (limit=12, inflight=12, queue=7)
+2026-11-09T20:15:18.910+03:00  WARN 45553 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-1-Acceptor] did not stop cleanly
+   [1/1] goodput=71,3 rps  p95=35,0 ms  p99=152,0 ms  429=1,1%  hard-fail=0,0%
+
+Report written to /private/tmp/iasr-pressure.rCIldE/episodes/block-02/trial-01
+All repetitions saved to /private/tmp/iasr-pressure.rCIldE/episodes/block-02/trial-01/episodes/b4e72e72-dabf-4bb1-b24c-2a2cb1666eb4

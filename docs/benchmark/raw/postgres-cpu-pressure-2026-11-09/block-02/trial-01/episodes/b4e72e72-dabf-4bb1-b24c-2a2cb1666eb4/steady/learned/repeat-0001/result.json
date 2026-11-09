@@ -1,0 +1,19 @@
+{
+  "mode" : "learned",
+  "scenario" : "steady",
+  "durationMs" : 21000,
+  "dispatched" : 1513,
+  "succeeded" : 1497,
+  "rejected429" : 16,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 71.3,
+  "p50Ms" : 31.0,
+  "p95Ms" : 35.0,
+  "p99Ms" : 152.0,
+  "maxMs" : 499.0,
+  "sloBreachPercent" : 1.0,
+  "rejectionRatePercent" : 1.1,
+  "failureRatePercent" : 0.0
+}

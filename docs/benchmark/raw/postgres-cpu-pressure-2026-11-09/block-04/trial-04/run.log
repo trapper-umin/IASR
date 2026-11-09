@@ -1,0 +1,12 @@
+
+=== steady / learned ===
+2026-11-09T20:20:30.510+03:00  WARN 46487 --- [o-auto-1-exec-2] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 24 request(s) rejected in the last 5000 ms (limit=10, inflight=10, queue=6)
+2026-11-09T20:20:35.522+03:00  WARN 46487 --- [-auto-1-exec-12] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 52 request(s) rejected in the last 5000 ms (limit=11, inflight=11, queue=7)
+2026-11-09T20:20:41.107+03:00  WARN 46487 --- [-auto-1-exec-15] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 135 request(s) rejected in the last 5000 ms (limit=11, inflight=11, queue=7)
+2026-11-09T20:20:46.535+03:00  WARN 46487 --- [-auto-1-exec-14] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 109 request(s) rejected in the last 5000 ms (limit=11, inflight=11, queue=6)
+2026-11-09T20:20:51.759+03:00  WARN 46487 --- [-auto-1-exec-15] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 122 request(s) rejected in the last 5000 ms (limit=12, inflight=12, queue=7)
+2026-11-09T20:20:54.829+03:00  WARN 46487 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-1-Acceptor] did not stop cleanly
+   [1/1] goodput=52,1 rps  p95=457,0 ms  p99=1791,0 ms  429=27,7%  hard-fail=0,0%
+
+Report written to /private/tmp/iasr-pressure.rCIldE/episodes/block-04/trial-04
+All repetitions saved to /private/tmp/iasr-pressure.rCIldE/episodes/block-04/trial-04/episodes/f5f8db20-052c-415a-b2bb-55418518805d

@@ -1,0 +1,175 @@
+{
+  "initialResources" : {
+    "concurrency_limit" : 10,
+    "hikari_max_pool" : 12
+  },
+  "configuration" : {
+    "iasr" : {
+      "enabled" : true,
+      "applyActions" : true,
+      "datasetLoggingEnabled" : true,
+      "sloLatencyMs" : 150.0,
+      "windowMs" : 1000,
+      "concurrency" : {
+        "initialLimit" : 10,
+        "minLimit" : 5,
+        "maxLimit" : 400,
+        "maxStep" : 20,
+        "maxStepDown" : 50,
+        "cooldownTicks" : 1,
+        "acquireTimeoutMs" : 100,
+        "blockIncreaseOnSloViolation" : true
+      },
+      "hikari" : {
+        "minPoolSize" : 2,
+        "maxPoolSize" : 16,
+        "maxStep" : 2,
+        "cooldownTicks" : 2,
+        "blockIncreaseOnSloViolation" : false
+      },
+      "controller" : {
+        "comfortFactor" : 0.7,
+        "concurrencyIncreaseStep" : 1,
+        "concurrencyDecreaseFactor" : 0.85,
+        "errorRateThreshold" : 0.01,
+        "timeoutRateThreshold" : 0.005,
+        "hikariStep" : 1,
+        "hikariPendingThreshold" : 0.0,
+        "hikariAcquireTimeThresholdMs" : 10.0,
+        "utilizationGate" : 0.9,
+        "sloTargetHeadroom" : 0.0,
+        "minGradient" : 0.9,
+        "hikariIdleShrinkThreshold" : 2.0
+      }
+    },
+    "controllerClass" : "com.iasr.policy.LearnedController",
+    "guardrails" : [ {
+      "actuatorName" : "concurrency_limit",
+      "minValue" : 5,
+      "maxValue" : 400,
+      "maxStep" : 20,
+      "cooldownTicks" : 1,
+      "blockIncreaseOnSloViolation" : true,
+      "maxStepDown" : 50
+    }, {
+      "actuatorName" : "hikari_max_pool",
+      "minValue" : 2,
+      "maxValue" : 16,
+      "maxStep" : 2,
+      "cooldownTicks" : 2,
+      "blockIncreaseOnSloViolation" : false,
+      "maxStepDown" : 0
+    } ],
+    "learned" : {
+      "poolPeriodTicks" : 5,
+      "algorithm" : "masked_fqi_action_forests",
+      "inferenceBudgetMs" : 20.0,
+      "deploymentAllowed" : false,
+      "featureVersion" : 1,
+      "treeCount" : 288,
+      "modelSha256" : "3fe3abdff980972971e2997e85f931cdb042a82e4455d15a146abd3e955108f7",
+      "modelVersion" : 2
+    },
+    "backend" : {
+      "kind" : "postgres",
+      "rowsPerMs" : 20000,
+      "thrash" : 0.3,
+      "appMs" : 5,
+      "serviceMs" : 16,
+      "workers" : 12
+    },
+    "pool" : {
+      "maximum" : 12,
+      "connectionTimeoutMs" : 3000,
+      "minimumIdle" : 12
+    },
+    "load" : {
+      "requestTimeoutMs" : 3000,
+      "clientThreads" : 64,
+      "scenario" : "steady",
+      "warmupMs" : 6000,
+      "durationMs" : 21000,
+      "warmupRps" : 60
+    },
+    "runtime" : {
+      "os" : "Mac OS X",
+      "availableProcessors" : 10,
+      "arch" : "aarch64",
+      "javaVersion" : "17.0.16"
+    },
+    "sloMs" : 150.0,
+    "conditions" : {
+      "profile" : {
+        "loadScale" : 0.6,
+        "profileVersion" : 1,
+        "durationScale" : 0.7,
+        "name" : "steady",
+        "degradedFactor" : 2.25,
+        "baseServiceMs" : 16
+      },
+      "backend" : {
+        "kind" : "postgres",
+        "rowsPerMs" : 20000,
+        "thrash" : 0.3,
+        "appMs" : 5,
+        "serviceMs" : 16,
+        "workers" : 12
+      },
+      "load" : {
+        "requestTimeoutMs" : 3000,
+        "clientThreads" : 64,
+        "scenario" : "steady",
+        "warmupMs" : 6000,
+        "durationMs" : 21000,
+        "warmupRps" : 60
+      },
+      "runtime" : {
+        "os" : "Mac OS X",
+        "availableProcessors" : 10,
+        "arch" : "aarch64",
+        "javaVersion" : "17.0.16"
+      },
+      "initialPool" : 12,
+      "initialLimit" : 10,
+      "sloMs" : 150.0
+    }
+  },
+  "measurementInitialResources" : {
+    "concurrency_limit" : 9,
+    "hikari_max_pool" : 11
+  },
+  "timing" : {
+    "captureStartedAt" : "2026-11-09T17:13:18.418644Z",
+    "warmupStartedAt" : "2026-11-09T17:13:18.485895Z",
+    "measurementStartedAt" : "2026-11-09T17:13:24.545413Z",
+    "measurementScheduledEndAt" : "2026-11-09T17:13:45.545413Z",
+    "drainCompletedAt" : "2026-11-09T17:13:45.599089Z",
+    "captureEndedAt" : "2026-11-09T17:13:45.617640Z"
+  },
+  "inference" : {
+    "decisions" : 28,
+    "modelDecisions" : 23,
+    "fallbacks" : {
+      "short_history" : 3,
+      "no_empirical_support" : 1,
+      "invalid_observation" : 1
+    },
+    "inferenceAttempts" : 24,
+    "meanInferenceMs" : 0.284642375,
+    "maxInferenceMs" : 2.017084
+  },
+  "metadataVersion" : 1,
+  "datasetSchemaVersion" : 3,
+  "runId" : "20bd69fe-231e-43a5-9edc-bbc708d1239a",
+  "episodeId" : "steady/learned/1",
+  "scenario" : "steady",
+  "mode" : "learned",
+  "repetition" : 1,
+  "orderSeed" : 20261115,
+  "source" : {
+    "dirty" : false,
+    "commit" : "ca2eaaf6ba429fe8c2fe1a8902c15e5ceb89f380"
+  },
+  "datasetRecords" : 28,
+  "status" : "complete"
+}

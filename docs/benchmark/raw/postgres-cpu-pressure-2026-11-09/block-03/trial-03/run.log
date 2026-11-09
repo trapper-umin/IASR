@@ -1,0 +1,8 @@
+
+=== steady / learned ===
+2026-11-09T20:18:11.386+03:00  WARN 46055 --- [-auto-1-exec-10] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=9, inflight=9, queue=7)
+2026-11-09T20:18:16.702+03:00  WARN 46055 --- [o-auto-1-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 39 request(s) rejected in the last 5000 ms (limit=10, inflight=10, queue=7)
+   [1/1] goodput=65,1 rps  p95=325,0 ms  p99=563,0 ms  429=9,6%  hard-fail=0,0%
+
+Report written to /private/tmp/iasr-pressure.rCIldE/episodes/block-03/trial-03
+All repetitions saved to /private/tmp/iasr-pressure.rCIldE/episodes/block-03/trial-03/episodes/82dafef7-b96c-4903-bbec-7cc5d6a4aa99
