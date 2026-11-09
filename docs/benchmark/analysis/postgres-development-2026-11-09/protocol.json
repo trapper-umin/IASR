@@ -1,0 +1,47 @@
+{
+  "protocolVersion": 1,
+  "purpose": "postgresql_development_only",
+  "model": "docs/benchmark/models/fqi-action-conditioned-2026-11-08/per-action/model.json",
+  "modelSha256": "2f4e3907b48616caba5d94d9682a47c8e0a04c2fea922ad2e468398851910aff",
+  "postgresVersion": "postgres (PostgreSQL) 17.10 (Homebrew)",
+  "calibration": {
+    "file": "../postgres-transfer-2026-11-09/calibration.csv",
+    "sha256": "eac04cddecbc894179bd2238e90bb5e165c1f7d603e9e05a0464307dda3a1858"
+  },
+  "scenarios": ["slow-dependency", "ramp", "spike"],
+  "modes": ["explore-balanced"],
+  "repeats": 4,
+  "orderSeed": 20261110,
+  "properties": {
+    "bench.db.real": true,
+    "bench.db.serviceMs": 20,
+    "bench.db.rowsPerMs": 20000,
+    "bench.degradedFactor": 2.25,
+    "bench.loadScale": 0.6,
+    "bench.durationScale": 1.0,
+    "bench.poolSize": 4,
+    "bench.poolMin": 2,
+    "bench.poolMax": 12,
+    "bench.initialLimit": 8,
+    "bench.sloMs": 150,
+    "bench.poolPeriod": 5,
+    "bench.epsilon": 0.75,
+    "bench.policySeed": 20261110
+  },
+  "development": {
+    "validationScenarios": ["spike"],
+    "reservedEvaluationGroup": "269bf4da65f403b54fe1cdf16db475916392a4c7bd724a81d4fba1f3367864d8",
+    "retainOriginalSyntheticTrain": true,
+    "regressor": "per_action",
+    "iterations": 8,
+    "trees": 32,
+    "depth": 6,
+    "leaf": 3,
+    "seed": 42,
+    "maxFeatures": 1.0,
+    "gamma": 0.95,
+    "minSamples": 3,
+    "minEpisodes": 2,
+    "maxDistance": 2.0
+  }
+}
