@@ -11,3 +11,25 @@
 - На одних и тех же историях PostgreSQL validation сравнить долю историй с хотя бы одним допустимым поддержанным действием, с поддержкой фактического действия и с возможностью изменить пул или оба ресурса. Показать результаты по группам состояний и эпизодам. Эти метрики описывают покрытие на траекториях исследующего регулятора. Эффективность и перенос новой политики проверяются позже на свежих условиях.
 
 Параметры, seeds и идентификатор зарезервированной группы зафиксированы в [протоколе](protocol.json). Сбор запускается существующим `run_postgres_transfer.py` из чистого checkout. Серия сравнения и её модель остаются в архиве.
+
+## Воспроизведение
+
+Из корня чистого checkout с зависимостями [стенда PostgreSQL](../postgres-transfer-2026-11-09/README.md) выполните сбор и восстановите замороженные входы исходной модели. Скрипт обучения сверяет SHA прежнего train и его манифеста, переносит только train и сохраняет новую validation побайтово.
+
+```bash
+protocol=docs/benchmark/analysis/postgres-development-2026-11-09/protocol.json
+python3 docs/benchmark/tools/run_postgres_transfer.py "$protocol" \
+  --out /tmp/iasr-postgres-development
+python3 docs/benchmark/tools/prepare_dataset.py docs/benchmark/raw/balanced-pilot-2026-11-08 \
+  --out /tmp/iasr-prior-balanced --development-only --validation-scenarios spike
+python3 docs/benchmark/tools/extend_development_dataset.py \
+  docs/benchmark/raw/fqi-prototype-2026-11-08/preparation-manifest.json \
+  /tmp/iasr-prior-balanced \
+  --prior-raw docs/benchmark/raw/fqi-prototype-2026-11-08 \
+  --out /tmp/iasr-prior-retained
+python3 docs/benchmark/tools/develop_postgres_policy.py \
+  /tmp/iasr-postgres-development "$protocol" /tmp/iasr-prior-retained \
+  --out /tmp/iasr-postgres-fqi
+```
+
+Для воспроизведения обучения на уже собранных траекториях подставьте архивный каталог вместо `/tmp/iasr-postgres-development`. Повторный живой сбор получает собственные временные метки и измерения.
