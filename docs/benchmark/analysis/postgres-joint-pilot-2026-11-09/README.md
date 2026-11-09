@@ -11,3 +11,18 @@
 - При выполнении критерия обучается один per-action FQI с параметрами текущей модели. Сравнивается поддержка на замороженной validation. Оценка пилота относится к траекториям сбора. Сравнение производительности и вклад координации требуют отдельных экспериментов.
 
 Настройки заморожены в [protocol.json](protocol.json).
+
+## Воспроизведение
+
+Соберите стенд JDK 17 командой `mvn --offline clean verify` и установите [зависимости Python](../../tools/requirements-ml.txt). Восстановите входы предыдущей модели по [инструкции](../postgres-development-2026-11-09/README.md), используя архив траекторий. Входы находятся в каталоге `combined` результата того этапа. Скрипт пилота сверяет SHA всех трёх входных файлов, включая validation.
+
+```bash
+protocol=docs/benchmark/analysis/postgres-joint-pilot-2026-11-09/protocol.json
+python3 docs/benchmark/tools/run_postgres_transfer.py "$protocol" \
+  --out /tmp/iasr-postgres-joint-pilot
+python3 docs/benchmark/tools/fit_postgres_joint_pilot.py \
+  /tmp/iasr-postgres-joint-pilot "$protocol" /tmp/iasr-postgres-fqi/combined \
+  --out /tmp/iasr-postgres-joint-fit
+```
+
+Обе команды выполняются из чистого checkout. Для повторного обучения можно использовать архив уже собранных эпизодов вместо нового запуска.

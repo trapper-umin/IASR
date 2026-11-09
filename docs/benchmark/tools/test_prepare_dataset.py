@@ -125,6 +125,15 @@ class PolicyDataTest(unittest.TestCase):
         self.assertEqual(assigned["d"], "test")
         self.assertEqual({assigned["a"], assigned["b"]}, {"train", "validation"})
 
+    def test_train_only_collection_prepares_a_single_group_for_extension(self):
+        fixture(self.root / "raw")
+        manifest = prepare(self.root / "raw", self.root / "out", train_only=True)
+        self.assertTrue(manifest["developmentOnly"])
+        self.assertEqual(manifest["sampleCounts"], {"train": 7})
+        self.assertEqual({item.name for item in (self.root / "out").glob("*.jsonl")}, {"train.jsonl"})
+        with self.assertRaisesRegex(ValueError, "train-only"):
+            prepare(self.root / "raw", self.root / "invalid", validation_scenarios=("spike",), train_only=True)
+
     def test_dirty_and_small_collections_fail_before_writing_output(self):
         fixture(self.root / "raw", dirty=True)
         with self.assertRaisesRegex(ValueError, "uncommitted source"):

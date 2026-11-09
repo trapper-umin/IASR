@@ -81,7 +81,10 @@ def coverage(records, min_samples=3, min_episodes=2):
             "readiness": "not_established", "supportScope": "diagnostic_coarse_bins"}
 
 
-def prepare(root, output, seed=42, test_scenarios=(), allow_dirty=False, validation_scenarios=(), development_only=False):
+def prepare(root, output, seed=42, test_scenarios=(), allow_dirty=False, validation_scenarios=(), development_only=False,
+            *, train_only=False):
+    require(not train_only or not (development_only or test_scenarios or validation_scenarios),
+            "train-only input cannot specify other partitions")
     root, output = Path(root), Path(output)
     for marker in root.rglob("collection.json"):
         collection = read_json(marker)
@@ -90,7 +93,10 @@ def prepare(root, output, seed=42, test_scenarios=(), allow_dirty=False, validat
                 f"unfinished collection: {marker}")
     validation = validate_collection(root)
     paths = [root] if (root / "metadata.json").is_file() else sorted(p.parent for p in root.rglob("metadata.json"))
-    groups, episodes, by_split = {}, [], {key: [] for key in (("train", "validation") if development_only else ("train", "validation", "test"))}
+    splits = ("train",)
+    if not train_only:
+        splits = ("train", "validation") if development_only else ("train", "validation", "test")
+    groups, episodes, by_split = {}, [], {key: [] for key in splits}
     for path in paths:
         metadata = read_json(path / "metadata.json")
         if metadata["mode"].removesuffix("-pinned") == "off":
@@ -105,7 +111,8 @@ def prepare(root, output, seed=42, test_scenarios=(), allow_dirty=False, validat
         for sample in built:
             sample.update(runId=metadata["runId"], episodeId=metadata["episodeId"], groupId=key)
         episodes.append((metadata, key, built, excluded))
-    assignment = partition_groups(groups, seed, test_scenarios, validation_scenarios, development_only)
+    assignment = dict.fromkeys(groups, "train") if train_only else partition_groups(
+        groups, seed, test_scenarios, validation_scenarios, development_only)
     manifest_episodes = []
     for metadata, key, built, excluded in episodes:
         split = assignment[key]
@@ -118,7 +125,7 @@ def prepare(root, output, seed=42, test_scenarios=(), allow_dirty=False, validat
         records.sort(key=lambda r: (r["groupId"], r["runId"], r["episodeId"], r["sequence"]))
     manifest = {"preparationVersion": 1, "splitSeed": seed, "historyWindows": 4,
                 "testScenarios": list(test_scenarios), "validationScenarios": list(validation_scenarios),
-                "developmentOnly": development_only, "prototypeAllowsDirtySource": allow_dirty,
+                "developmentOnly": development_only or train_only, "prototypeAllowsDirtySource": allow_dirty,
                 "groups": {key: {"split": assignment[key], "conditions": groups[key]} for key in sorted(groups)},
                 "episodes": manifest_episodes, "validation": validation,
                 "sampleCounts": {name: len(records) for name, records in by_split.items()}}
@@ -138,13 +145,15 @@ def main():
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--test-scenarios", default="", help="comma-separated profiles reserved entirely for test")
     parser.add_argument("--validation-scenarios", default="", help="profiles reserved entirely for validation")
-    parser.add_argument("--development-only", action="store_true", help="prepare train/validation without test data")
+    partition = parser.add_mutually_exclusive_group()
+    partition.add_argument("--development-only", action="store_true", help="prepare train/validation without test data")
+    partition.add_argument("--train-only", action="store_true", help="prepare a separately collected train extension")
     parser.add_argument("--allow-dirty", action="store_true", help="prototype only; manifest records this exception")
     args = parser.parse_args()
     try:
         result = prepare(args.directory, args.out, args.seed,
                          tuple(filter(None, args.test_scenarios.split(","))), args.allow_dirty,
-                         tuple(filter(None, args.validation_scenarios.split(","))), args.development_only)
+                         tuple(filter(None, args.validation_scenarios.split(","))), args.development_only, train_only=args.train_only)
     except (ValueError, KeyError, TypeError, OSError) as error:
         parser.exit(1, f"Dataset preparation failed: {error}\n")
     print(json.dumps({"groups": len(result["groups"]), "sampleCounts": result["sampleCounts"]}, indent=2))

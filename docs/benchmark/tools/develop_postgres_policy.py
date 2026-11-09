@@ -21,6 +21,8 @@ def check_collection(raw, protocol, plan):
     require(execution["protocolSha256"] == digest(protocol) and execution["postgresVersion"] == plan["postgresVersion"],
             "collection differs from frozen protocol")
     props, development = plan["properties"], plan["development"]
+    mode, = plan["modes"]
+    sampling = {"explore-balanced": "balanced", "explore-joint": "joint"}[mode]
     expected = {(scenario, repeat) for scenario in plan["scenarios"] for repeat in range(1, plan["repeats"] + 1)}
     seen, sources, runs = set(), set(), set()
     groups = defaultdict(set)
@@ -30,11 +32,11 @@ def check_collection(raw, protocol, plan):
         condition = group_id(meta)
         require(condition != development["reservedEvaluationGroup"], "reserved evaluation group in development input")
         key = (meta["scenario"], meta["repetition"])
-        require(key in expected and key not in seen and meta["mode"] == "explore-balanced",
+        require(key in expected and key not in seen and meta["mode"] == mode,
                 "unexpected or duplicate development episode")
         assert_conditions(meta, plan)
         exploration = meta["configuration"]["exploration"]
-        require(exploration["sampling"] == "balanced" and exploration["epsilon"] == props["bench.epsilon"]
+        require(exploration["sampling"] == sampling and exploration["epsilon"] == props["bench.epsilon"]
                 and exploration["poolPeriodTicks"] == props["bench.poolPeriod"], "exploration differs from protocol")
         require(meta["source"]["dirty"] is False and meta["orderSeed"] == plan["orderSeed"], "source or order seed differs")
         seen.add(key)

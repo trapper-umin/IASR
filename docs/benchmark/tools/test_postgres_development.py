@@ -11,7 +11,7 @@ from prepare_dataset import group_id
 class PostgresDevelopmentTest(unittest.TestCase):
     def test_rejects_reserved_condition_before_reading_any_transitions(self):
         meta = {"configuration": {"conditions": {"profile": {"name": "slow-dependency"}}}}
-        plan = {"postgresVersion": "postgres", "scenarios": ["slow-dependency"], "repeats": 1,
+        plan = {"postgresVersion": "postgres", "scenarios": ["slow-dependency"], "repeats": 1, "modes": ["explore-balanced"],
                 "properties": {}, "development": {"reservedEvaluationGroup": group_id(meta)}}
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
