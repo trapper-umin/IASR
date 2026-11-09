@@ -42,3 +42,54 @@ class ActionForestsRegressor:
         for key, selected in buckets.items():
             predictions[selected] = self.models[key].predict(x[selected, :208])
         return predictions
+
+
+class AdditiveActionRegressor:
+    """Backfit separate state-conditioned contributions for the two action coordinates."""
+    sweeps = 4
+
+    def __init__(self, trees, depth, leaf, seed, max_features):
+        require(trees >= 2 and trees % 2 == 0, "additive regression needs an even tree budget")
+        self.limit = ActionForestsRegressor(trees // 2, depth, leaf, seed, max_features)
+        self.pool = ActionForestsRegressor(trees // 2, depth, leaf, seed + 100_003, max_features)
+
+    @staticmethod
+    def inputs(x):
+        import numpy as np
+        x = np.asarray(x, dtype=np.float32)
+        limit, pool = x.copy(), x.copy()
+        limit[:, 209] = 0
+        pool[:, 208] = 0
+        return limit, pool
+
+    def fit(self, x, targets):
+        import numpy as np
+        limit, pool = self.inputs(x)
+        pool_prediction = np.zeros(len(x))
+        for _ in range(self.sweeps):
+            self.limit.fit(limit, targets - pool_prediction)
+            self.pool.fit(pool, targets - self.limit.predict(limit))
+            pool_prediction = self.pool.predict(pool)
+        actions = np.asarray(x, dtype=np.float32)[:, -2:].tolist()
+        self.actions = sorted({normalized_action_key(action) for action in actions})
+        return self
+
+    def predict(self, x):
+        limit, pool = self.inputs(x)
+        return self.limit.predict(limit) + self.pool.predict(pool)
+
+    def export(self, export_forest):
+        def doubled(models):
+            forests = {key: export_forest(model) for key, model in models.items()}
+            for forest in forests.values():
+                for tree in forest:
+                    tree["value"] = [2 * value for value in tree["value"]]
+            return forests
+
+        # The v2 scorer averages equal-sized ensembles, so double values to recover the sum.
+        limit, pool = doubled(self.limit.models), doubled(self.pool.models)
+        result = {}
+        for action in self.actions:
+            dl, dp = action.split(",")
+            result[action] = limit[f"{dl},0"] + pool[f"0,{dp}"]
+        return result

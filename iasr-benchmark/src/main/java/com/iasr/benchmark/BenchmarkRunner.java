@@ -75,7 +75,8 @@ public class BenchmarkRunner {
             throw new IllegalArgumentException("Select nonempty scenarios and unique modes");
         }
         for (String mode : modes) {
-            if (!Set.of("off", "fixed", "adaptive", "gradient", "bottleneck", "explore", "explore-balanced", "explore-joint", "learned").contains(baseMode(mode))) {
+            if (!Set.of("off", "fixed", "adaptive", "gradient", "bottleneck", "explore", "explore-balanced", "explore-joint",
+                    "learned", "learned-additive").contains(baseMode(mode))) {
                 throw new IllegalArgumentException("Unknown mode: " + mode);
             }
         }
@@ -336,7 +337,11 @@ public class BenchmarkRunner {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, GradientBaselineConfig.class);
         } else if ("bottleneck".equals(base)) {
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, BottleneckConfig.class);
-        } else if ("learned".equals(base)) {
+        } else if ("learned".equals(base) || "learned-additive".equals(base)) {
+            String modelProperty = "learned-additive".equals(base) ? "bench.additiveModel" : "bench.model";
+            String model = System.getProperty(modelProperty);
+            if (model == null || model.isBlank()) throw new IllegalArgumentException("Missing -D" + modelProperty + "=<JSON model>");
+            props.put("bench.learned.modelPath", model);
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, LearnedConfig.class);
         } else if (base.startsWith("explore")) {
             props.put("bench.exploration.sampling", switch (base) {
@@ -423,12 +428,11 @@ public class BenchmarkRunner {
     @org.springframework.context.annotation.Configuration(proxyBeanMethods = false)
     static class LearnedConfig {
         @org.springframework.context.annotation.Bean
-        public com.iasr.core.controller.Controller learnedController(IasrProperties props) throws java.io.IOException {
+        public com.iasr.core.controller.Controller learnedController(IasrProperties props,
+                @org.springframework.beans.factory.annotation.Value("${bench.learned.modelPath}") String path) throws java.io.IOException {
             if (!Boolean.getBoolean("bench.allowPrototype")) {
                 throw new IllegalArgumentException("learned requires -Dbench.allowPrototype=true; model is an experimental prototype");
             }
-            String path = System.getProperty("bench.model");
-            if (path == null || path.isBlank()) throw new IllegalArgumentException("Missing -Dbench.model=<JSON model>");
             double budgetMs = Double.parseDouble(System.getProperty("bench.inferenceBudgetMs", "20"));
             if (!Double.isFinite(budgetMs) || budgetMs <= 0 || budgetMs > 1000) throw new IllegalArgumentException("Invalid inference budget");
             var model = com.iasr.policy.FqiModel.loadPrototype(java.nio.file.Path.of(path));

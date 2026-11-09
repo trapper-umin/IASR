@@ -193,7 +193,7 @@ def train(directory, output, iterations=8, trees=32, depth=6, leaf=3, seed=42,
             "iteration/tree/support counts must be positive integers")
     require(math.isfinite(gamma) and 0 < gamma < 1 and math.isfinite(max_distance) and max_distance > 0, "invalid discount/support radius")
     require(type(max_features) in (int, float) and math.isfinite(max_features) and 0 < max_features <= 1, "invalid max_features fraction")
-    require(regressor in ("pooled", "per_action"), "unknown regressor")
+    require(regressor in ("pooled", "per_action", "additive"), "unknown regressor")
     max_features = float(max_features)
     directory, output = Path(directory), Path(output)
     require(not output.exists(), "model output already exists")
@@ -219,17 +219,23 @@ def train(directory, output, iterations=8, trees=32, depth=6, leaf=3, seed=42,
         if regressor == "pooled":
             fitted = ExtraTreesRegressor(n_estimators=trees, max_depth=depth, min_samples_leaf=leaf,
                                          random_state=seed + iteration, n_jobs=1, max_features=max_features)
-        else:
+        elif regressor == "per_action":
             from action_fqi import ActionForestsRegressor
             fitted = ActionForestsRegressor(trees, depth, leaf, seed + iteration, max_features)
+        else:
+            from action_fqi import AdditiveActionRegressor
+            fitted = AdditiveActionRegressor(trees, depth, leaf, seed + iteration, max_features)
         fitted.fit(x, np.asarray(targets, dtype=np.float64))
         model = fitted
         trace.append({"iteration": iteration + 1, "train": diagnostics(train_cache, model, gamma),
                       "validation": diagnostics(validation_cache, model, gamma)})
-    scorer = ({"modelVersion": 1, "algorithm": "masked_fqi_extra_trees", "forest": export_forest(model)}
-              if regressor == "pooled" else
-              {"modelVersion": 2, "algorithm": "masked_fqi_action_forests", "stateFeatureCount": 208,
-               "actionForests": {key: export_forest(value) for key, value in model.models.items()}})
+    if regressor == "pooled":
+        scorer = {"modelVersion": 1, "algorithm": "masked_fqi_extra_trees", "forest": export_forest(model)}
+    else:
+        forests = (model.export(export_forest) if regressor == "additive"
+                   else {key: export_forest(value) for key, value in model.models.items()})
+        scorer = {"modelVersion": 2, "algorithm": "masked_fqi_action_forests", "stateFeatureCount": 208,
+                  "actionForests": forests}
     expected = model.predict(x)
     export_error = max(abs(predict_model(scorer, row.tolist()) - expected[i]) for i, row in enumerate(x))
     require(export_error <= 1e-10, "portable export does not match sklearn")
@@ -242,6 +248,9 @@ def train(directory, output, iterations=8, trees=32, depth=6, leaf=3, seed=42,
     if regressor == "per_action":
         config["actionTrainingCounts"] = model.counts
         config["actionsBelowTwoLeaves"] = sorted(key for key, count in model.counts.items() if count < 2 * leaf)
+    if regressor == "additive":
+        config.update(backfitSweeps=model.sweeps, treesPerHead=trees // 2,
+                      uniqueTrees=(len(model.limit.models) + len(model.pool.models)) * (trees // 2))
     artifact = {**scorer, "deploymentAllowed": False,
                 "preprocessing": preprocessing, "support": support,
                 "rewardWeights": REWARD, "trainingConfig": config, "inputSha256": digests,
@@ -261,7 +270,7 @@ def train(directory, output, iterations=8, trees=32, depth=6, leaf=3, seed=42,
     (output / "model.json").write_text(json.dumps(artifact, sort_keys=True, separators=(",", ":"), allow_nan=False) + "\n")
     (output / "report.json").write_text(json.dumps(report, sort_keys=True, indent=2, allow_nan=False) + "\n")
     golden_indices = list(range(min(16, len(x))))
-    if regressor == "per_action":
+    if regressor != "pooled":
         from fqi_runtime import normalized_action_key
         first_per_action = {}
         for i, row in enumerate(x):
@@ -282,7 +291,7 @@ def main():
     parser.add_argument("--depth", type=int, default=6)
     parser.add_argument("--leaf", type=int, default=3)
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--regressor", choices=("pooled", "per_action"), default="pooled")
+    parser.add_argument("--regressor", choices=("pooled", "per_action", "additive"), default="pooled")
     parser.add_argument("--max-features", type=float, default=1.0)
     parser.add_argument("--development-only", action="store_true", help="fit and diagnose train/validation without opening test outcomes")
     parser.add_argument("--allow-incomplete-joint-support", action="store_true", help="diagnostic legacy export only; never establishes joint readiness")

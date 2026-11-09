@@ -304,6 +304,29 @@ class FqiTest(unittest.TestCase):
             self.assertTrue(all(f == -2 or 0 <= f < 208 for tree in forest for f in tree["feature"]))
         self.assertLessEqual(report["portableExportMaxError"], 1e-10)
 
+    def test_additive_export_has_zero_mixed_action_interaction(self):
+        import numpy as np
+        from action_fqi import AdditiveActionRegressor
+        from fqi_runtime import predict_model
+        from train_fqi import export_forest
+        directory = self.dataset()
+        reference, _ = train(directory, self.root / "joint", regressor="per_action", **self.options())
+        model, _ = train(directory, self.root / "additive", regressor="additive", **self.options())
+        self.assertEqual(model["support"], reference["support"])
+        self.assertEqual(model["preprocessing"], reference["preprocessing"])
+        self.assertEqual(set(model["actionForests"]), set(reference["actionForests"]))
+        golden = json.loads((self.root / "additive/prediction-fixtures.json").read_text())
+        for row in golden:
+            self.assertAlmostEqual(predict_model(model, row["features"]), row["prediction"], places=12)
+        actions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+        x = np.array([[0.] * 208 + [dl, dp] for dl, dp in actions])
+        targets = np.array([3 * dl + 2 * dp + 20 * dl * dp for dl, dp in actions])
+        fitted = AdditiveActionRegressor(4, 3, 1, 42, 1.0).fit(x, targets)
+        scorer = {**model, "actionForests": fitted.export(export_forest)}
+        q11, q12, q21, q22 = [predict_model(scorer, row.tolist()) for row in x]
+        self.assertNotEqual(q11, q22)
+        self.assertAlmostEqual(q11 - q12 - q21 + q22, 0.0, places=12)
+
     def test_per_action_development_fit_does_not_use_holdout_values(self):
         from unittest.mock import patch
         directory = self.dataset()

@@ -10,13 +10,13 @@ from policy_data import context, observation, LIMIT, POOL
 from validate_episodes import read_json, require, validate_collection
 
 
-def replay(directory, model_path):
+def replay(directory, model_path, modes=("learned", "learned-pinned")):
     integrity = validate_collection(directory)
     model, digest = load_model(model_path), hashlib.sha256(model_path.read_bytes()).hexdigest()
     results = []
     for path in sorted(directory.rglob("metadata.json")):
         metadata = read_json(path)
-        if metadata["mode"].removesuffix("-pinned") != "learned":
+        if metadata["mode"] not in modes:
             continue
         control, history, previous = context(metadata), [], -1
         require(metadata["configuration"]["learned"]["modelSha256"] == digest, "model SHA differs from JVM run")
@@ -66,9 +66,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path)
     parser.add_argument("model", type=Path)
+    parser.add_argument("--modes", default="learned,learned-pinned", help="comma-separated modes using this model")
     args = parser.parse_args()
     try:
-        report = replay(args.directory, args.model)
+        report = replay(args.directory, args.model, tuple(args.modes.split(",")))
     except (ValueError, KeyError, TypeError, OSError) as error:
         parser.exit(1, f"JVM replay failed: {error}\n")
     print(json.dumps(report, indent=2))

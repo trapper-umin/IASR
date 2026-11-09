@@ -104,7 +104,7 @@ def assert_conditions(metadata, plan):
     require(all(backend[key] == value for key, value in expected.items()), "query cost differs from protocol")
     require(profile["degradedFactor"] == properties["bench.degradedFactor"]
             and profile["loadScale"] == properties["bench.loadScale"]
-            and profile["durationScale"] == 1.0, "workload differs from protocol")
+            and profile["durationScale"] == properties.get("bench.durationScale", 1.0), "workload differs from protocol")
     require(conditions["initialPool"] == properties["bench.poolSize"]
             and conditions["initialLimit"] == properties["bench.initialLimit"]
             and conditions["sloMs"] == properties["bench.sloMs"], "initial conditions differ from protocol")
@@ -112,16 +112,34 @@ def assert_conditions(metadata, plan):
             "actual initial resources differ from protocol")
     require(config["iasr"]["applyActions"] == (metadata["mode"] != "fixed"), "unexpected control mode")
     rules = {rule["actuatorName"]: rule for rule in config["guardrails"]}
-    require(rules[POOL]["minValue"] == properties["bench.poolMin"]
-            and rules[POOL]["maxValue"] == properties["bench.poolMax"], "pool bounds differ from protocol")
-    if metadata["mode"] == "learned":
+    mode = metadata["mode"]
+    bounds = (properties["bench.poolMin"], properties["bench.poolMax"])
+    if mode.endswith("-pinned"):
+        bounds = (properties["bench.poolSize"],) * 2
+    require((rules[POOL]["minValue"], rules[POOL]["maxValue"]) == bounds
+            and (config["iasr"]["hikari"]["minPoolSize"], config["iasr"]["hikari"]["maxPoolSize"]) == bounds,
+            "pool bounds differ from protocol")
+    if mode.startswith("learned"):
         learned = config["learned"]
-        require(learned["modelSha256"] == plan["modelSha256"]
+        sha_key = "additiveModelSha256" if mode == "learned-additive" else "modelSha256"
+        require(learned["modelSha256"] == plan[sha_key]
                 and learned["poolPeriodTicks"] == properties["bench.poolPeriod"]
                 and learned["inferenceBudgetMs"] == properties["bench.inferenceBudgetMs"], "policy differs from protocol")
 
 
-def audit(root, protocol_path, model_path):
+def differences_for(cases, repeats, metrics, mode, reference):
+    differences = {}
+    for metric in metrics:
+        deltas = []
+        for rep in repeats:
+            value = metric_value(cases[rep, mode]["result"], metric)
+            baseline = metric_value(cases[rep, reference]["result"], metric)
+            deltas.append(round(value - baseline, 6) if value is not None and baseline is not None else None)
+        differences[metric] = paired_interval(deltas)
+    return differences
+
+
+def audit(root, protocol_path, model_path, additive_path=None):
     root, protocol_path, model_path = Path(root), Path(protocol_path), Path(model_path)
     plan, execution = read_json(protocol_path), read_json(root / "execution.json")
     protocol_sha = hashlib.sha256(protocol_path.read_bytes()).hexdigest()
@@ -133,10 +151,26 @@ def audit(root, protocol_path, model_path):
     require(hashlib.sha256(calibration.read_bytes()).hexdigest() == plan["calibration"]["sha256"], "calibration changed")
     require(hashlib.sha256(model_path.read_bytes()).hexdigest() == plan["modelSha256"], "model changed")
     model = read_json(model_path)
+    models = {mode: model for mode in ("learned", "learned-pinned")}
     audit_replay = replay(root, model_path)
     replayed = {episode["episodeId"]: episode for episode in audit_replay["replay"]}
     scenario, = plan["scenarios"]
     modes = plan["modes"]
+    if "learned-additive" in modes:
+        require(additive_path is not None, "additive model file is required")
+        additive_path = Path(additive_path)
+        require(hashlib.sha256(additive_path.read_bytes()).hexdigest() == plan["additiveModelSha256"], "additive model changed")
+        additive = read_json(additive_path)
+        require(model["trainingConfig"]["regressor"] == "per_action"
+                and additive["trainingConfig"]["regressor"] == "additive", "wrong ablation model types")
+        for name in ("inputSha256", "inputGroups", "support", "preprocessing", "rewardWeights"):
+            require(model[name] == additive[name], f"ablation inputs differ: {name}")
+        require(model["actionForests"].keys() == additive["actionForests"].keys()
+                and all(len(model["actionForests"][key]) == len(additive["actionForests"][key])
+                        for key in model["actionForests"]), "ablation scoring budgets differ")
+        models["learned-additive"] = additive
+        other = replay(root, additive_path, ("learned-additive",))
+        replayed.update({episode["episodeId"]: episode for episode in other["replay"]})
     repeats = range(1, plan["repeats"] + 1)
     require(len(modes) > 1 and len(set(modes)) == len(modes) and len(repeats) >= 2
             and len(repeats) % len(modes) == 0, "expected full balanced blocks")
@@ -152,7 +186,11 @@ def audit(root, protocol_path, model_path):
         assert_conditions(metadata, plan)
         config = metadata["configuration"]
         settings = {key: value for key, value in config["iasr"].items() if key != "applyActions"}
-        controller_settings.add(json.dumps([settings, config["guardrails"]], sort_keys=True))
+        settings["hikari"] = {key: value for key, value in settings["hikari"].items()
+                              if key not in ("minPoolSize", "maxPoolSize")}
+        rules = [{key: value for key, value in rule.items()
+                  if rule["actuatorName"] != POOL or key not in ("minValue", "maxValue")} for rule in config["guardrails"]]
+        controller_settings.add(json.dumps([settings, rules], sort_keys=True))
         conditions.add(group_id(metadata))
         sources.add(metadata["source"]["commit"])
         run_ids.add(metadata["runId"])
@@ -171,7 +209,9 @@ def audit(root, protocol_path, model_path):
                 "recovery": recovery(rows, start, end, plan["analysis"]["recovery"], plan["properties"]["bench.sloMs"])}
         if mode == "fixed":
             require(all(item["changes"] == 0 for item in movement(rows).values()), "fixed controller moved resources")
-        if mode == "learned":
+        if mode.endswith("-pinned"):
+            require(movement(rows)[POOL]["changes"] == 0, "pinned pool moved")
+        if mode in models:
             actions = classify_actions(rows)
             counts = replayed[metadata["episodeId"]]["counts"]
             require(actions["modelDecisions"] == metadata["inference"]["modelDecisions"]
@@ -180,13 +220,14 @@ def audit(root, protocol_path, model_path):
                     == counts.get("matched_support_fallbacks", 0), "some support fallbacks cannot be replayed")
             case.update(inference=metadata["inference"], learnedActions=actions,
                         measuredLearnedActions=classify_actions(measured), replayCounts=counts,
-                        supportDiagnostics=diagnose_support(rows, context(metadata), model))
+                        supportDiagnostics=diagnose_support(rows, context(metadata), models[mode]))
         cases[key] = case
     require(set(cases) == {(rep, mode) for rep in repeats for mode in modes}, "paired episodes missing")
     require(len(conditions) == len(sources) == len(run_ids) == len(controller_settings) == 1,
             "condition, controller settings, source or run differs between modes")
     condition, = conditions
     require(condition not in model["inputGroups"], "evaluation condition occurs in model inputs")
+    require(condition != plan.get("reservedEvaluationGroup"), "evaluation reused the prior holdout group")
     orders = [[case["mode"] for case in sorted((cases[rep, mode] for mode in modes),
               key=lambda item: timestamp(item["startedAt"]))] for rep in repeats]
     for index, order in enumerate(orders):
@@ -196,24 +237,20 @@ def audit(root, protocol_path, model_path):
     require(ordered_cases == sorted(ordered_cases, key=lambda item: timestamp(item["startedAt"])), "blocks are out of order")
     reference = plan["analysis"]["reference"]
     metrics = plan["analysis"]["primary"] + plan["analysis"]["secondary"]
-    differences = {}
-    for mode in modes:
-        if mode == reference:
-            continue
-        differences[mode] = {}
-        for metric in metrics:
-            deltas = []
-            for rep in repeats:
-                value = metric_value(cases[rep, mode]["result"], metric)
-                baseline = metric_value(cases[rep, reference]["result"], metric)
-                deltas.append(round(value - baseline, 6) if value is not None and baseline is not None else None)
-            differences[mode][metric] = paired_interval(deltas)
-    return {"analysisVersion": 1, "protocolSha256": protocol_sha, "modelSha256": plan["modelSha256"],
+    differences = {mode: differences_for(cases, repeats, metrics, mode, reference) for mode in modes if mode != reference}
+    report = {"analysisVersion": 1, "protocolSha256": protocol_sha, "modelSha256": plan["modelSha256"],
             "conditionGroup": condition, "sourceCommit": next(iter(sources)), "scenario": scenario,
             "integrity": audit_replay["integrity"], "observedModeOrder": orders,
             "cases": ordered_cases,
             "reference": reference, "differenceDirection": "mode_minus_reference", "pairedDifferences": differences,
             "intervalMethod": plan["analysis"]["interval"], "heldOutConditions": True}
+    if additive_path is not None:
+        report["additiveModelSha256"] = plan["additiveModelSha256"]
+    if "contrasts" in plan["analysis"]:
+        report["plannedContrasts"] = [
+            {"mode": mode, "reference": baseline, "metrics": differences_for(cases, repeats, metrics, mode, baseline)}
+            for mode, baseline in plan["analysis"]["contrasts"]]
+    return report
 
 
 if __name__ == "__main__":
@@ -221,10 +258,11 @@ if __name__ == "__main__":
     parser.add_argument("raw", type=Path)
     parser.add_argument("protocol", type=Path)
     parser.add_argument("model", type=Path)
+    parser.add_argument("--additive-model", type=Path)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     try:
-        result = audit(args.raw, args.protocol, args.model)
+        result = audit(args.raw, args.protocol, args.model, args.additive_model)
         with args.out.open("x", encoding="utf-8") as output:
             json.dump(result, output, indent=2, sort_keys=True, allow_nan=False)
             output.write("\n")

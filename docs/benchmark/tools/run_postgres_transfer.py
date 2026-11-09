@@ -29,6 +29,10 @@ def run(plan_path, output):
     require(not subprocess.check_output(["git", "status", "--porcelain"], cwd=repo).strip(), "working tree must be clean")
     model = (repo / plan["model"]).resolve()
     require(hashlib.sha256(model.read_bytes()).hexdigest() == plan["modelSha256"], "model changed")
+    additive = None
+    if "learned-additive" in plan["modes"]:
+        additive = (repo / plan["additiveModel"]).resolve()
+        require(hashlib.sha256(additive.read_bytes()).hexdigest() == plan["additiveModelSha256"], "additive model changed")
     calibration = plan_path.parent / plan["calibration"]["file"]
     require(hashlib.sha256(calibration.read_bytes()).hexdigest() == plan["calibration"]["sha256"], "calibration changed")
     version = subprocess.check_output(["postgres", "--version"], text=True).strip()
@@ -74,6 +78,8 @@ def run(plan_path, output):
                       "bench.db.password": password, "bench.out": output, "bench.model": model,
                       "bench.scenarios": ",".join(plan["scenarios"]), "bench.modes": ",".join(plan["modes"]),
                       "bench.repeat": plan["repeats"], "bench.orderSeed": plan["orderSeed"]}
+        if additive is not None:
+            properties["bench.additiveModel"] = additive
         flags = [f"-D{key}={str(value).lower() if type(value) is bool else value}" for key, value in properties.items()]
         caffeinate = shutil.which("caffeinate")
         prefix = [caffeinate, "-i"] if caffeinate else []
