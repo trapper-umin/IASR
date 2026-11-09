@@ -1,0 +1,19 @@
+{
+  "mode" : "learned-pinned",
+  "scenario" : "ramp",
+  "durationMs" : 20250,
+  "dispatched" : 2041,
+  "succeeded" : 1443,
+  "rejected429" : 598,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 71.3,
+  "p50Ms" : 38.0,
+  "p95Ms" : 196.0,
+  "p99Ms" : 509.0,
+  "maxMs" : 1048.0,
+  "sloBreachPercent" : 16.8,
+  "rejectionRatePercent" : 29.3,
+  "failureRatePercent" : 0.0
+}

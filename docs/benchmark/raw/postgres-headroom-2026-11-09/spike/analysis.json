@@ -1,0 +1,2542 @@
+{
+  "additiveModelSha256": "e45604918f3ff522657548b7544b2d963b1e0ec1d1376885daa6332dd9a40e0c",
+  "analysisVersion": 1,
+  "cases": [
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/learned/repeat-0001",
+      "inference": {
+        "decisions": 29,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 25,
+        "maxInferenceMs": 1.883167,
+        "meanInferenceMs": 0.35503008,
+        "modelDecisions": 25
+      },
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.08333333333333333,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "-1,0": 1,
+          "0,0": 3
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,-1": 2,
+          "0,0": 19,
+          "1,0": 2,
+          "1,1": 2
+        },
+        "modelDecisions": 25,
+        "modelLimitChanges": 6,
+        "modelPoolChanges": 4,
+        "modelSimultaneousChanges": 4
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {},
+        "fallbackReasons": {},
+        "modelActions": {
+          "-1,-1": 2,
+          "0,0": 14,
+          "1,0": 2,
+          "1,1": 1
+        },
+        "modelDecisions": 19,
+        "modelLimitChanges": 5,
+        "modelPoolChanges": 3,
+        "modelSimultaneousChanges": 3
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.9528159526419752,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.18761800912661392,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 2.372175767327381,
+          "started": 0
+        },
+        "sampledSeconds": 19.294523040999998,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 10,
+        "hikari_max_pool": 13
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 5,
+          "directionReversals": 1,
+          "maxTarget": 11,
+          "minTarget": 8,
+          "totalVariation": 5
+        },
+        "hikari_max_pool": {
+          "changes": 3,
+          "directionReversals": 1,
+          "maxTarget": 13,
+          "minTarget": 11,
+          "totalVariation": 3
+        }
+      },
+      "mode": "learned",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.39136
+      },
+      "repetition": 1,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 25,
+        "matched_model_decisions": 25,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 88.0,
+        "maxMs": 49.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 34.0,
+        "p95Ms": 40.0,
+        "p99Ms": 44.0,
+        "rejected429": 0,
+        "rejectionRatePercent": 0.0,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 0.0,
+        "succeeded": 1781
+      },
+      "startedAt": "2026-11-09T16:33:10.137436Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 25
+        },
+        "unsupportedBins": {}
+      }
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/learned-additive/repeat-0001",
+      "inference": {
+        "decisions": 28,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 24,
+        "maxInferenceMs": 0.664625,
+        "meanInferenceMs": 0.20679679166666665,
+        "modelDecisions": 24
+      },
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.07692307692307693,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "0,0": 4
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "0,0": 16,
+          "0,1": 3,
+          "1,0": 5
+        },
+        "modelDecisions": 24,
+        "modelLimitChanges": 5,
+        "modelPoolChanges": 3,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {},
+        "fallbackReasons": {},
+        "modelActions": {
+          "0,0": 12,
+          "0,1": 2,
+          "1,0": 5
+        },
+        "modelDecisions": 19,
+        "modelLimitChanges": 5,
+        "modelPoolChanges": 2,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.9028638538765434,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.15260083476175723,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 2.5674133274970914,
+          "started": 0
+        },
+        "sampledSeconds": 18.282993041000005,
+        "samples": 18
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 10,
+        "hikari_max_pool": 13
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 5,
+          "directionReversals": 0,
+          "maxTarget": 15,
+          "minTarget": 10,
+          "totalVariation": 5
+        },
+        "hikari_max_pool": {
+          "changes": 2,
+          "directionReversals": 0,
+          "maxTarget": 15,
+          "minTarget": 13,
+          "totalVariation": 2
+        }
+      },
+      "mode": "learned-additive",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.534488
+      },
+      "repetition": 1,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 24,
+        "matched_model_decisions": 24,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 88.0,
+        "maxMs": 73.0,
+        "mode": "learned-additive",
+        "otherFailures": 0,
+        "p50Ms": 35.0,
+        "p95Ms": 42.0,
+        "p99Ms": 45.0,
+        "rejected429": 0,
+        "rejectionRatePercent": 0.0,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 0.0,
+        "succeeded": 1781
+      },
+      "startedAt": "2026-11-09T16:33:38.425192Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 24
+        },
+        "unsupportedBins": {}
+      }
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/learned-pinned/repeat-0001",
+      "inference": {
+        "decisions": 27,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 2,
+          "short_history": 3
+        },
+        "inferenceAttempts": 23,
+        "maxInferenceMs": 0.396,
+        "meanInferenceMs": 0.171587,
+        "modelDecisions": 21
+      },
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.08333333333333333,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "0,0": 6
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_no_empirical_support": 2,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,0": 3,
+          "0,0": 17,
+          "1,0": 1
+        },
+        "modelDecisions": 21,
+        "modelLimitChanges": 4,
+        "modelPoolChanges": 0,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {
+          "0,0": 2
+        },
+        "fallbackReasons": {
+          "learned_fallback_no_empirical_support": 2
+        },
+        "modelActions": {
+          "-1,0": 3,
+          "0,0": 13,
+          "1,0": 1
+        },
+        "modelDecisions": 17,
+        "modelLimitChanges": 4,
+        "modelPoolChanges": 0,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.9540748333333332,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.1397514415797923,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 2.5848840712943795,
+          "started": 0
+        },
+        "sampledSeconds": 19.320015374999997,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 10,
+        "hikari_max_pool": 12
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 4,
+          "directionReversals": 1,
+          "maxTarget": 10,
+          "minTarget": 7,
+          "totalVariation": 4
+        },
+        "hikari_max_pool": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 12,
+          "minTarget": 12,
+          "totalVariation": 0
+        }
+      },
+      "mode": "learned-pinned",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.532891
+      },
+      "repetition": 1,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 2,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 21,
+        "matched_model_decisions": 21,
+        "matched_support_fallbacks": 2,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 82.6,
+        "maxMs": 772.0,
+        "mode": "learned-pinned",
+        "otherFailures": 0,
+        "p50Ms": 36.0,
+        "p95Ms": 132.0,
+        "p99Ms": 156.0,
+        "rejected429": 108,
+        "rejectionRatePercent": 6.1,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 1.6,
+        "succeeded": 1673
+      },
+      "startedAt": "2026-11-09T16:34:06.561880Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 21,
+          "noLegalActionWithBinCoverage": 2
+        },
+        "unsupportedBins": {
+          "within_slo/no_pending/binding/pool_tick": 1,
+          "within_slo/no_pending/headroom/limit_tick": 1
+        }
+      }
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/adaptive/repeat-0001",
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.25,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.953890991802469,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.09007939760869396,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 2.556391180412243,
+          "started": 0
+        },
+        "sampledSeconds": 19.316292583999996,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 10,
+        "hikari_max_pool": 12
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 1,
+          "directionReversals": 0,
+          "maxTarget": 10,
+          "minTarget": 8,
+          "totalVariation": 2
+        },
+        "hikari_max_pool": {
+          "changes": 2,
+          "directionReversals": 0,
+          "maxTarget": 12,
+          "minTarget": 10,
+          "totalVariation": 2
+        }
+      },
+      "mode": "adaptive",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.536245
+      },
+      "repetition": 1,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 83.8,
+        "maxMs": 743.0,
+        "mode": "adaptive",
+        "otherFailures": 0,
+        "p50Ms": 37.0,
+        "p95Ms": 86.0,
+        "p99Ms": 134.0,
+        "rejected429": 85,
+        "rejectionRatePercent": 4.8,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 0.6,
+        "succeeded": 1696
+      },
+      "startedAt": "2026-11-09T16:34:33.019987Z"
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/learned-additive/repeat-0002",
+      "inference": {
+        "decisions": 27,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 23,
+        "maxInferenceMs": 0.326208,
+        "meanInferenceMs": 0.19020639130434783,
+        "modelDecisions": 23
+      },
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.08333333333333333,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "0,0": 4
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,0": 1,
+          "0,0": 17,
+          "0,1": 1,
+          "1,0": 4
+        },
+        "modelDecisions": 23,
+        "modelLimitChanges": 5,
+        "modelPoolChanges": 1,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {},
+        "fallbackReasons": {},
+        "modelActions": {
+          "-1,0": 1,
+          "0,0": 13,
+          "0,1": 1,
+          "1,0": 4
+        },
+        "modelDecisions": 19,
+        "modelLimitChanges": 5,
+        "modelPoolChanges": 1,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.9536907242469137,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.09320515197322533,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 2.7034672136233846,
+          "started": 0
+        },
+        "sampledSeconds": 19.312237166000003,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 10,
+        "hikari_max_pool": 12
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 5,
+          "directionReversals": 1,
+          "maxTarget": 13,
+          "minTarget": 9,
+          "totalVariation": 5
+        },
+        "hikari_max_pool": {
+          "changes": 1,
+          "directionReversals": 0,
+          "maxTarget": 13,
+          "minTarget": 12,
+          "totalVariation": 1
+        }
+      },
+      "mode": "learned-additive",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.542881
+      },
+      "repetition": 2,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 23,
+        "matched_model_decisions": 23,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 88.0,
+        "maxMs": 54.0,
+        "mode": "learned-additive",
+        "otherFailures": 0,
+        "p50Ms": 38.0,
+        "p95Ms": 45.0,
+        "p99Ms": 47.0,
+        "rejected429": 0,
+        "rejectionRatePercent": 0.0,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 0.0,
+        "succeeded": 1781
+      },
+      "startedAt": "2026-11-09T16:34:59.492621Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 23
+        },
+        "unsupportedBins": {}
+      }
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/learned-pinned/repeat-0002",
+      "inference": {
+        "decisions": 27,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 23,
+        "maxInferenceMs": 0.394709,
+        "meanInferenceMs": 0.1335832608695652,
+        "modelDecisions": 23
+      },
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.08333333333333333,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "0,0": 4
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,0": 3,
+          "0,0": 19,
+          "1,0": 1
+        },
+        "modelDecisions": 23,
+        "modelLimitChanges": 4,
+        "modelPoolChanges": 0,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {},
+        "fallbackReasons": {},
+        "modelActions": {
+          "-1,0": 3,
+          "0,0": 15,
+          "1,0": 1
+        },
+        "modelDecisions": 19,
+        "modelLimitChanges": 4,
+        "modelPoolChanges": 0,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.9539174650370361,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.07713481470928242,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 2.7095544979086217,
+          "started": 0
+        },
+        "sampledSeconds": 19.31682866699998,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 10,
+        "hikari_max_pool": 12
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 4,
+          "directionReversals": 1,
+          "maxTarget": 10,
+          "minTarget": 7,
+          "totalVariation": 4
+        },
+        "hikari_max_pool": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 12,
+          "minTarget": 12,
+          "totalVariation": 0
+        }
+      },
+      "mode": "learned-pinned",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.535022
+      },
+      "repetition": 2,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 23,
+        "matched_model_decisions": 23,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 88.0,
+        "maxMs": 64.0,
+        "mode": "learned-pinned",
+        "otherFailures": 0,
+        "p50Ms": 38.0,
+        "p95Ms": 45.0,
+        "p99Ms": 48.0,
+        "rejected429": 0,
+        "rejectionRatePercent": 0.0,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 0.0,
+        "succeeded": 1781
+      },
+      "startedAt": "2026-11-09T16:35:25.950777Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 23
+        },
+        "unsupportedBins": {}
+      }
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/adaptive/repeat-0002",
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.09090909090909091,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.9543750617283955,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.051226075417718786,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 2.854172040445831,
+          "started": 0
+        },
+        "sampledSeconds": 19.32609500000001,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 10,
+        "hikari_max_pool": 12
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 10,
+          "minTarget": 10,
+          "totalVariation": 0
+        },
+        "hikari_max_pool": {
+          "changes": 2,
+          "directionReversals": 0,
+          "maxTarget": 12,
+          "minTarget": 10,
+          "totalVariation": 2
+        }
+      },
+      "mode": "adaptive",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.535035
+      },
+      "repetition": 2,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 88.0,
+        "maxMs": 141.0,
+        "mode": "adaptive",
+        "otherFailures": 0,
+        "p50Ms": 39.0,
+        "p95Ms": 80.0,
+        "p99Ms": 117.0,
+        "rejected429": 0,
+        "rejectionRatePercent": 0.0,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 0.0,
+        "succeeded": 1781
+      },
+      "startedAt": "2026-11-09T16:35:52.395501Z"
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/learned/repeat-0002",
+      "inference": {
+        "decisions": 27,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 23,
+        "maxInferenceMs": 0.156334,
+        "meanInferenceMs": 0.10812686956521739,
+        "modelDecisions": 22
+      },
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.1,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "0,0": 5
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_no_empirical_support": 1,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,-1": 3,
+          "0,0": 15,
+          "0,1": 2,
+          "1,0": 2
+        },
+        "modelDecisions": 22,
+        "modelLimitChanges": 5,
+        "modelPoolChanges": 5,
+        "modelSimultaneousChanges": 3
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {
+          "0,0": 1
+        },
+        "fallbackReasons": {
+          "learned_fallback_no_empirical_support": 1
+        },
+        "modelActions": {
+          "-1,-1": 2,
+          "0,0": 12,
+          "0,1": 2,
+          "1,0": 2
+        },
+        "modelDecisions": 18,
+        "modelLimitChanges": 4,
+        "modelPoolChanges": 4,
+        "modelSimultaneousChanges": 2
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.9547103847901242,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.05017357654324814,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 3.0517948619089106,
+          "started": 0
+        },
+        "sampledSeconds": 19.332885292000014,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 9,
+        "hikari_max_pool": 11
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 4,
+          "directionReversals": 2,
+          "maxTarget": 10,
+          "minTarget": 8,
+          "totalVariation": 4
+        },
+        "hikari_max_pool": {
+          "changes": 4,
+          "directionReversals": 2,
+          "maxTarget": 12,
+          "minTarget": 10,
+          "totalVariation": 4
+        }
+      },
+      "mode": "learned",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.539011
+      },
+      "repetition": 2,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 1,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 22,
+        "matched_model_decisions": 22,
+        "matched_support_fallbacks": 1,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 87.6,
+        "maxMs": 286.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 41.0,
+        "p95Ms": 126.0,
+        "p99Ms": 156.0,
+        "rejected429": 8,
+        "rejectionRatePercent": 0.4,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 1.5,
+        "succeeded": 1773
+      },
+      "startedAt": "2026-11-09T16:36:18.863983Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 22,
+          "noLegalActionWithBinCoverage": 1
+        },
+        "unsupportedBins": {
+          "within_slo/no_pending/headroom/limit_tick": 1
+        }
+      }
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/learned-pinned/repeat-0003",
+      "inference": {
+        "decisions": 27,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 23,
+        "maxInferenceMs": 0.261417,
+        "meanInferenceMs": 0.11803621739130435,
+        "modelDecisions": 23
+      },
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.16666666666666666,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "0,0": 4
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,0": 3,
+          "0,0": 20
+        },
+        "modelDecisions": 23,
+        "modelLimitChanges": 3,
+        "modelPoolChanges": 0,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {},
+        "fallbackReasons": {},
+        "modelActions": {
+          "-1,0": 3,
+          "0,0": 16
+        },
+        "modelDecisions": 19,
+        "modelLimitChanges": 3,
+        "modelPoolChanges": 0,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.9552376563456796,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.05324768887927678,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 3.015473487697292,
+          "started": 0
+        },
+        "sampledSeconds": 19.34356254100001,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 10,
+        "hikari_max_pool": 12
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 3,
+          "directionReversals": 0,
+          "maxTarget": 10,
+          "minTarget": 7,
+          "totalVariation": 3
+        },
+        "hikari_max_pool": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 12,
+          "minTarget": 12,
+          "totalVariation": 0
+        }
+      },
+      "mode": "learned-pinned",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.544441
+      },
+      "repetition": 3,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 23,
+        "matched_model_decisions": 23,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 87.0,
+        "maxMs": 163.0,
+        "mode": "learned-pinned",
+        "otherFailures": 0,
+        "p50Ms": 40.0,
+        "p95Ms": 143.0,
+        "p99Ms": 154.0,
+        "rejected429": 19,
+        "rejectionRatePercent": 1.1,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 2.4,
+        "succeeded": 1762
+      },
+      "startedAt": "2026-11-09T16:36:45.330041Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 23
+        },
+        "unsupportedBins": {}
+      }
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/adaptive/repeat-0003",
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.09090909090909091,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.956417378617283,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.053182008888629506,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 2.862534536685074,
+          "started": 0
+        },
+        "sampledSeconds": 19.367451916999983,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 10,
+        "hikari_max_pool": 12
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 10,
+          "minTarget": 10,
+          "totalVariation": 0
+        },
+        "hikari_max_pool": {
+          "changes": 2,
+          "directionReversals": 0,
+          "maxTarget": 12,
+          "minTarget": 10,
+          "totalVariation": 2
+        }
+      },
+      "mode": "adaptive",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.535069
+      },
+      "repetition": 3,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 88.0,
+        "maxMs": 63.0,
+        "mode": "adaptive",
+        "otherFailures": 0,
+        "p50Ms": 41.0,
+        "p95Ms": 48.0,
+        "p99Ms": 52.0,
+        "rejected429": 0,
+        "rejectionRatePercent": 0.0,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 0.0,
+        "succeeded": 1781
+      },
+      "startedAt": "2026-11-09T16:37:11.779909Z"
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/learned/repeat-0003",
+      "inference": {
+        "decisions": 28,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 24,
+        "maxInferenceMs": 0.444167,
+        "meanInferenceMs": 0.129012125,
+        "modelDecisions": 24
+      },
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.09090909090909091,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "0,0": 4
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,-1": 4,
+          "0,0": 19,
+          "1,0": 1
+        },
+        "modelDecisions": 24,
+        "modelLimitChanges": 5,
+        "modelPoolChanges": 4,
+        "modelSimultaneousChanges": 4
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {},
+        "fallbackReasons": {},
+        "modelActions": {
+          "-1,-1": 3,
+          "0,0": 15,
+          "1,0": 1
+        },
+        "modelDecisions": 19,
+        "modelLimitChanges": 4,
+        "modelPoolChanges": 3,
+        "modelSimultaneousChanges": 3
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.956712987654322,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.053681747142659865,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 2.874554325360317,
+          "started": 0
+        },
+        "sampledSeconds": 19.37343800000002,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 9,
+        "hikari_max_pool": 11
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 4,
+          "directionReversals": 2,
+          "maxTarget": 9,
+          "minTarget": 7,
+          "totalVariation": 4
+        },
+        "hikari_max_pool": {
+          "changes": 3,
+          "directionReversals": 0,
+          "maxTarget": 11,
+          "minTarget": 8,
+          "totalVariation": 3
+        }
+      },
+      "mode": "learned",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.532996
+      },
+      "repetition": 3,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 24,
+        "matched_model_decisions": 24,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 88.0,
+        "maxMs": 120.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 42.0,
+        "p95Ms": 48.0,
+        "p99Ms": 51.0,
+        "rejected429": 0,
+        "rejectionRatePercent": 0.0,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 0.0,
+        "succeeded": 1781
+      },
+      "startedAt": "2026-11-09T16:37:39.880322Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 24
+        },
+        "unsupportedBins": {}
+      }
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/learned-additive/repeat-0003",
+      "inference": {
+        "decisions": 27,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 23,
+        "maxInferenceMs": 0.187791,
+        "meanInferenceMs": 0.11714495652173913,
+        "modelDecisions": 22
+      },
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.08333333333333333,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "0,0": 5
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_no_empirical_support": 1,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,0": 1,
+          "-1,1": 1,
+          "0,0": 17,
+          "0,1": 2,
+          "1,0": 1
+        },
+        "modelDecisions": 22,
+        "modelLimitChanges": 3,
+        "modelPoolChanges": 3,
+        "modelSimultaneousChanges": 1
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {
+          "0,0": 1
+        },
+        "fallbackReasons": {
+          "learned_fallback_no_empirical_support": 1
+        },
+        "modelActions": {
+          "-1,0": 1,
+          "-1,1": 1,
+          "0,0": 13,
+          "0,1": 2,
+          "1,0": 1
+        },
+        "modelDecisions": 18,
+        "modelLimitChanges": 3,
+        "modelPoolChanges": 3,
+        "modelSimultaneousChanges": 1
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.9581166296296307,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.05360310332074178,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 3.004350858236578,
+          "started": 0
+        },
+        "sampledSeconds": 19.401861750000023,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 10,
+        "hikari_max_pool": 12
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 3,
+          "directionReversals": 1,
+          "maxTarget": 11,
+          "minTarget": 9,
+          "totalVariation": 3
+        },
+        "hikari_max_pool": {
+          "changes": 3,
+          "directionReversals": 0,
+          "maxTarget": 15,
+          "minTarget": 12,
+          "totalVariation": 3
+        }
+      },
+      "mode": "learned-additive",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.542631
+      },
+      "repetition": 3,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 1,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 22,
+        "matched_model_decisions": 22,
+        "matched_support_fallbacks": 1,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 83.8,
+        "maxMs": 653.0,
+        "mode": "learned-additive",
+        "otherFailures": 0,
+        "p50Ms": 42.0,
+        "p95Ms": 143.0,
+        "p99Ms": 297.0,
+        "rejected429": 85,
+        "rejectionRatePercent": 4.8,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 3.8,
+        "succeeded": 1696
+      },
+      "startedAt": "2026-11-09T16:38:07.362781Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 22,
+          "noLegalActionWithBinCoverage": 1
+        },
+        "unsupportedBins": {
+          "within_slo/no_pending/headroom/limit_tick": 1
+        }
+      }
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/adaptive/repeat-0004",
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.09090909090909091,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.9574702016296293,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.06653335382686475,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 3.035777679262993,
+          "started": 0
+        },
+        "sampledSeconds": 19.388771582999993,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 10,
+        "hikari_max_pool": 12
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 1,
+          "directionReversals": 0,
+          "maxTarget": 10,
+          "minTarget": 9,
+          "totalVariation": 1
+        },
+        "hikari_max_pool": {
+          "changes": 2,
+          "directionReversals": 0,
+          "maxTarget": 12,
+          "minTarget": 10,
+          "totalVariation": 2
+        }
+      },
+      "mode": "adaptive",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.531431
+      },
+      "repetition": 4,
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 87.2,
+        "maxMs": 275.0,
+        "mode": "adaptive",
+        "otherFailures": 0,
+        "p50Ms": 43.0,
+        "p95Ms": 121.0,
+        "p99Ms": 152.0,
+        "rejected429": 15,
+        "rejectionRatePercent": 0.8,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 1.1,
+        "succeeded": 1766
+      },
+      "startedAt": "2026-11-09T16:38:33.804191Z"
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/learned/repeat-0004",
+      "inference": {
+        "decisions": 27,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "no_empirical_support": 2,
+          "short_history": 3
+        },
+        "inferenceAttempts": 23,
+        "maxInferenceMs": 0.288166,
+        "meanInferenceMs": 0.12662134782608697,
+        "modelDecisions": 21
+      },
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.09090909090909091,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "0,-1": 1,
+          "0,0": 5
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_no_empirical_support": 2,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,-1": 1,
+          "0,0": 19,
+          "0,1": 1
+        },
+        "modelDecisions": 21,
+        "modelLimitChanges": 1,
+        "modelPoolChanges": 2,
+        "modelSimultaneousChanges": 1
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {
+          "0,-1": 1,
+          "0,0": 1
+        },
+        "fallbackReasons": {
+          "learned_fallback_no_empirical_support": 2
+        },
+        "modelActions": {
+          "0,0": 16,
+          "0,1": 1
+        },
+        "modelDecisions": 17,
+        "modelLimitChanges": 0,
+        "modelPoolChanges": 1,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.9557383374320989,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.052186400039037836,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 3.100182180536907,
+          "started": 0
+        },
+        "sampledSeconds": 19.353701333000004,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 9,
+        "hikari_max_pool": 11
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 9,
+          "minTarget": 9,
+          "totalVariation": 0
+        },
+        "hikari_max_pool": {
+          "changes": 2,
+          "directionReversals": 1,
+          "maxTarget": 12,
+          "minTarget": 11,
+          "totalVariation": 2
+        }
+      },
+      "mode": "learned",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.538532
+      },
+      "repetition": 4,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_no_empirical_support": 2,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 21,
+        "matched_model_decisions": 21,
+        "matched_support_fallbacks": 2,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 78.5,
+        "maxMs": 923.0,
+        "mode": "learned",
+        "otherFailures": 0,
+        "p50Ms": 69.0,
+        "p95Ms": 161.0,
+        "p99Ms": 332.0,
+        "rejected429": 191,
+        "rejectionRatePercent": 10.7,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 7.2,
+        "succeeded": 1590
+      },
+      "startedAt": "2026-11-09T16:39:00.278741Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 21,
+          "noLegalActionWithBinCoverage": 2
+        },
+        "unsupportedBins": {
+          "within_slo/no_pending/binding/pool_tick": 1,
+          "within_slo/no_pending/headroom/limit_tick": 1
+        }
+      }
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/learned-additive/repeat-0004",
+      "inference": {
+        "decisions": 28,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 24,
+        "maxInferenceMs": 0.377125,
+        "meanInferenceMs": 0.130717125,
+        "modelDecisions": 24
+      },
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.08333333333333333,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "0,0": 4
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,0": 1,
+          "-1,1": 1,
+          "0,0": 17,
+          "0,1": 2,
+          "1,0": 3
+        },
+        "modelDecisions": 24,
+        "modelLimitChanges": 5,
+        "modelPoolChanges": 3,
+        "modelSimultaneousChanges": 1
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {},
+        "fallbackReasons": {},
+        "modelActions": {
+          "-1,0": 1,
+          "-1,1": 1,
+          "0,0": 12,
+          "0,1": 2,
+          "1,0": 3
+        },
+        "modelDecisions": 19,
+        "modelLimitChanges": 5,
+        "modelPoolChanges": 3,
+        "modelSimultaneousChanges": 1
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.9572769033086416,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.05571359044493494,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 2.9337332301883854,
+          "started": 0
+        },
+        "sampledSeconds": 19.384857291999992,
+        "samples": 19
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 10,
+        "hikari_max_pool": 12
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 5,
+          "directionReversals": 1,
+          "maxTarget": 13,
+          "minTarget": 10,
+          "totalVariation": 5
+        },
+        "hikari_max_pool": {
+          "changes": 3,
+          "directionReversals": 0,
+          "maxTarget": 15,
+          "minTarget": 12,
+          "totalVariation": 3
+        }
+      },
+      "mode": "learned-additive",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.533188
+      },
+      "repetition": 4,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 24,
+        "matched_model_decisions": 24,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 88.0,
+        "maxMs": 56.0,
+        "mode": "learned-additive",
+        "otherFailures": 0,
+        "p50Ms": 43.0,
+        "p95Ms": 49.0,
+        "p99Ms": 51.0,
+        "rejected429": 0,
+        "rejectionRatePercent": 0.0,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 0.0,
+        "succeeded": 1781
+      },
+      "startedAt": "2026-11-09T16:39:26.752642Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 24
+        },
+        "unsupportedBins": {}
+      }
+    },
+    {
+      "episodePath": "episodes/8f570134-e2ed-482f-a35b-992e7588c21b/spike/learned-pinned/repeat-0004",
+      "inference": {
+        "decisions": 27,
+        "fallbacks": {
+          "invalid_observation": 1,
+          "short_history": 3
+        },
+        "inferenceAttempts": 23,
+        "maxInferenceMs": 0.239625,
+        "meanInferenceMs": 0.1138658695652174,
+        "modelDecisions": 23
+      },
+      "initialPoolObservation": {
+        "maxActiveFraction": 0.08333333333333333,
+        "observedWindows": 4,
+        "pendingWindows": 0,
+        "saturatedWindows": 0,
+        "windows": 4
+      },
+      "learnedActions": {
+        "fallbackActions": {
+          "0,0": 4
+        },
+        "fallbackReasons": {
+          "learned_fallback_invalid_observation": 1,
+          "learned_fallback_short_history": 3
+        },
+        "modelActions": {
+          "-1,0": 2,
+          "0,0": 21
+        },
+        "modelDecisions": 23,
+        "modelLimitChanges": 2,
+        "modelPoolChanges": 0,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredLearnedActions": {
+        "fallbackActions": {},
+        "fallbackReasons": {},
+        "modelActions": {
+          "-1,0": 2,
+          "0,0": 17
+        },
+        "modelDecisions": 19,
+        "modelLimitChanges": 2,
+        "modelPoolChanges": 0,
+        "modelSimultaneousChanges": 0
+      },
+      "measuredWindows": 19,
+      "measurementCpu": {
+        "fractionCovered": 0.9083291666666659,
+        "jvm": {
+          "exited": 0,
+          "meanCores": 0.06360885447486778,
+          "started": 0
+        },
+        "postgres": {
+          "exited": 0,
+          "meanCores": 2.9749371939015044,
+          "started": 0
+        },
+        "sampledSeconds": 18.393665624999983,
+        "samples": 18
+      },
+      "measurementInitialResources": {
+        "concurrency_limit": 10,
+        "hikari_max_pool": 12
+      },
+      "measurementMovement": {
+        "concurrency_limit": {
+          "changes": 2,
+          "directionReversals": 0,
+          "maxTarget": 10,
+          "minTarget": 8,
+          "totalVariation": 2
+        },
+        "hikari_max_pool": {
+          "changes": 0,
+          "directionReversals": 0,
+          "maxTarget": 12,
+          "minTarget": 12,
+          "totalVariation": 0
+        }
+      },
+      "mode": "learned-pinned",
+      "recovery": {
+        "censored": false,
+        "seconds": 3.531628
+      },
+      "repetition": 4,
+      "replayCounts": {
+        "learned_fallback_invalid_observation": 1,
+        "learned_fallback_short_history": 3,
+        "learned_policy": 23,
+        "matched_model_decisions": 23,
+        "unreplayable_initial_history": 3
+      },
+      "result": {
+        "clientTimeouts": 0,
+        "dispatched": 1781,
+        "durationMs": 20250,
+        "failureRatePercent": 0.0,
+        "goodputRps": 72.7,
+        "maxMs": 963.0,
+        "mode": "learned-pinned",
+        "otherFailures": 0,
+        "p50Ms": 122.0,
+        "p95Ms": 179.0,
+        "p99Ms": 737.0,
+        "rejected429": 309,
+        "rejectionRatePercent": 17.3,
+        "scenario": "spike",
+        "serverErrors": 0,
+        "sloBreachPercent": 18.5,
+        "succeeded": 1472
+      },
+      "startedAt": "2026-11-09T16:39:54.880458Z",
+      "supportDiagnostics": {
+        "counts": {
+          "hasSupportedAction": 23
+        },
+        "unsupportedBins": {}
+      }
+    }
+  ],
+  "conditionGroup": "ffc9fd6c3ce27d2457d721052dc0a49689a8ccbd0c7342915aa5383cf07011a8",
+  "differenceDirection": "mode_minus_reference",
+  "heldOutConditions": true,
+  "integrity": {
+    "details": [
+      {
+        "distinctAppliedChanges": 3,
+        "episodeId": "spike/adaptive/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 27,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 2,
+        "episodeId": "spike/adaptive/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 27,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 2,
+        "episodeId": "spike/adaptive/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 28,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 3,
+        "episodeId": "spike/adaptive/4",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 27,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 4,
+        "episodeId": "spike/learned/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 29,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 4,
+        "episodeId": "spike/learned/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 27,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 3,
+        "episodeId": "spike/learned/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 28,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 3,
+        "episodeId": "spike/learned/4",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 27,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 3,
+        "episodeId": "spike/learned-additive/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 28,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 4,
+        "episodeId": "spike/learned-additive/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 27,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 5,
+        "episodeId": "spike/learned-additive/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 27,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 5,
+        "episodeId": "spike/learned-additive/4",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 28,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 3,
+        "episodeId": "spike/learned-pinned/1",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 27,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 3,
+        "episodeId": "spike/learned-pinned/2",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 27,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 2,
+        "episodeId": "spike/learned-pinned/3",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 27,
+        "sourceDirty": false
+      },
+      {
+        "distinctAppliedChanges": 2,
+        "episodeId": "spike/learned-pinned/4",
+        "irregularTransitions": 0,
+        "measurementTransitions": 18,
+        "records": 27,
+        "sourceDirty": false
+      }
+    ],
+    "episodes": 16,
+    "measurementTransitions": 288,
+    "records": 438
+  },
+  "intervalMethod": "paired_t_95_unadjusted_exploratory",
+  "modelSha256": "3fe3abdff980972971e2997e85f931cdb042a82e4455d15a146abd3e955108f7",
+  "observedModeOrder": [
+    [
+      "learned",
+      "learned-additive",
+      "learned-pinned",
+      "adaptive"
+    ],
+    [
+      "learned-additive",
+      "learned-pinned",
+      "adaptive",
+      "learned"
+    ],
+    [
+      "learned-pinned",
+      "adaptive",
+      "learned",
+      "learned-additive"
+    ],
+    [
+      "adaptive",
+      "learned",
+      "learned-additive",
+      "learned-pinned"
+    ]
+  ],
+  "pairedDifferences": {
+    "learned": {
+      "failureRatePercent": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "deltas": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean": 0.0
+      },
+      "goodputRps": {
+        "ci95": [
+          -9.817973355065812,
+          7.367973355065812
+        ],
+        "deltas": [
+          4.2,
+          -0.4,
+          0.0,
+          -8.7
+        ],
+        "mean": -1.2249999999999999
+      },
+      "p95Ms": {
+        "ci95": [
+          -57.70961470872436,
+          77.70961470872436
+        ],
+        "deltas": [
+          -46.0,
+          46.0,
+          0.0,
+          40.0
+        ],
+        "mean": 10.0
+      },
+      "p99Ms": {
+        "ci95": [
+          -146.91179882293443,
+          210.91179882293443
+        ],
+        "deltas": [
+          -90.0,
+          39.0,
+          -1.0,
+          180.0
+        ],
+        "mean": 32.0
+      },
+      "rejectionRatePercent": {
+        "ci95": [
+          -8.418781376995765,
+          11.168781376995765
+        ],
+        "deltas": [
+          -4.8,
+          0.4,
+          0.0,
+          9.9
+        ],
+        "mean": 1.3750000000000002
+      },
+      "sloBreachPercent": {
+        "ci95": [
+          -3.0737950212073795,
+          6.5737950212073795
+        ],
+        "deltas": [
+          -0.6,
+          1.5,
+          0.0,
+          6.1
+        ],
+        "mean": 1.75
+      }
+    },
+    "learned-additive": {
+      "failureRatePercent": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "deltas": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean": 0.0
+      },
+      "goodputRps": {
+        "ci95": [
+          -5.293754105193645,
+          5.693754105193645
+        ],
+        "deltas": [
+          4.2,
+          0.0,
+          -4.2,
+          0.8
+        ],
+        "mean": 0.2
+      },
+      "p95Ms": {
+        "ci95": [
+          -132.31540438065167,
+          104.31540438065167
+        ],
+        "deltas": [
+          -44.0,
+          -35.0,
+          95.0,
+          -72.0
+        ],
+        "mean": -14.0
+      },
+      "p99Ms": {
+        "ci95": [
+          -268.4081708336172,
+          260.9081708336172
+        ],
+        "deltas": [
+          -89.0,
+          -70.0,
+          245.0,
+          -101.0
+        ],
+        "mean": -3.75
+      },
+      "rejectionRatePercent": {
+        "ci95": [
+          -6.46869222451922,
+          6.06869222451922
+        ],
+        "deltas": [
+          -4.8,
+          0.0,
+          4.8,
+          -0.8
+        ],
+        "mean": -0.2
+      },
+      "sloBreachPercent": {
+        "ci95": [
+          -3.022095414740832,
+          4.072095414740832
+        ],
+        "deltas": [
+          -0.6,
+          0.0,
+          3.8,
+          -1.1
+        ],
+        "mean": 0.5249999999999999
+      }
+    },
+    "learned-pinned": {
+      "failureRatePercent": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "deltas": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean": 0.0
+      },
+      "goodputRps": {
+        "ci95": [
+          -15.159723341436127,
+          6.809723341436128
+        ],
+        "deltas": [
+          -1.2,
+          0.0,
+          -1.0,
+          -14.5
+        ],
+        "mean": -4.175
+      },
+      "p95Ms": {
+        "ci95": [
+          -46.183928259491154,
+          128.18392825949115
+        ],
+        "deltas": [
+          46.0,
+          -35.0,
+          95.0,
+          58.0
+        ],
+        "mean": 41.0
+      },
+      "p99Ms": {
+        "ci95": [
+          -304.34825285023805,
+          624.348252850238
+        ],
+        "deltas": [
+          22.0,
+          -69.0,
+          102.0,
+          585.0
+        ],
+        "mean": 160.0
+      },
+      "rejectionRatePercent": {
+        "ci95": [
+          -7.799166239099277,
+          17.249166239099274
+        ],
+        "deltas": [
+          1.3,
+          0.0,
+          1.1,
+          16.5
+        ],
+        "mean": 4.725
+      },
+      "sloBreachPercent": {
+        "ci95": [
+          -7.836381556067346,
+          18.236381556067343
+        ],
+        "deltas": [
+          1.0,
+          0.0,
+          2.4,
+          17.4
+        ],
+        "mean": 5.199999999999999
+      }
+    }
+  },
+  "plannedContrasts": [
+    {
+      "metrics": {
+        "failureRatePercent": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "mean": 0.0
+        },
+        "goodputRps": {
+          "ci95": [
+            -10.608600288814246,
+            7.758600288814246
+          ],
+          "deltas": [
+            0.0,
+            -0.4,
+            4.2,
+            -9.5
+          ],
+          "mean": -1.425
+        },
+        "p95Ms": {
+          "ci95": [
+            -123.649732665361,
+            171.649732665361
+          ],
+          "deltas": [
+            -2.0,
+            81.0,
+            -95.0,
+            112.0
+          ],
+          "mean": 24.0
+        },
+        "p99Ms": {
+          "ci95": [
+            -315.5786555107,
+            387.0786555107
+          ],
+          "deltas": [
+            -1.0,
+            109.0,
+            -246.0,
+            281.0
+          ],
+          "mean": 35.75
+        },
+        "rejectionRatePercent": {
+          "ci95": [
+            -8.809382113167333,
+            11.959382113167331
+          ],
+          "deltas": [
+            0.0,
+            0.4,
+            -4.8,
+            10.7
+          ],
+          "mean": 1.575
+        },
+        "sloBreachPercent": {
+          "ci95": [
+            -6.039504453158159,
+            8.489504453158158
+          ],
+          "deltas": [
+            0.0,
+            1.5,
+            -3.8,
+            7.2
+          ],
+          "mean": 1.225
+        }
+      },
+      "mode": "learned",
+      "reference": "learned-additive"
+    },
+    {
+      "metrics": {
+        "failureRatePercent": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "mean": 0.0
+        },
+        "goodputRps": {
+          "ci95": [
+            -2.0100921090860204,
+            7.910092109086021
+          ],
+          "deltas": [
+            5.4,
+            -0.4,
+            1.0,
+            5.8
+          ],
+          "mean": 2.95
+        },
+        "p95Ms": {
+          "ci95": [
+            -162.63304767988492,
+            100.63304767988492
+          ],
+          "deltas": [
+            -92.0,
+            81.0,
+            -95.0,
+            -18.0
+          ],
+          "mean": -31.0
+        },
+        "p99Ms": {
+          "ci95": [
+            -463.4249088560462,
+            207.42490885604622
+          ],
+          "deltas": [
+            -112.0,
+            108.0,
+            -103.0,
+            -405.0
+          ],
+          "mean": -128.0
+        },
+        "rejectionRatePercent": {
+          "ci95": [
+            -8.957039304185336,
+            2.2570393041853363
+          ],
+          "deltas": [
+            -6.1,
+            0.4,
+            -1.1,
+            -6.6
+          ],
+          "mean": -3.3499999999999996
+        },
+        "sloBreachPercent": {
+          "ci95": [
+            -12.196904122114113,
+            5.296904122114113
+          ],
+          "deltas": [
+            -1.6,
+            1.5,
+            -2.4,
+            -11.3
+          ],
+          "mean": -3.45
+        }
+      },
+      "mode": "learned",
+      "reference": "learned-pinned"
+    },
+    {
+      "metrics": {
+        "failureRatePercent": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "mean": 0.0
+        },
+        "goodputRps": {
+          "ci95": [
+            -9.817973355065812,
+            7.367973355065812
+          ],
+          "deltas": [
+            4.2,
+            -0.4,
+            0.0,
+            -8.7
+          ],
+          "mean": -1.2249999999999999
+        },
+        "p95Ms": {
+          "ci95": [
+            -57.70961470872436,
+            77.70961470872436
+          ],
+          "deltas": [
+            -46.0,
+            46.0,
+            0.0,
+            40.0
+          ],
+          "mean": 10.0
+        },
+        "p99Ms": {
+          "ci95": [
+            -146.91179882293443,
+            210.91179882293443
+          ],
+          "deltas": [
+            -90.0,
+            39.0,
+            -1.0,
+            180.0
+          ],
+          "mean": 32.0
+        },
+        "rejectionRatePercent": {
+          "ci95": [
+            -8.418781376995765,
+            11.168781376995765
+          ],
+          "deltas": [
+            -4.8,
+            0.4,
+            0.0,
+            9.9
+          ],
+          "mean": 1.3750000000000002
+        },
+        "sloBreachPercent": {
+          "ci95": [
+            -3.0737950212073795,
+            6.5737950212073795
+          ],
+          "deltas": [
+            -0.6,
+            1.5,
+            0.0,
+            6.1
+          ],
+          "mean": 1.75
+        }
+      },
+      "mode": "learned",
+      "reference": "adaptive"
+    }
+  ],
+  "protocolSha256": "7e2ad4276752f5d05268a684926a682832a1d079c85ba9a6355466f7f9870ad7",
+  "reference": "adaptive",
+  "scenario": "spike",
+  "sourceCommit": "118b55003a1715fe8d869cc6bc132a1c6ac0fb83"
+}

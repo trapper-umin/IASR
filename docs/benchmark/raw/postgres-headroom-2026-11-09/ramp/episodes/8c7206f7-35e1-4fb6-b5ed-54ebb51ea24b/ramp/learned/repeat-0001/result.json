@@ -1,0 +1,19 @@
+{
+  "mode" : "learned",
+  "scenario" : "ramp",
+  "durationMs" : 20250,
+  "dispatched" : 2041,
+  "succeeded" : 1904,
+  "rejected429" : 137,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 94.0,
+  "p50Ms" : 46.0,
+  "p95Ms" : 108.0,
+  "p99Ms" : 234.0,
+  "maxMs" : 1034.0,
+  "sloBreachPercent" : 2.4,
+  "rejectionRatePercent" : 6.7,
+  "failureRatePercent" : 0.0
+}

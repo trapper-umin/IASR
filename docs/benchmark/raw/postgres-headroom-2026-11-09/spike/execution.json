@@ -1,0 +1,17 @@
+{
+  "protocolSha256": "7e2ad4276752f5d05268a684926a682832a1d079c85ba9a6355466f7f9870ad7",
+  "postgresVersion": "postgres (PostgreSQL) 17.10 (Homebrew)",
+  "startedAt": "2026-11-09T16:33:08.254110+00:00",
+  "status": "complete",
+  "cpuSamplingSec": 1.0,
+  "postgresSettings": [
+    "jit=on",
+    "max_connections=100",
+    "max_parallel_workers_per_gather=2",
+    "server_version=17.10 (Homebrew)",
+    "shared_buffers=16384",
+    "work_mem=4096"
+  ],
+  "postgresStopped": true,
+  "endedAt": "2026-11-09T16:40:21.854311+00:00"
+}

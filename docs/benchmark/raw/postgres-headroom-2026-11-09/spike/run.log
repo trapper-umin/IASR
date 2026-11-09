@@ -1,0 +1,72 @@
+
+=== spike / learned ===
+2026-11-09T19:33:38.167+03:00  WARN 37421 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-1-Acceptor] did not stop cleanly
+   [1/4] goodput=88,0 rps  p95=40,0 ms  p99=44,0 ms  429=0,0%  hard-fail=0,0%
+
+=== spike / learned-additive ===
+2026-11-09T19:34:06.380+03:00  WARN 37421 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-2-Acceptor] did not stop cleanly
+   [1/4] goodput=88,0 rps  p95=42,0 ms  p99=45,0 ms  429=0,0%  hard-fail=0,0%
+
+=== spike / learned-pinned ===
+2026-11-09T19:34:24.012+03:00  WARN 37421 --- [-auto-3-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=8, inflight=8, queue=14)
+   [1/4] goodput=82,6 rps  p95=132,0 ms  p99=156,0 ms  429=6,1%  hard-fail=0,0%
+
+=== spike / adaptive ===
+2026-11-09T19:34:51.604+03:00  WARN 37421 --- [-auto-4-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=10, inflight=10, queue=15)
+   [1/4] goodput=83,8 rps  p95=86,0 ms  p99=134,0 ms  429=4,8%  hard-fail=0,0%
+
+=== spike / learned-additive ===
+   [2/4] goodput=88,0 rps  p95=45,0 ms  p99=47,0 ms  429=0,0%  hard-fail=0,0%
+
+=== spike / learned-pinned ===
+   [2/4] goodput=88,0 rps  p95=45,0 ms  p99=48,0 ms  429=0,0%  hard-fail=0,0%
+
+=== spike / adaptive ===
+   [2/4] goodput=88,0 rps  p95=80,0 ms  p99=117,0 ms  429=0,0%  hard-fail=0,0%
+
+=== spike / learned ===
+2026-11-09T19:36:36.767+03:00  WARN 37421 --- [-auto-8-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=10, inflight=10, queue=15)
+   [2/4] goodput=87,6 rps  p95=126,0 ms  p99=156,0 ms  429=0,4%  hard-fail=0,0%
+
+=== spike / learned-pinned ===
+2026-11-09T19:37:04.008+03:00  WARN 37421 --- [o-auto-9-exec-2] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=8, inflight=8, queue=14)
+   [3/4] goodput=87,0 rps  p95=143,0 ms  p99=154,0 ms  429=1,1%  hard-fail=0,0%
+
+=== spike / adaptive ===
+2026-11-09T19:37:39.737+03:00  WARN 37421 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-10-Acceptor] did not stop cleanly
+   [3/4] goodput=88,0 rps  p95=48,0 ms  p99=52,0 ms  429=0,0%  hard-fail=0,0%
+
+=== spike / learned ===
+   [3/4] goodput=88,0 rps  p95=48,0 ms  p99=51,0 ms  429=0,0%  hard-fail=0,0%
+
+=== spike / learned-additive ===
+2026-11-09T19:38:20.723+03:00  WARN 37421 --- [auto-12-exec-17] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=11, inflight=11, queue=14)
+   [3/4] goodput=83,8 rps  p95=143,0 ms  p99=297,0 ms  429=4,8%  hard-fail=0,0%
+
+=== spike / adaptive ===
+2026-11-09T19:38:51.633+03:00  WARN 37421 --- [auto-13-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 2 request(s) rejected in the last 5000 ms (limit=10, inflight=10, queue=14)
+   [4/4] goodput=87,2 rps  p95=121,0 ms  p99=152,0 ms  429=0,8%  hard-fail=0,0%
+
+=== spike / learned ===
+2026-11-09T19:39:14.155+03:00  WARN 37421 --- [-auto-14-exec-3] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=9, inflight=9, queue=15)
+   [4/4] goodput=78,5 rps  p95=161,0 ms  p99=332,0 ms  429=10,7%  hard-fail=0,0%
+
+=== spike / learned-additive ===
+2026-11-09T19:39:54.718+03:00  WARN 37421 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-15-Acceptor] did not stop cleanly
+   [4/4] goodput=88,0 rps  p95=49,0 ms  p99=51,0 ms  429=0,0%  hard-fail=0,0%
+
+=== spike / learned-pinned ===
+2026-11-09T19:40:07.108+03:00  WARN 37421 --- [-auto-16-exec-5] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=10, inflight=10, queue=13)
+2026-11-09T19:40:13.484+03:00  WARN 37421 --- [auto-16-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 291 request(s) rejected in the last 5000 ms (limit=9, inflight=9, queue=15)
+   [4/4] goodput=72,7 rps  p95=179,0 ms  p99=737,0 ms  429=17,3%  hard-fail=0,0%
+
+   spike / adaptive median: goodput=83,8 rps  p95=86,0 ms  (spread p95 48,0–121,0)
+
+   spike / learned-pinned median: goodput=87,0 rps  p95=143,0 ms  (spread p95 45,0–179,0)
+
+   spike / learned-additive median: goodput=88,0 rps  p95=49,0 ms  (spread p95 42,0–143,0)
+
+   spike / learned median: goodput=87,6 rps  p95=126,0 ms  (spread p95 40,0–161,0)
+
+Report written to /private/tmp/iasr-headroom.2Pv0ij/spike
+All repetitions saved to /private/tmp/iasr-headroom.2Pv0ij/spike/episodes/8f570134-e2ed-482f-a35b-992e7588c21b
