@@ -9,6 +9,7 @@ from pathlib import Path
 from statistics import mean, stdev
 
 from audit_controller_comparison import classify_actions, live_records
+from benchmark_cpu import read_cpu_trace, summarize_cpu
 from fqi_runtime import action_key, bin_for, supported_actions
 from policy_data import LIMIT, POOL, candidates, context
 from prepare_dataset import group_id
@@ -57,6 +58,18 @@ def movement(rows):
                             "directionReversals": sum(a * b < 0 for a, b in zip(changes, changes[1:])),
                             "minTarget": min(values, default=None), "maxTarget": max(values, default=None)}
     return result
+
+
+def initial_pool_observation(rows, start, seconds):
+    end = start + timedelta(seconds=seconds)
+    observations = [(row["state"].get("hikari_active"), row["state"].get("hikari_pending"),
+                     row["resourcesBefore"][POOL]) for row in rows if timestamp(row["timestamp"]) <= end]
+    observed = [(active, pending, pool) for active, pending, pool in observations
+                if active is not None and pending is not None and pool > 0]
+    return {"windows": len(observations), "observedWindows": len(observed),
+            "pendingWindows": sum(pending > 0 for _, pending, _ in observed),
+            "saturatedWindows": sum(active >= pool for active, _, pool in observed),
+            "maxActiveFraction": max((active / pool for active, _, pool in observed), default=None)}
 
 
 def diagnose_support(rows, control, model):
@@ -147,6 +160,11 @@ def audit(root, protocol_path, model_path, additive_path=None):
     require(execution["status"] == "complete" and execution["postgresStopped"], "benchmark or database shutdown incomplete")
     require(execution["protocolSha256"] == protocol_sha and execution["postgresVersion"] == plan["postgresVersion"],
             "execution does not match the protocol")
+    cpu_interval = plan.get("cpuSamplingSec")
+    cpu_samples = None
+    if cpu_interval is not None:
+        require(execution["cpuSamplingSec"] == cpu_interval, "CPU sampling differs from protocol")
+        cpu_samples = read_cpu_trace(root / "cpu.jsonl")
     calibration = protocol_path.parent / plan["calibration"]["file"]
     require(hashlib.sha256(calibration.read_bytes()).hexdigest() == plan["calibration"]["sha256"], "calibration changed")
     require(hashlib.sha256(model_path.read_bytes()).hexdigest() == plan["modelSha256"], "model changed")
@@ -172,6 +190,8 @@ def audit(root, protocol_path, model_path, additive_path=None):
         other = replay(root, additive_path, ("learned-additive",))
         replayed.update({episode["episodeId"]: episode for episode in other["replay"]})
     repeats = range(1, plan["repeats"] + 1)
+    recovery_criterion = plan["analysis"]["recovery"]
+    headroom_seconds = plan["analysis"].get("headroomObservationSec")
     require(len(modes) > 1 and len(set(modes)) == len(modes) and len(repeats) >= 2
             and len(repeats) % len(modes) == 0, "expected full balanced blocks")
     cases, conditions, sources, run_ids, controller_settings = {}, set(), set(), set(), set()
@@ -206,7 +226,14 @@ def audit(root, protocol_path, model_path, additive_path=None):
                 "startedAt": timing["captureStartedAt"], "result": result, "measuredWindows": len(measured),
                 "measurementInitialResources": metadata["measurementInitialResources"],
                 "measurementMovement": movement(measured),
-                "recovery": recovery(rows, start, end, plan["analysis"]["recovery"], plan["properties"]["bench.sloMs"])}
+                "recovery": (recovery(rows, start, end, recovery_criterion, plan["properties"]["bench.sloMs"])
+                             if recovery_criterion is not None else None)}
+        if headroom_seconds is not None:
+            case["initialPoolObservation"] = initial_pool_observation(measured, start, headroom_seconds)
+        if cpu_samples is not None:
+            case["measurementCpu"] = summarize_cpu(cpu_samples, start, end, cpu_interval)
+            require(case["measurementCpu"]["fractionCovered"] >= plan["analysis"]["minCpuCoverage"],
+                    f"insufficient CPU sampling in {metadata['episodeId']}")
         if mode == "fixed":
             require(all(item["changes"] == 0 for item in movement(rows).values()), "fixed controller moved resources")
         if mode.endswith("-pinned"):
@@ -227,7 +254,8 @@ def audit(root, protocol_path, model_path, additive_path=None):
             "condition, controller settings, source or run differs between modes")
     condition, = conditions
     require(condition not in model["inputGroups"], "evaluation condition occurs in model inputs")
-    require(condition != plan.get("reservedEvaluationGroup"), "evaluation reused the prior holdout group")
+    reserved_groups = [plan.get("reservedEvaluationGroup"), *plan.get("reservedEvaluationGroups", [])]
+    require(condition not in reserved_groups, "evaluation reused a prior holdout group")
     orders = [[case["mode"] for case in sorted((cases[rep, mode] for mode in modes),
               key=lambda item: timestamp(item["startedAt"]))] for rep in repeats]
     for index, order in enumerate(orders):

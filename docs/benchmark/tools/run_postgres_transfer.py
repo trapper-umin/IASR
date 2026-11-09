@@ -13,6 +13,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
+from benchmark_cpu import run_sampled
 from validate_episodes import read_json, require
 
 
@@ -52,6 +53,8 @@ def run(plan_path, output):
     password_file.chmod(0o600)
     execution = {"protocolSha256": hashlib.sha256(plan_path.read_bytes()).hexdigest(), "postgresVersion": version,
                  "startedAt": now(), "status": "running"}
+    if "cpuSamplingSec" in plan:
+        execution["cpuSamplingSec"] = plan["cpuSamplingSec"]
     (output / "execution.json").write_text(json.dumps(execution, indent=2) + "\n")
     startup_attempted, finished = False, False
     try:
@@ -84,8 +87,12 @@ def run(plan_path, output):
         caffeinate = shutil.which("caffeinate")
         prefix = [caffeinate, "-i"] if caffeinate else []
         with (output / "run.log").open("w") as log:
-            subprocess.run([*prefix, "java", *flags, "-cp", classpath, "com.iasr.benchmark.BenchmarkRunner"],
-                           cwd=repo, stdout=log, stderr=subprocess.STDOUT, check=True)
+            command = [*prefix, "java", *flags, "-cp", classpath, "com.iasr.benchmark.BenchmarkRunner"]
+            if "cpuSamplingSec" in plan:
+                postgres_pid = int((data / "postmaster.pid").read_text().splitlines()[0])
+                run_sampled(command, repo, log, output / "cpu.jsonl", postgres_pid, plan["cpuSamplingSec"])
+            else:
+                subprocess.run(command, cwd=repo, stdout=log, stderr=subprocess.STDOUT, check=True)
         finished = True
     finally:
         stopped = not startup_attempted or subprocess.run(
