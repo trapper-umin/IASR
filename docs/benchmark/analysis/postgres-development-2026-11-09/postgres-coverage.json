@@ -1,0 +1,505 @@
+{
+  "train": {
+    "actions": {
+      "[-1,0]": 16,
+      "[0,-1]": 14,
+      "[0,0]": 257,
+      "[0,1]": 19,
+      "[1,-1]": 1,
+      "[1,0]": 12
+    },
+    "bins": {
+      "comfortable/no_pending/binding/limit_tick": {
+        "[0,0]": {
+          "episodes": 6,
+          "opportunities": 11,
+          "samples": 9,
+          "supported": true
+        },
+        "[1,0]": {
+          "episodes": 2,
+          "opportunities": 10,
+          "samples": 2,
+          "supported": false
+        }
+      },
+      "comfortable/no_pending/headroom/limit_tick": {
+        "[-1,0]": {
+          "episodes": 2,
+          "opportunities": 12,
+          "samples": 4,
+          "supported": true
+        },
+        "[0,0]": {
+          "episodes": 6,
+          "opportunities": 29,
+          "samples": 19,
+          "supported": true
+        },
+        "[1,0]": {
+          "episodes": 4,
+          "opportunities": 16,
+          "samples": 6,
+          "supported": true
+        }
+      },
+      "comfortable/no_pending/headroom/pool_tick": {
+        "[-1,-1]": {
+          "episodes": 0,
+          "opportunities": 4,
+          "samples": 0,
+          "supported": false
+        },
+        "[-1,0]": {
+          "episodes": 0,
+          "opportunities": 4,
+          "samples": 0,
+          "supported": false
+        },
+        "[-1,1]": {
+          "episodes": 0,
+          "opportunities": 4,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,-1]": {
+          "episodes": 1,
+          "opportunities": 7,
+          "samples": 1,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 2,
+          "opportunities": 7,
+          "samples": 2,
+          "supported": false
+        },
+        "[0,1]": {
+          "episodes": 1,
+          "opportunities": 7,
+          "samples": 1,
+          "supported": false
+        },
+        "[1,-1]": {
+          "episodes": 1,
+          "opportunities": 6,
+          "samples": 1,
+          "supported": false
+        },
+        "[1,0]": {
+          "episodes": 2,
+          "opportunities": 6,
+          "samples": 2,
+          "supported": false
+        },
+        "[1,1]": {
+          "episodes": 0,
+          "opportunities": 6,
+          "samples": 0,
+          "supported": false
+        }
+      },
+      "comfortable/pending/binding/limit_tick": {
+        "[0,0]": {
+          "episodes": 1,
+          "opportunities": 1,
+          "samples": 1,
+          "supported": false
+        }
+      },
+      "comfortable/pending/headroom/limit_tick": {
+        "[-1,0]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 1,
+          "opportunities": 1,
+          "samples": 1,
+          "supported": false
+        },
+        "[1,0]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        }
+      },
+      "over_slo/no_pending/binding/limit_tick": {
+        "[-1,0]": {
+          "episodes": 3,
+          "opportunities": 8,
+          "samples": 3,
+          "supported": true
+        },
+        "[0,0]": {
+          "episodes": 8,
+          "opportunities": 177,
+          "samples": 174,
+          "supported": true
+        }
+      },
+      "over_slo/no_pending/binding/pool_tick": {
+        "[0,-1]": {
+          "episodes": 8,
+          "opportunities": 47,
+          "samples": 13,
+          "supported": true
+        },
+        "[0,0]": {
+          "episodes": 7,
+          "opportunities": 47,
+          "samples": 22,
+          "supported": true
+        },
+        "[0,1]": {
+          "episodes": 8,
+          "opportunities": 47,
+          "samples": 12,
+          "supported": true
+        }
+      },
+      "over_slo/no_pending/headroom/limit_tick": {
+        "[-1,0]": {
+          "episodes": 2,
+          "opportunities": 2,
+          "samples": 2,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 4,
+          "opportunities": 8,
+          "samples": 6,
+          "supported": true
+        }
+      },
+      "over_slo/no_pending/headroom/pool_tick": {
+        "[0,-1]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,1]": {
+          "episodes": 1,
+          "opportunities": 1,
+          "samples": 1,
+          "supported": false
+        }
+      },
+      "over_slo/pending/binding/limit_tick": {
+        "[-1,0]": {
+          "episodes": 5,
+          "opportunities": 11,
+          "samples": 7,
+          "supported": true
+        },
+        "[0,0]": {
+          "episodes": 3,
+          "opportunities": 23,
+          "samples": 16,
+          "supported": true
+        }
+      },
+      "over_slo/pending/binding/pool_tick": {
+        "[-1,-1]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[-1,0]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[-1,1]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,-1]": {
+          "episodes": 0,
+          "opportunities": 6,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 1,
+          "opportunities": 6,
+          "samples": 2,
+          "supported": false
+        },
+        "[0,1]": {
+          "episodes": 3,
+          "opportunities": 6,
+          "samples": 4,
+          "supported": true
+        }
+      },
+      "over_slo/pending/headroom/pool_tick": {
+        "[-1,-1]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[-1,0]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[-1,1]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,-1]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 1,
+          "opportunities": 2,
+          "samples": 1,
+          "supported": false
+        },
+        "[0,1]": {
+          "episodes": 1,
+          "opportunities": 2,
+          "samples": 1,
+          "supported": false
+        }
+      },
+      "within_slo/no_pending/binding/limit_tick": {
+        "[-1,0]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 2,
+          "opportunities": 5,
+          "samples": 3,
+          "supported": true
+        },
+        "[1,0]": {
+          "episodes": 2,
+          "opportunities": 5,
+          "samples": 2,
+          "supported": false
+        }
+      },
+      "within_slo/no_pending/headroom/pool_tick": {
+        "[0,-1]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 1,
+          "opportunities": 1,
+          "samples": 1,
+          "supported": false
+        },
+        "[0,1]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,-1]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,0]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,1]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        }
+      }
+    },
+    "minEpisodes": 2,
+    "minSamples": 3,
+    "missingLatestMetrics": {},
+    "readiness": "not_established",
+    "samples": 319,
+    "supportScope": "diagnostic_coarse_bins"
+  },
+  "validation": {
+    "actions": {
+      "[-1,0]": 3,
+      "[0,-1]": 6,
+      "[0,0]": 142,
+      "[0,1]": 8,
+      "[1,1]": 1
+    },
+    "bins": {
+      "comfortable/no_pending/binding/limit_tick": {
+        "[0,0]": {
+          "episodes": 3,
+          "opportunities": 4,
+          "samples": 4,
+          "supported": true
+        },
+        "[1,0]": {
+          "episodes": 0,
+          "opportunities": 4,
+          "samples": 0,
+          "supported": false
+        }
+      },
+      "comfortable/no_pending/binding/pool_tick": {
+        "[0,-1]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,1]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,-1]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,0]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[1,1]": {
+          "episodes": 1,
+          "opportunities": 1,
+          "samples": 1,
+          "supported": false
+        }
+      },
+      "over_slo/no_pending/binding/limit_tick": {
+        "[-1,0]": {
+          "episodes": 1,
+          "opportunities": 1,
+          "samples": 1,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 4,
+          "opportunities": 114,
+          "samples": 113,
+          "supported": true
+        }
+      },
+      "over_slo/no_pending/binding/pool_tick": {
+        "[0,-1]": {
+          "episodes": 4,
+          "opportunities": 29,
+          "samples": 5,
+          "supported": true
+        },
+        "[0,0]": {
+          "episodes": 4,
+          "opportunities": 29,
+          "samples": 17,
+          "supported": true
+        },
+        "[0,1]": {
+          "episodes": 4,
+          "opportunities": 29,
+          "samples": 7,
+          "supported": true
+        }
+      },
+      "over_slo/no_pending/headroom/limit_tick": {
+        "[-1,0]": {
+          "episodes": 0,
+          "opportunities": 1,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 4,
+          "opportunities": 5,
+          "samples": 5,
+          "supported": true
+        }
+      },
+      "over_slo/no_pending/headroom/pool_tick": {
+        "[0,-1]": {
+          "episodes": 1,
+          "opportunities": 2,
+          "samples": 1,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 0,
+          "opportunities": 2,
+          "samples": 0,
+          "supported": false
+        },
+        "[0,1]": {
+          "episodes": 1,
+          "opportunities": 2,
+          "samples": 1,
+          "supported": false
+        }
+      },
+      "over_slo/pending/binding/limit_tick": {
+        "[-1,0]": {
+          "episodes": 2,
+          "opportunities": 5,
+          "samples": 2,
+          "supported": false
+        },
+        "[0,0]": {
+          "episodes": 3,
+          "opportunities": 5,
+          "samples": 3,
+          "supported": true
+        }
+      }
+    },
+    "minEpisodes": 2,
+    "minSamples": 3,
+    "missingLatestMetrics": {},
+    "readiness": "not_established",
+    "samples": 160,
+    "supportScope": "diagnostic_coarse_bins"
+  }
+}

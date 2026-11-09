@@ -1,0 +1,377 @@
+{
+  "auditVersion": 1,
+  "inputSha256": {
+    "train": "a2c1623658ac6143c7840bddc1b2ff76baef5d64f9c6336ef7964bbe235c1144",
+    "validation": "25963f3d6148b6613516a8bd021ddcb414211ccf47a37d6416974b3da01a2f3a"
+  },
+  "necessaryJointCoverageEstablished": true,
+  "partitionsRead": [
+    "train",
+    "validation"
+  ],
+  "performanceEstablished": false,
+  "supportParameters": {
+    "maxRmsDistance": 2.0,
+    "minEpisodes": 2,
+    "minSamples": 3
+  },
+  "testEvaluated": false,
+  "train": {
+    "afterClosure": {
+      "actions": {
+        "-1,-1": 4,
+        "-1,0": 136,
+        "-1,1": 6,
+        "0,-1": 30,
+        "0,0": 474,
+        "0,1": 41,
+        "1,0": 35
+      },
+      "established": true,
+      "poolGrowth": 47,
+      "poolShrinkage": 34,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 10
+    },
+    "beforeClosure": {
+      "actions": {
+        "-1,-1": 7,
+        "-1,0": 143,
+        "-1,1": 6,
+        "0,-1": 32,
+        "0,0": 492,
+        "0,1": 45,
+        "1,-1": 2,
+        "1,0": 47
+      },
+      "established": true,
+      "poolGrowth": 51,
+      "poolShrinkage": 41,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 15
+    },
+    "closureFailure": null,
+    "closureTrace": [
+      {
+        "excluded": {
+          "unsupported_behavior_action": 26,
+          "unsupported_continuation": 11
+        },
+        "input": 774,
+        "pass": 1,
+        "retained": 737,
+        "retainedCoverage": {
+          "actions": {
+            "-1,-1": 4,
+            "-1,0": 136,
+            "-1,1": 6,
+            "0,-1": 31,
+            "0,0": 480,
+            "0,1": 41,
+            "1,0": 39
+          },
+          "established": true,
+          "poolGrowth": 47,
+          "poolShrinkage": 35,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 10
+        }
+      },
+      {
+        "excluded": {
+          "unsupported_behavior_action": 6,
+          "unsupported_continuation": 5
+        },
+        "input": 737,
+        "pass": 2,
+        "retained": 726,
+        "retainedCoverage": {
+          "actions": {
+            "-1,-1": 4,
+            "-1,0": 136,
+            "-1,1": 6,
+            "0,-1": 30,
+            "0,0": 474,
+            "0,1": 41,
+            "1,0": 35
+          },
+          "established": true,
+          "poolGrowth": 47,
+          "poolShrinkage": 34,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 10
+        }
+      },
+      {
+        "excluded": {},
+        "input": 726,
+        "pass": 3,
+        "retained": 726,
+        "retainedCoverage": {
+          "actions": {
+            "-1,-1": 4,
+            "-1,0": 136,
+            "-1,1": 6,
+            "0,-1": 30,
+            "0,0": 474,
+            "0,1": 41,
+            "1,0": 35
+          },
+          "established": true,
+          "poolGrowth": 47,
+          "poolShrinkage": 34,
+          "scope": "necessary_retained_action_coverage_only",
+          "simultaneousChanges": 10
+        }
+      }
+    ],
+    "excluded": {
+      "unsupported_behavior_action": 36,
+      "unsupported_continuation": 12
+    },
+    "input": 774,
+    "lagDescriptions": {
+      "excluded": {
+        "h3:gap_or_episode_end": 15,
+        "h5:gap_or_episode_end": 15
+      },
+      "groups": {
+        "comfortable/no_pending/headroom/pool_tick/dp=-1/h=1": {
+          "count": 9,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 121.67744444444445,
+          "meanP95Ms": 61.2528888888889,
+          "simultaneousLimitChangeAtStart": 3
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=-1/h=3": {
+          "count": 7,
+          "limitChangedDuringFollowup": 4,
+          "meanGoodputRps": 116.76971428571429,
+          "meanP95Ms": 103.48428571428572,
+          "simultaneousLimitChangeAtStart": 2
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=-1/h=5": {
+          "count": 7,
+          "limitChangedDuringFollowup": 7,
+          "meanGoodputRps": 117.94671428571428,
+          "meanP95Ms": 106.24185714285714,
+          "simultaneousLimitChangeAtStart": 2
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=1/h=1": {
+          "count": 10,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 136.41070000000002,
+          "meanP95Ms": 44.5655,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=1/h=3": {
+          "count": 9,
+          "limitChangedDuringFollowup": 6,
+          "meanGoodputRps": 147.46344444444446,
+          "meanP95Ms": 45.05233333333334,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "comfortable/no_pending/headroom/pool_tick/dp=1/h=5": {
+          "count": 9,
+          "limitChangedDuringFollowup": 8,
+          "meanGoodputRps": 152.36033333333333,
+          "meanP95Ms": 58.228,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "comfortable/pending/headroom/pool_tick/dp=-1/h=1": {
+          "count": 2,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 209.599,
+          "meanP95Ms": 140.9035,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "comfortable/pending/headroom/pool_tick/dp=-1/h=3": {
+          "count": 2,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 207.792,
+          "meanP95Ms": 216.4135,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "comfortable/pending/headroom/pool_tick/dp=-1/h=5": {
+          "count": 2,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 209.3535,
+          "meanP95Ms": 214.473,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "over_slo/no_pending/binding/pool_tick/dp=-1/h=1": {
+          "count": 13,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 34.67476923076923,
+          "meanP95Ms": 698.8146923076923,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "over_slo/no_pending/binding/pool_tick/dp=-1/h=3": {
+          "count": 12,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 47.332166666666666,
+          "meanP95Ms": 457.35324999999995,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "over_slo/no_pending/binding/pool_tick/dp=-1/h=5": {
+          "count": 12,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 44.79558333333333,
+          "meanP95Ms": 326.38225,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "over_slo/no_pending/binding/pool_tick/dp=1/h=1": {
+          "count": 13,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 52.52684615384616,
+          "meanP95Ms": 416.3417692307693,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "over_slo/no_pending/binding/pool_tick/dp=1/h=3": {
+          "count": 10,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 48.08710000000001,
+          "meanP95Ms": 792.3412,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "over_slo/no_pending/binding/pool_tick/dp=1/h=5": {
+          "count": 10,
+          "limitChangedDuringFollowup": 2,
+          "meanGoodputRps": 45.0357,
+          "meanP95Ms": 778.2260999999999,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "over_slo/no_pending/headroom/pool_tick/dp=1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 34.864,
+          "meanP95Ms": 345.734,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "over_slo/no_pending/headroom/pool_tick/dp=1/h=3": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 1.999,
+          "meanP95Ms": 1179.4,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "over_slo/no_pending/headroom/pool_tick/dp=1/h=5": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 57.236,
+          "meanP95Ms": 219.678,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=1": {
+          "count": 16,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 142.4549375,
+          "meanP95Ms": 222.67587500000002,
+          "simultaneousLimitChangeAtStart": 4
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=3": {
+          "count": 13,
+          "limitChangedDuringFollowup": 12,
+          "meanGoodputRps": 137.60700000000003,
+          "meanP95Ms": 223.47915384615388,
+          "simultaneousLimitChangeAtStart": 3
+        },
+        "over_slo/pending/binding/pool_tick/dp=-1/h=5": {
+          "count": 13,
+          "limitChangedDuringFollowup": 13,
+          "meanGoodputRps": 137.02561538461538,
+          "meanP95Ms": 218.92361538461535,
+          "simultaneousLimitChangeAtStart": 3
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=1": {
+          "count": 24,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 121.68433333333333,
+          "meanP95Ms": 266.194,
+          "simultaneousLimitChangeAtStart": 6
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=3": {
+          "count": 21,
+          "limitChangedDuringFollowup": 18,
+          "meanGoodputRps": 122.36176190476192,
+          "meanP95Ms": 286.03423809523815,
+          "simultaneousLimitChangeAtStart": 5
+        },
+        "over_slo/pending/binding/pool_tick/dp=1/h=5": {
+          "count": 21,
+          "limitChangedDuringFollowup": 18,
+          "meanGoodputRps": 120.60409523809524,
+          "meanP95Ms": 270.3920476190477,
+          "simultaneousLimitChangeAtStart": 5
+        },
+        "over_slo/pending/headroom/pool_tick/dp=1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 89.951,
+          "meanP95Ms": 50.982,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "over_slo/pending/headroom/pool_tick/dp=1/h=3": {
+          "count": 1,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 72.003,
+          "meanP95Ms": 193.229,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "over_slo/pending/headroom/pool_tick/dp=1/h=5": {
+          "count": 1,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 48.236,
+          "meanP95Ms": 250.899,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "within_slo/no_pending/binding/pool_tick/dp=1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 144.864,
+          "meanP95Ms": 147.906,
+          "simultaneousLimitChangeAtStart": 0
+        },
+        "within_slo/pending/binding/pool_tick/dp=-1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 128.4,
+          "meanP95Ms": 140.82,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "within_slo/pending/binding/pool_tick/dp=-1/h=3": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 129.296,
+          "meanP95Ms": 140.935,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "within_slo/pending/binding/pool_tick/dp=-1/h=5": {
+          "count": 1,
+          "limitChangedDuringFollowup": 1,
+          "meanGoodputRps": 143.136,
+          "meanP95Ms": 149.747,
+          "simultaneousLimitChangeAtStart": 1
+        },
+        "within_slo/pending/binding/pool_tick/dp=1/h=1": {
+          "count": 1,
+          "limitChangedDuringFollowup": 0,
+          "meanGoodputRps": 132.241,
+          "meanP95Ms": 132.681,
+          "simultaneousLimitChangeAtStart": 0
+        }
+      },
+      "scope": "descriptive_observed_trajectories_not_causal_action_effects"
+    },
+    "removedActions": {
+      "-1,-1": 3,
+      "-1,0": 7,
+      "0,-1": 2,
+      "0,0": 18,
+      "0,1": 4,
+      "1,-1": 2,
+      "1,0": 12
+    },
+    "retained": 726
+  }
+}

@@ -1,0 +1,275 @@
+{
+  "analysisVersion": 1,
+  "candidate": {
+    "modelSha256": "d13557458a62b7ec5991b83f7752f5e3ed1fe4dfaa6d69c570285b77679ea2b4",
+    "status": "trained",
+    "support": {
+      "byBin": {
+        "comfortable/no_pending/binding/limit_tick": {
+          "anySupportedAction": 4,
+          "histories": 4,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 4,
+          "poolActionLegal": 0,
+          "poolActionSupported": 0
+        },
+        "comfortable/no_pending/binding/pool_tick": {
+          "anySupportedAction": false,
+          "histories": 1,
+          "jointActionLegal": true,
+          "jointActionSupported": false,
+          "observedActionSupported": false,
+          "poolActionLegal": true,
+          "poolActionSupported": false
+        },
+        "over_slo/no_pending/binding/limit_tick": {
+          "anySupportedAction": 114,
+          "histories": 114,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 114,
+          "poolActionLegal": 0,
+          "poolActionSupported": 0
+        },
+        "over_slo/no_pending/binding/pool_tick": {
+          "anySupportedAction": 29,
+          "histories": 29,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 29,
+          "poolActionLegal": 29,
+          "poolActionSupported": 29
+        },
+        "over_slo/no_pending/headroom/limit_tick": {
+          "anySupportedAction": 5,
+          "histories": 5,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 5,
+          "poolActionLegal": 0,
+          "poolActionSupported": 0
+        },
+        "over_slo/no_pending/headroom/pool_tick": {
+          "anySupportedAction": 0,
+          "histories": 2,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 0,
+          "poolActionLegal": 2,
+          "poolActionSupported": 0
+        },
+        "over_slo/pending/binding/limit_tick": {
+          "anySupportedAction": 5,
+          "histories": 5,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 5,
+          "poolActionLegal": 0,
+          "poolActionSupported": 0
+        }
+      },
+      "byEpisode": {
+        "spike/explore-balanced/1": {
+          "anySupportedAction": 38,
+          "histories": 40,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 38,
+          "poolActionLegal": 8,
+          "poolActionSupported": 6
+        },
+        "spike/explore-balanced/2": {
+          "anySupportedAction": 39,
+          "histories": 40,
+          "jointActionLegal": 1,
+          "jointActionSupported": 0,
+          "observedActionSupported": 39,
+          "poolActionLegal": 8,
+          "poolActionSupported": 7
+        },
+        "spike/explore-balanced/3": {
+          "anySupportedAction": 40,
+          "histories": 40,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 40,
+          "poolActionLegal": 8,
+          "poolActionSupported": 8
+        },
+        "spike/explore-balanced/4": {
+          "anySupportedAction": 40,
+          "histories": 40,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 40,
+          "poolActionLegal": 8,
+          "poolActionSupported": 8
+        }
+      },
+      "total": {
+        "anySupportedAction": 157,
+        "histories": 160,
+        "jointActionLegal": 1,
+        "jointActionSupported": 0,
+        "observedActionSupported": 157,
+        "poolActionLegal": 32,
+        "poolActionSupported": 29
+      }
+    }
+  },
+  "postgresTrain": {
+    "afterClosure": {
+      "actions": {
+        "-1,0": 14,
+        "0,-1": 14,
+        "0,0": 249,
+        "0,1": 17,
+        "1,0": 8
+      },
+      "established": false,
+      "poolGrowth": 17,
+      "poolShrinkage": 14,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 0
+    },
+    "beforeClosure": {
+      "actions": {
+        "-1,0": 16,
+        "0,-1": 14,
+        "0,0": 257,
+        "0,1": 19,
+        "1,-1": 1,
+        "1,0": 12
+      },
+      "established": true,
+      "poolGrowth": 19,
+      "poolShrinkage": 15,
+      "scope": "necessary_retained_action_coverage_only",
+      "simultaneousChanges": 1
+    },
+    "input": 319,
+    "retained": 302
+  },
+  "protocolSha256": "c132985682f44deba6829d8ab553cddc499f98d144363cfca95924fce177bc83",
+  "reference": {
+    "modelSha256": "2f4e3907b48616caba5d94d9682a47c8e0a04c2fea922ad2e468398851910aff",
+    "support": {
+      "byBin": {
+        "comfortable/no_pending/binding/limit_tick": {
+          "anySupportedAction": 0,
+          "histories": 4,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 0,
+          "poolActionLegal": 0,
+          "poolActionSupported": 0
+        },
+        "comfortable/no_pending/binding/pool_tick": {
+          "anySupportedAction": false,
+          "histories": 1,
+          "jointActionLegal": true,
+          "jointActionSupported": false,
+          "observedActionSupported": false,
+          "poolActionLegal": true,
+          "poolActionSupported": false
+        },
+        "over_slo/no_pending/binding/limit_tick": {
+          "anySupportedAction": 0,
+          "histories": 114,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 0,
+          "poolActionLegal": 0,
+          "poolActionSupported": 0
+        },
+        "over_slo/no_pending/binding/pool_tick": {
+          "anySupportedAction": 0,
+          "histories": 29,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 0,
+          "poolActionLegal": 29,
+          "poolActionSupported": 0
+        },
+        "over_slo/no_pending/headroom/limit_tick": {
+          "anySupportedAction": 0,
+          "histories": 5,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 0,
+          "poolActionLegal": 0,
+          "poolActionSupported": 0
+        },
+        "over_slo/no_pending/headroom/pool_tick": {
+          "anySupportedAction": 0,
+          "histories": 2,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 0,
+          "poolActionLegal": 2,
+          "poolActionSupported": 0
+        },
+        "over_slo/pending/binding/limit_tick": {
+          "anySupportedAction": 5,
+          "histories": 5,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 5,
+          "poolActionLegal": 0,
+          "poolActionSupported": 0
+        }
+      },
+      "byEpisode": {
+        "spike/explore-balanced/1": {
+          "anySupportedAction": 1,
+          "histories": 40,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 1,
+          "poolActionLegal": 8,
+          "poolActionSupported": 0
+        },
+        "spike/explore-balanced/2": {
+          "anySupportedAction": 0,
+          "histories": 40,
+          "jointActionLegal": 1,
+          "jointActionSupported": 0,
+          "observedActionSupported": 0,
+          "poolActionLegal": 8,
+          "poolActionSupported": 0
+        },
+        "spike/explore-balanced/3": {
+          "anySupportedAction": 2,
+          "histories": 40,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 2,
+          "poolActionLegal": 8,
+          "poolActionSupported": 0
+        },
+        "spike/explore-balanced/4": {
+          "anySupportedAction": 2,
+          "histories": 40,
+          "jointActionLegal": 0,
+          "jointActionSupported": 0,
+          "observedActionSupported": 2,
+          "poolActionLegal": 8,
+          "poolActionSupported": 0
+        }
+      },
+      "total": {
+        "anySupportedAction": 5,
+        "histories": 160,
+        "jointActionLegal": 1,
+        "jointActionSupported": 0,
+        "observedActionSupported": 5,
+        "poolActionLegal": 32,
+        "poolActionSupported": 0
+      }
+    }
+  },
+  "reservedEvaluationGroup": "269bf4da65f403b54fe1cdf16db475916392a4c7bd724a81d4fba1f3367864d8",
+  "testEvaluated": false,
+  "validationSha256": "25963f3d6148b6613516a8bd021ddcb414211ccf47a37d6416974b3da01a2f3a"
+}

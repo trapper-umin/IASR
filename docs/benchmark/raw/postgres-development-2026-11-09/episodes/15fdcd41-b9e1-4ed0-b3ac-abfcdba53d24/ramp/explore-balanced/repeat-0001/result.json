@@ -1,0 +1,19 @@
+{
+  "mode" : "explore-balanced",
+  "scenario" : "ramp",
+  "durationMs" : 45000,
+  "dispatched" : 7559,
+  "succeeded" : 2165,
+  "rejected429" : 5394,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 48.1,
+  "p50Ms" : 143.0,
+  "p95Ms" : 265.0,
+  "p99Ms" : 1372.0,
+  "maxMs" : 1934.0,
+  "sloBreachPercent" : 42.0,
+  "rejectionRatePercent" : 71.4,
+  "failureRatePercent" : 0.0
+}

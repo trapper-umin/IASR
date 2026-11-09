@@ -1,0 +1,35 @@
+{
+  "protocolVersion": 1,
+  "purpose": "postgresql_development_live_smoke",
+  "model": "docs/benchmark/models/fqi-postgres-development-2026-11-09/model.json",
+  "modelSha256": "d13557458a62b7ec5991b83f7752f5e3ed1fe4dfaa6d69c570285b77679ea2b4",
+  "postgresVersion": "postgres (PostgreSQL) 17.10 (Homebrew)",
+  "calibration": {
+    "file": "../postgres-transfer-2026-11-09/calibration.csv",
+    "sha256": "eac04cddecbc894179bd2238e90bb5e165c1f7d603e9e05a0464307dda3a1858"
+  },
+  "scenarios": [
+    "spike"
+  ],
+  "modes": [
+    "learned"
+  ],
+  "repeats": 1,
+  "orderSeed": 20261110,
+  "properties": {
+    "bench.db.real": true,
+    "bench.db.serviceMs": 20,
+    "bench.db.rowsPerMs": 20000,
+    "bench.degradedFactor": 2.25,
+    "bench.loadScale": 0.6,
+    "bench.durationScale": 1.0,
+    "bench.poolSize": 4,
+    "bench.poolMin": 2,
+    "bench.poolMax": 12,
+    "bench.initialLimit": 8,
+    "bench.sloMs": 150,
+    "bench.poolPeriod": 5,
+    "bench.allowPrototype": true,
+    "bench.inferenceBudgetMs": 20
+  }
+}

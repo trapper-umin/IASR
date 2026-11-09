@@ -1,0 +1,19 @@
+{
+  "mode" : "explore-balanced",
+  "scenario" : "slow-dependency",
+  "durationMs" : 45000,
+  "dispatched" : 4051,
+  "succeeded" : 1919,
+  "rejected429" : 2132,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 42.6,
+  "p50Ms" : 173.0,
+  "p95Ms" : 341.0,
+  "p99Ms" : 1285.0,
+  "maxMs" : 2166.0,
+  "sloBreachPercent" : 58.5,
+  "rejectionRatePercent" : 52.6,
+  "failureRatePercent" : 0.0
+}
