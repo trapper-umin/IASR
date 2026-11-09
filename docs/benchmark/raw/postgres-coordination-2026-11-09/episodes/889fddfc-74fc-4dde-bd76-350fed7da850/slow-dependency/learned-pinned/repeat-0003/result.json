@@ -1,0 +1,19 @@
+{
+  "mode" : "learned-pinned",
+  "scenario" : "slow-dependency",
+  "durationMs" : 31500,
+  "dispatched" : 1985,
+  "succeeded" : 1032,
+  "rejected429" : 953,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 32.8,
+  "p50Ms" : 34.0,
+  "p95Ms" : 911.0,
+  "p99Ms" : 1794.0,
+  "maxMs" : 1955.0,
+  "sloBreachPercent" : 33.0,
+  "rejectionRatePercent" : 48.0,
+  "failureRatePercent" : 0.0
+}

@@ -1,0 +1,175 @@
+{
+  "initialResources" : {
+    "concurrency_limit" : 10,
+    "hikari_max_pool" : 5
+  },
+  "configuration" : {
+    "iasr" : {
+      "enabled" : true,
+      "applyActions" : true,
+      "datasetLoggingEnabled" : true,
+      "sloLatencyMs" : 150.0,
+      "windowMs" : 1000,
+      "concurrency" : {
+        "initialLimit" : 10,
+        "minLimit" : 5,
+        "maxLimit" : 400,
+        "maxStep" : 20,
+        "maxStepDown" : 50,
+        "cooldownTicks" : 1,
+        "acquireTimeoutMs" : 100,
+        "blockIncreaseOnSloViolation" : true
+      },
+      "hikari" : {
+        "minPoolSize" : 5,
+        "maxPoolSize" : 5,
+        "maxStep" : 2,
+        "cooldownTicks" : 2,
+        "blockIncreaseOnSloViolation" : false
+      },
+      "controller" : {
+        "comfortFactor" : 0.7,
+        "concurrencyIncreaseStep" : 1,
+        "concurrencyDecreaseFactor" : 0.85,
+        "errorRateThreshold" : 0.01,
+        "timeoutRateThreshold" : 0.005,
+        "hikariStep" : 1,
+        "hikariPendingThreshold" : 0.0,
+        "hikariAcquireTimeThresholdMs" : 10.0,
+        "utilizationGate" : 0.9,
+        "sloTargetHeadroom" : 0.0,
+        "minGradient" : 0.9,
+        "hikariIdleShrinkThreshold" : 2.0
+      }
+    },
+    "controllerClass" : "com.iasr.policy.LearnedController",
+    "guardrails" : [ {
+      "actuatorName" : "concurrency_limit",
+      "minValue" : 5,
+      "maxValue" : 400,
+      "maxStep" : 20,
+      "cooldownTicks" : 1,
+      "blockIncreaseOnSloViolation" : true,
+      "maxStepDown" : 50
+    }, {
+      "actuatorName" : "hikari_max_pool",
+      "minValue" : 5,
+      "maxValue" : 5,
+      "maxStep" : 2,
+      "cooldownTicks" : 2,
+      "blockIncreaseOnSloViolation" : false,
+      "maxStepDown" : 0
+    } ],
+    "learned" : {
+      "modelVersion" : 2,
+      "modelSha256" : "3fe3abdff980972971e2997e85f931cdb042a82e4455d15a146abd3e955108f7",
+      "treeCount" : 288,
+      "featureVersion" : 1,
+      "deploymentAllowed" : false,
+      "inferenceBudgetMs" : 20.0,
+      "algorithm" : "masked_fqi_action_forests",
+      "poolPeriodTicks" : 5
+    },
+    "backend" : {
+      "serviceMs" : 16,
+      "appMs" : 5,
+      "thrash" : 0.3,
+      "rowsPerMs" : 20000,
+      "kind" : "postgres",
+      "workers" : 12
+    },
+    "pool" : {
+      "minimumIdle" : 5,
+      "connectionTimeoutMs" : 3000,
+      "maximum" : 5
+    },
+    "load" : {
+      "warmupRps" : 60,
+      "durationMs" : 31500,
+      "warmupMs" : 6000,
+      "scenario" : "slow-dependency",
+      "clientThreads" : 64,
+      "requestTimeoutMs" : 3000
+    },
+    "runtime" : {
+      "availableProcessors" : 10,
+      "os" : "Mac OS X",
+      "javaVersion" : "17.0.16",
+      "arch" : "aarch64"
+    },
+    "sloMs" : 150.0,
+    "conditions" : {
+      "profile" : {
+        "degradedFactor" : 2.25,
+        "name" : "slow-dependency",
+        "durationScale" : 0.7,
+        "profileVersion" : 1,
+        "loadScale" : 0.42,
+        "baseServiceMs" : 16
+      },
+      "backend" : {
+        "serviceMs" : 16,
+        "appMs" : 5,
+        "thrash" : 0.3,
+        "rowsPerMs" : 20000,
+        "kind" : "postgres",
+        "workers" : 12
+      },
+      "load" : {
+        "warmupRps" : 60,
+        "durationMs" : 31500,
+        "warmupMs" : 6000,
+        "scenario" : "slow-dependency",
+        "clientThreads" : 64,
+        "requestTimeoutMs" : 3000
+      },
+      "runtime" : {
+        "availableProcessors" : 10,
+        "os" : "Mac OS X",
+        "javaVersion" : "17.0.16",
+        "arch" : "aarch64"
+      },
+      "initialPool" : 5,
+      "initialLimit" : 10,
+      "sloMs" : 150.0
+    }
+  },
+  "measurementInitialResources" : {
+    "concurrency_limit" : 11,
+    "hikari_max_pool" : 5
+  },
+  "timing" : {
+    "captureStartedAt" : "2026-11-09T16:11:38.845264Z",
+    "warmupStartedAt" : "2026-11-09T16:11:38.845459Z",
+    "measurementStartedAt" : "2026-11-09T16:11:46.155659Z",
+    "measurementScheduledEndAt" : "2026-11-09T16:12:17.655659Z",
+    "drainCompletedAt" : "2026-11-09T16:12:17.860048Z",
+    "captureEndedAt" : "2026-11-09T16:12:17.867368Z"
+  },
+  "inference" : {
+    "decisions" : 40,
+    "modelDecisions" : 33,
+    "fallbacks" : {
+      "short_history" : 3,
+      "invalid_observation" : 1,
+      "no_empirical_support" : 3
+    },
+    "inferenceAttempts" : 36,
+    "meanInferenceMs" : 0.09167483333333333,
+    "maxInferenceMs" : 0.222583
+  },
+  "metadataVersion" : 1,
+  "datasetSchemaVersion" : 3,
+  "runId" : "889fddfc-74fc-4dde-bd76-350fed7da850",
+  "episodeId" : "slow-dependency/learned-pinned/3",
+  "scenario" : "slow-dependency",
+  "mode" : "learned-pinned",
+  "repetition" : 3,
+  "orderSeed" : 20261112,
+  "source" : {
+    "dirty" : false,
+    "commit" : "07d0b38a2f801f4291cb273350722208cbe86b57"
+  },
+  "datasetRecords" : 40,
+  "status" : "complete"
+}
