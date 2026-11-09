@@ -1,0 +1,29 @@
+
+=== steady / explore-joint ===
+   [1/8] goodput=48,0 rps  p95=27,0 ms  p99=30,0 ms  429=0,0%  hard-fail=0,0%
+
+=== steady / explore-joint ===
+   [2/8] goodput=48,0 rps  p95=26,0 ms  p99=28,0 ms  429=0,0%  hard-fail=0,0%
+
+=== steady / explore-joint ===
+   [3/8] goodput=48,0 rps  p95=26,0 ms  p99=29,0 ms  429=0,0%  hard-fail=0,0%
+
+=== steady / explore-joint ===
+   [4/8] goodput=48,0 rps  p95=26,0 ms  p99=29,0 ms  429=0,0%  hard-fail=0,0%
+
+=== steady / explore-joint ===
+   [5/8] goodput=48,0 rps  p95=27,0 ms  p99=28,0 ms  429=0,0%  hard-fail=0,0%
+
+=== steady / explore-joint ===
+   [6/8] goodput=48,0 rps  p95=27,0 ms  p99=29,0 ms  429=0,0%  hard-fail=0,0%
+
+=== steady / explore-joint ===
+   [7/8] goodput=48,0 rps  p95=27,0 ms  p99=28,0 ms  429=0,0%  hard-fail=0,0%
+
+=== steady / explore-joint ===
+   [8/8] goodput=48,0 rps  p95=27,0 ms  p99=28,0 ms  429=0,0%  hard-fail=0,0%
+
+   steady / explore-joint median: goodput=48,0 rps  p95=27,0 ms  (spread p95 26,0–27,0)
+
+Report written to /private/tmp/iasr-postgres-joint-pilot-20261109
+All repetitions saved to /private/tmp/iasr-postgres-joint-pilot-20261109/episodes/e74f07bf-7c36-4546-b4a6-be7269fb7d81
