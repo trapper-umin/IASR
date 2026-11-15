@@ -29,9 +29,11 @@ def now():
 def source_state():
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO, text=True).strip()
     diff = subprocess.check_output(["git", "diff", "HEAD"], cwd=REPO)
-    status = subprocess.check_output(["git", "status", "--porcelain"], cwd=REPO, text=True)
-    return {"commit": commit, "dirty": bool(status.strip()),
-            "trackedDiffSha256": hashlib.sha256(diff).hexdigest(), "status": status.splitlines()}
+    tracked = subprocess.check_output(["git", "status", "--porcelain", "--untracked-files=no"], cwd=REPO, text=True)
+    untracked = subprocess.check_output(["git", "status", "--porcelain"], cwd=REPO, text=True)
+    # Untracked files cannot be on the classpath of a build from tracked sources; they are listed, not counted.
+    return {"commit": commit, "dirty": bool(tracked.strip()),
+            "trackedDiffSha256": hashlib.sha256(diff).hexdigest(), "status": untracked.splitlines()}
 
 
 def freeze_classpath(destination):

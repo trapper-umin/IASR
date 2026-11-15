@@ -1,0 +1,63 @@
+{
+ "planVersion": 1,
+ "purpose": "confirmatory held-out comparison of the frozen coordinated policy with AIMD on a new PostgreSQL condition",
+ "frozenBeforeRun": true,
+ "model": {
+  "path": "docs/benchmark/models/coordinated-2026-11-15/policy.json",
+  "sha256": "7bab153565a422aa00dd391e0c419d782bb6c515439a9a6b0b1fc036ae810a6e"
+ },
+ "protocol": {
+  "reference": "adaptive",
+  "pairedBy": [
+   "scenario",
+   "repetition"
+  ],
+  "primary": "servedWithinSloPercent pooled over the four scenarios, coordinated minus adaptive; two-sided paired Student 95% interval; confirmed if the interval excludes zero",
+  "secondary": [
+   "p95Ms",
+   "sloBreachPercent",
+   "goodputRps",
+   "p99Ms",
+   "rejectionRatePercent",
+   "per-scenario differences"
+  ],
+  "secondaryInterpretation": "descriptive, unadjusted",
+  "power": "64 pairs give about 80% power for +2.7 pp at sd 7.2 pp (estimated from the first held-out run)",
+  "conditions": "service time, load scale, starting pool and limit and degradation factor differ from every training, validation and earlier held-out case",
+  "noChanges": "model, decision rule, code and stand parameters are those of the first held-out run; this plan is run once"
+ },
+ "seed": 20261121,
+ "common": {
+  "bench.db.rowsPerMs": 20000,
+  "bench.sloMs": 150,
+  "bench.limitMin": 2,
+  "bench.poolMin": 2,
+  "bench.poolMax": 16,
+  "bench.policy": "docs/benchmark/models/coordinated-2026-11-15/policy.json",
+  "bench.inferenceBudgetMs": 20
+ },
+ "cases": [
+  {
+   "id": "confirmation",
+   "role": "test",
+   "scenarios": [
+    "steady",
+    "spike",
+    "ramp",
+    "slow-dependency"
+   ],
+   "modes": [
+    "adaptive",
+    "coordinated"
+   ],
+   "repeats": 16,
+   "properties": {
+    "bench.db.serviceMs": 22,
+    "bench.loadScale": 0.42,
+    "bench.poolSize": 7,
+    "bench.initialLimit": 10,
+    "bench.degradedFactor": 2.1
+   }
+  }
+ ]
+}
