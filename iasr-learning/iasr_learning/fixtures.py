@@ -15,7 +15,7 @@ def export(policy, episode_directory, limit=None):
     windows = []
     for index, row in enumerate(rows[:limit]):
         window = {"state": row["state"], "capacities": [row["resourcesBefore"].get(n) for n in names],
-                  "intent": row.get("intent") or {}}
+                  "intent": dataset.proposal(row)}
         point = points.get(index)
         if point is not None:
             chosen, scored, reason = runtime.decide(policy, point)

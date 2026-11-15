@@ -73,7 +73,7 @@ def decision_points(metadata, rows, resources=DEFAULT_RESOURCES):
         cooldowns = [F.number(row["cooldownRemaining"].get(n), math.nan) for n in names]
         options = F.candidates(rules, levels, capacities, cooldowns, F.number(state.get("latency_p95_ms"), math.nan), slo)
         chosen = [int(row["action"][n]) for n in names]
-        intent = row.get("intent") or {}
+        intent = proposal(row)
         p95 = F.number(state.get("latency_p95_ms"), math.nan)
         reference = [F.clamp(rule, c, int(intent.get(n, c)), cd, p95, slo)
                      for rule, c, n, cd in zip(rules, capacities, names, cooldowns)]
@@ -81,6 +81,18 @@ def decision_points(metadata, rows, resources=DEFAULT_RESOURCES):
                "candidates": options, "candidateFeatures": [smoother.action_features(capacities, o) for o in options],
                "chosen": chosen, "chosenFeatures": smoother.action_features(capacities, chosen),
                "bin": F.support_bin(state, resources, slo), "raw": state}
+
+
+def proposal(row):
+    """What the rules proposed in a window.
+
+    ``baselineIntent`` is written by controllers that decide relative to the
+    rules (the learned policy); there ``intent`` holds the policy's own choice
+    whenever it deviated. Older records have only ``intent``, which is the
+    rules' proposal for every controller that is not a learned policy.
+    """
+    baseline = row.get("baselineIntent")
+    return (baseline if baseline is not None else row.get("intent")) or {}
 
 
 def transitions(metadata, rows, resources=DEFAULT_RESOURCES):

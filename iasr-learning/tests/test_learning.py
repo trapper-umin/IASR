@@ -170,6 +170,32 @@ class FittedPolicy(unittest.TestCase):
         self.assertEqual(chosen, proposal)
         self.assertEqual(reason, "baseline")
 
+    def test_deviation_windows_replay_against_the_recorded_baseline_proposal(self):
+        rows = [dict(r) for r in self.rows]
+        for index, point in enumerate(dataset.decision_points(self.metadata, rows)):
+            chosen, _, reason = runtime.decide(self.policy, point)
+            if reason == "policy" and chosen != point["reference"]:
+                break
+        else:
+            self.fail("the fitted policy never deviates from the recorded proposal")
+        row = rows[point["index"]]
+        proposal = dict(row.get("intent") or {})
+        names = ["concurrency_limit", "hikari_max_pool"]
+        decided = dict(zip(names, chosen))
+        # What the policy-run engine writes: its own choice as intent and action, the rules' proposal apart.
+        rows[point["index"]] = {**row, "action": decided, "intent": decided, "baselineIntent": proposal}
+        replayed = next(p for p in dataset.decision_points(self.metadata, rows) if p["index"] == point["index"])
+        self.assertEqual(replayed["reference"], point["reference"])
+        self.assertEqual(runtime.decide(self.policy, replayed)[0], replayed["chosen"])
+        self.assertEqual(runtime.decide(self.policy, replayed)[2], "policy")
+        # Without the separate field the reference collapses onto the choice and the check proves nothing.
+        legacy = {**rows[point["index"]]}
+        del legacy["baselineIntent"]
+        rows[point["index"]] = legacy
+        collapsed = next(p for p in dataset.decision_points(self.metadata, rows) if p["index"] == point["index"])
+        self.assertEqual(collapsed["reference"], replayed["chosen"])
+        self.assertEqual(runtime.decide(self.policy, collapsed)[2], "baseline")
+
     def test_reference_follows_the_guardrail_chain(self):
         rule = RULES[0]
         self.assertEqual(F.clamp(rule, 40, 10, 0, 100.0, 150.0), 10)

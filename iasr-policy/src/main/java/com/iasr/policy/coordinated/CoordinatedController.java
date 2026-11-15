@@ -105,14 +105,16 @@ public final class CoordinatedController implements Controller {
                     String own = alternative.reason(actuator.name());
                     kept.reason(actuator.name(), "coordinated_baseline" + (own == null ? "" : ":" + own));
                 }
-                return kept.build();
+                return kept.baseline(alternative.desiredValues()).build();
             }
             deviations++;
             int changed = 0;
             for (int r = 0; r < capacities.length; r++) if (choice.targets()[r] != capacities[r]) changed++;
             if (changed > 0) moves++;
             if (changed > 1) jointMoves++;
-            return space.action(choice.targets(), "coordinated_" + choice.reason());
+            ControlAction chosen = space.action(choice.targets(), "coordinated_" + choice.reason());
+            return ControlAction.builder().also(chosen.desiredValues()).alsoReasons(chosen.reasons())
+                    .baseline(alternative.desiredValues()).build();
         } catch (PolicyModel.Deadline.Exceeded e) {
             return fallback(alternative, actuators, "budget");
         } catch (RuntimeException e) {
@@ -131,7 +133,7 @@ public final class CoordinatedController implements Controller {
             String own = action.reason(actuator.name());
             result.reason(actuator.name(), "coordinated_fallback_" + reason + (own == null ? "" : ":" + own));
         }
-        return result.build();
+        return result.baseline(action.desiredValues()).build();
     }
 
     /** Counters for reports: how often the policy decided, moved, and why it deferred. */

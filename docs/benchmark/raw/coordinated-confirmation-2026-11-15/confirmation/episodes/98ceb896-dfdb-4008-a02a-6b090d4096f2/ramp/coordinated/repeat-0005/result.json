@@ -1,0 +1,19 @@
+{
+  "mode" : "coordinated",
+  "scenario" : "ramp",
+  "durationMs" : 45000,
+  "dispatched" : 5291,
+  "succeeded" : 1401,
+  "rejected429" : 3890,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 31.1,
+  "p50Ms" : 140.0,
+  "p95Ms" : 308.0,
+  "p99Ms" : 1468.0,
+  "maxMs" : 2237.0,
+  "sloBreachPercent" : 30.3,
+  "rejectionRatePercent" : 73.5,
+  "failureRatePercent" : 0.0
+}

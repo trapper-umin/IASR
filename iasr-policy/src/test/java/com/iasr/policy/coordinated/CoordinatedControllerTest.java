@@ -103,13 +103,15 @@ class CoordinatedControllerTest {
             ControlAction action = controller.decide(snapshot(window), actuators);
             JsonNode expected = window.get("expected");
             String reason = action.reason(model.resources().get(0).signals().actuatorName());
+            Map<String, Integer> intent = JSON.convertValue(window.get("intent"), new com.fasterxml.jackson.core.type.TypeReference<>() { });
+            // Every decision carries the rules' proposal, so a log can always be replayed against it.
+            assertThat(action.baselineValues()).contains(intent);
             if (expected == null) {
                 assertThat(reason).startsWith("coordinated_fallback_");
                 continue;
             }
             decided++;
             int[] reference = JSON.convertValue(expected.get("reference"), int[].class);
-            Map<String, Integer> intent = JSON.convertValue(window.get("intent"), new com.fasterxml.jackson.core.type.TypeReference<>() { });
             assertThat(space.admissible(intent, snapshot(window), actuators)).containsExactly(reference);
             if ("baseline".equals(expected.get("reason").asText())) {
                 assertThat(reason).startsWith("coordinated_baseline");

@@ -68,6 +68,8 @@ def validate_episode(directory):
         for key in ("resourcesBefore", "action", "cooldownRemaining"):
             numeric_map(row.get(key), key, integers=True)
         numeric_map(row.get("intent"), "intent", integers=True, allow_negative=True)
+        if row.get("baselineIntent") is not None:
+            numeric_map(row["baselineIntent"], "baselineIntent", integers=True, allow_negative=True)
         require(row["resourcesBefore"].keys() == row["action"].keys(), "resource keys differ before/after action")
         require(row["cooldownRemaining"].keys() <= row["resourcesBefore"].keys(), "unknown cooldown resource")
         current = timestamp(row["timestamp"])

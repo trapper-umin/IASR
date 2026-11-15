@@ -28,7 +28,11 @@ import java.util.Map;
 @Getter
 public final class DatasetRecord {
 
-    /** v3 adds pre-action resources, cooldowns and explicit transition timing to v2 metrics. */
+    /**
+     * v3 adds pre-action resources, cooldowns and explicit transition timing to v2 metrics.
+     * The optional {@code baselineIntent} field (present only when the deciding controller
+     * reports a baseline proposal) is additive and keeps the version at 3.
+     */
     public static final int SCHEMA_VERSION = 3;
 
     private final Instant timestamp;
@@ -40,6 +44,7 @@ public final class DatasetRecord {
     private final Map<String, Integer> action;
     private final Map<String, Integer> intent;
     private final Map<String, String> reasons;
+    private final Map<String, Integer> baselineIntent; // null when the controller had no baseline
     private final Map<String, Integer> resourcesBefore;
     private final Map<String, Integer> cooldownRemaining;
     private Map<String, Double> outcome; // mutable — filled at t+1
@@ -65,6 +70,16 @@ public final class DatasetRecord {
                          Map<String, Integer> intent, Map<String, String> reasons,
                          long sequence, Instant stateWindowStartedAt,
                          Map<String, Integer> resourcesBefore, Map<String, Integer> cooldownRemaining) {
+        this(timestamp, windowSec, state, action, intent, reasons, sequence, stateWindowStartedAt,
+                resourcesBefore, cooldownRemaining, null);
+    }
+
+    public DatasetRecord(Instant timestamp, double windowSec,
+                         Map<String, Double> state, Map<String, Integer> action,
+                         Map<String, Integer> intent, Map<String, String> reasons,
+                         long sequence, Instant stateWindowStartedAt,
+                         Map<String, Integer> resourcesBefore, Map<String, Integer> cooldownRemaining,
+                         Map<String, Integer> baselineIntent) {
         this.timestamp = timestamp;
         this.sequence = sequence;
         this.stateWindowStartedAt = stateWindowStartedAt;
@@ -73,6 +88,7 @@ public final class DatasetRecord {
         this.action = new LinkedHashMap<>(action);
         this.intent = new LinkedHashMap<>(intent);
         this.reasons = new LinkedHashMap<>(reasons);
+        this.baselineIntent = baselineIntent == null ? null : new LinkedHashMap<>(baselineIntent);
         this.resourcesBefore = new LinkedHashMap<>(resourcesBefore);
         this.cooldownRemaining = new LinkedHashMap<>(cooldownRemaining);
     }
@@ -121,6 +137,10 @@ public final class DatasetRecord {
         sb.append(',');
         appendIntMap(sb, "intent", intent);
         sb.append(',');
+        if (baselineIntent != null) {
+            appendIntMap(sb, "baselineIntent", baselineIntent);
+            sb.append(',');
+        }
         appendStringMap(sb, "reasons", reasons);
         sb.append(',');
         if (outcome != null) {

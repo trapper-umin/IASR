@@ -3,6 +3,7 @@ package com.iasr.core.controller;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Immutable container for the set of parameter changes decided by a
@@ -30,14 +31,26 @@ public final class ControlAction {
 
     /** Singleton empty action — "do nothing". */
     public static final ControlAction NONE =
-            new ControlAction(Collections.emptyMap(), Collections.emptyMap());
+            new ControlAction(Collections.emptyMap(), Collections.emptyMap(), null);
 
     private final Map<String, Integer> desired;
     private final Map<String, String> reasons;
+    private final Map<String, Integer> baseline;
 
-    private ControlAction(Map<String, Integer> desired, Map<String, String> reasons) {
+    private ControlAction(Map<String, Integer> desired, Map<String, String> reasons, Map<String, Integer> baseline) {
         this.desired = Collections.unmodifiableMap(new LinkedHashMap<>(desired));
         this.reasons = Collections.unmodifiableMap(new LinkedHashMap<>(reasons));
+        this.baseline = baseline == null ? null : Collections.unmodifiableMap(new LinkedHashMap<>(baseline));
+    }
+
+    /**
+     * What a baseline controller proposed in the same tick, when the decision
+     * came from a controller that decides relative to one (a learned policy
+     * deferring to rules). Empty when the deciding controller has no baseline;
+     * present but empty when the baseline proposed to keep every value.
+     */
+    public Optional<Map<String, Integer>> baselineValues() {
+        return Optional.ofNullable(baseline);
     }
 
     public Map<String, Integer> desiredValues() {
@@ -63,9 +76,8 @@ public final class ControlAction {
 
     @Override
     public String toString() {
-        return reasons.isEmpty()
-                ? "ControlAction" + desired
-                : "ControlAction" + desired + " " + reasons;
+        String text = reasons.isEmpty() ? "ControlAction" + desired : "ControlAction" + desired + " " + reasons;
+        return baseline == null ? text : text + " baseline=" + baseline;
     }
 
     // ── Builder ──────────────────────────────────────────────────────────
@@ -77,8 +89,15 @@ public final class ControlAction {
     public static final class Builder {
         private final Map<String, Integer> map = new LinkedHashMap<>();
         private final Map<String, String> why = new LinkedHashMap<>();
+        private Map<String, Integer> baseline;
 
         private Builder() {}
+
+        /** Record the baseline controller's proposal for this tick (see {@link ControlAction#baselineValues()}). */
+        public Builder baseline(Map<String, Integer> proposal) {
+            baseline = new LinkedHashMap<>(proposal);
+            return this;
+        }
 
         public Builder set(String actuatorName, int desiredValue) {
             map.put(actuatorName, desiredValue);
@@ -120,8 +139,8 @@ public final class ControlAction {
         }
 
         public ControlAction build() {
-            if (map.isEmpty() && why.isEmpty()) return NONE;
-            return new ControlAction(map, why);
+            if (map.isEmpty() && why.isEmpty() && baseline == null) return NONE;
+            return new ControlAction(map, why, baseline);
         }
     }
 }

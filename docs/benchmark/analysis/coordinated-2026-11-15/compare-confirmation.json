@@ -1,0 +1,320 @@
+{
+  "reference": "adaptive",
+  "scenarios": {
+    "ramp": {
+      "blocks": 16,
+      "means": {
+        "adaptive": {
+          "servedWithinSloPercent": 24.55693985068985,
+          "goodputRps": 32.88125,
+          "p95Ms": 238.875,
+          "p99Ms": 1103.4375,
+          "sloBreachPercent": 11.9875,
+          "rejectionRatePercent": 72.03125000000001,
+          "failureRatePercent": 0.0
+        },
+        "coordinated": {
+          "servedWithinSloPercent": 26.261220704970704,
+          "goodputRps": 34.14375,
+          "p95Ms": 197.25,
+          "p99Ms": 950.0,
+          "sloBreachPercent": 9.73125,
+          "rejectionRatePercent": 70.95625,
+          "failureRatePercent": 0.0
+        }
+      },
+      "differences": {
+        "coordinated": {
+          "pairs": 16,
+          "servedWithinSloPercent": {
+            "mean": 1.7042808542808547,
+            "low": -1.009250738373289,
+            "high": 4.417812446934999
+          },
+          "goodputRps": {
+            "mean": 1.2625000000000015,
+            "low": -2.299629587601325,
+            "high": 4.824629587601327
+          },
+          "p95Ms": {
+            "mean": -41.625,
+            "low": -91.82160785763395,
+            "high": 8.57160785763395
+          },
+          "p99Ms": {
+            "mean": -153.4375,
+            "low": -315.42906407416535,
+            "high": 8.554064074165353
+          },
+          "sloBreachPercent": {
+            "mean": -2.25625,
+            "low": -5.320585177474709,
+            "high": 0.8080851774747089
+          },
+          "rejectionRatePercent": {
+            "mean": -1.075000000000001,
+            "low": -4.10857391254771,
+            "high": 1.958573912547708
+          },
+          "failureRatePercent": {
+            "mean": 0.0,
+            "low": 0.0,
+            "high": 0.0
+          }
+        }
+      }
+    },
+    "slow-dependency": {
+      "blocks": 16,
+      "means": {
+        "adaptive": {
+          "servedWithinSloPercent": 23.30660481311707,
+          "goodputRps": 25.606250000000003,
+          "p95Ms": 277.75,
+          "p99Ms": 1256.875,
+          "sloBreachPercent": 42.675000000000004,
+          "rejectionRatePercent": 59.36875,
+          "failureRatePercent": 0.0
+        },
+        "coordinated": {
+          "servedWithinSloPercent": 25.34693891043723,
+          "goodputRps": 26.79375,
+          "p95Ms": 298.3125,
+          "p99Ms": 1215.4375,
+          "sloBreachPercent": 40.931250000000006,
+          "rejectionRatePercent": 57.46875,
+          "failureRatePercent": 0.0125
+        }
+      },
+      "differences": {
+        "coordinated": {
+          "pairs": 16,
+          "servedWithinSloPercent": {
+            "mean": 2.04033409732017,
+            "low": -1.2711688660003029,
+            "high": 5.3518370606406425
+          },
+          "goodputRps": {
+            "mean": 1.1875,
+            "low": -1.0199377739338567,
+            "high": 3.3949377739338567
+          },
+          "p95Ms": {
+            "mean": 20.5625,
+            "low": -32.07897083633925,
+            "high": 73.20397083633925
+          },
+          "p99Ms": {
+            "mean": -41.4375,
+            "low": -235.79026550325455,
+            "high": 152.91526550325455
+          },
+          "sloBreachPercent": {
+            "mean": -1.7437500000000006,
+            "low": -6.028085920045924,
+            "high": 2.540585920045923
+          },
+          "rejectionRatePercent": {
+            "mean": -1.899999999999999,
+            "low": -5.395566424164202,
+            "high": 1.595566424164204
+          },
+          "failureRatePercent": {
+            "mean": 0.0125,
+            "low": -0.01414311931949152,
+            "high": 0.03914311931949152
+          }
+        }
+      }
+    },
+    "spike": {
+      "blocks": 16,
+      "means": {
+        "adaptive": {
+          "servedWithinSloPercent": 28.11842133737286,
+          "goodputRps": 32.5375,
+          "p95Ms": 233.9375,
+          "p99Ms": 1003.3125,
+          "sloBreachPercent": 11.268750000000002,
+          "rejectionRatePercent": 68.30624999999999,
+          "failureRatePercent": 0.0125
+        },
+        "coordinated": {
+          "servedWithinSloPercent": 30.483353170309453,
+          "goodputRps": 35.075,
+          "p95Ms": 234.0,
+          "p99Ms": 987.25,
+          "sloBreachPercent": 11.025,
+          "rejectionRatePercent": 65.84374999999999,
+          "failureRatePercent": 0.0
+        }
+      },
+      "differences": {
+        "coordinated": {
+          "pairs": 16,
+          "servedWithinSloPercent": {
+            "mean": 2.364931832936592,
+            "low": -1.737946084957942,
+            "high": 6.467809750831126
+          },
+          "goodputRps": {
+            "mean": 2.5375000000000005,
+            "low": -1.2695335699552657,
+            "high": 6.344533569955267
+          },
+          "p95Ms": {
+            "mean": 0.0625,
+            "low": -56.36037843577532,
+            "high": 56.48537843577532
+          },
+          "p99Ms": {
+            "mean": -16.0625,
+            "low": -192.81850044685933,
+            "high": 160.69350044685933
+          },
+          "sloBreachPercent": {
+            "mean": -0.2437499999999999,
+            "low": -5.365625503185244,
+            "high": 4.878125503185245
+          },
+          "rejectionRatePercent": {
+            "mean": -2.4624999999999995,
+            "low": -6.15821854770965,
+            "high": 1.2332185477096504
+          },
+          "failureRatePercent": {
+            "mean": -0.0125,
+            "low": -0.039143119319491534,
+            "high": 0.01414311931949153
+          }
+        }
+      }
+    },
+    "steady": {
+      "blocks": 16,
+      "means": {
+        "adaptive": {
+          "servedWithinSloPercent": 64.08154742233971,
+          "goodputRps": 36.462500000000006,
+          "p95Ms": 267.75,
+          "p99Ms": 966.8125,
+          "sloBreachPercent": 12.075000000000001,
+          "rejectionRatePercent": 27.675000000000004,
+          "failureRatePercent": 0.0
+        },
+        "coordinated": {
+          "servedWithinSloPercent": 64.10740251156642,
+          "goodputRps": 36.050000000000004,
+          "p95Ms": 258.0,
+          "p99Ms": 1072.875,
+          "sloBreachPercent": 10.881250000000001,
+          "rejectionRatePercent": 28.506249999999998,
+          "failureRatePercent": 0.0
+        }
+      },
+      "differences": {
+        "coordinated": {
+          "pairs": 16,
+          "servedWithinSloPercent": {
+            "mean": 0.025855089226699324,
+            "low": -7.302950605955655,
+            "high": 7.354660784409052
+          },
+          "goodputRps": {
+            "mean": -0.41250000000000053,
+            "low": -3.381193953092831,
+            "high": 2.55619395309283
+          },
+          "p95Ms": {
+            "mean": -9.75,
+            "low": -105.55553532173481,
+            "high": 86.05553532173481
+          },
+          "p99Ms": {
+            "mean": 106.0625,
+            "low": -182.47799452297346,
+            "high": 394.60299452297346
+          },
+          "sloBreachPercent": {
+            "mean": -1.1937500000000003,
+            "low": -5.086562599966392,
+            "high": 2.699062599966391
+          },
+          "rejectionRatePercent": {
+            "mean": 0.8312499999999994,
+            "low": -5.037456730705735,
+            "high": 6.699956730705734
+          },
+          "failureRatePercent": {
+            "mean": 0.0,
+            "low": 0.0,
+            "high": 0.0
+          }
+        }
+      }
+    }
+  },
+  "pooled": {
+    "blocks": 64,
+    "means": {
+      "adaptive": {
+        "servedWithinSloPercent": 35.01587835587988,
+        "goodputRps": 31.871875000000003,
+        "p95Ms": 254.578125,
+        "p99Ms": 1082.609375,
+        "sloBreachPercent": 19.501562500000006,
+        "rejectionRatePercent": 56.84531250000003,
+        "failureRatePercent": 0.003125
+      },
+      "coordinated": {
+        "servedWithinSloPercent": 36.54972882432095,
+        "goodputRps": 33.015625,
+        "p95Ms": 246.890625,
+        "p99Ms": 1056.390625,
+        "sloBreachPercent": 18.14218749999999,
+        "rejectionRatePercent": 55.69375000000001,
+        "failureRatePercent": 0.003125
+      }
+    },
+    "differences": {
+      "coordinated": {
+        "pairs": 64,
+        "servedWithinSloPercent": {
+          "mean": 1.5338504684410796,
+          "low": -0.6344524454231653,
+          "high": 3.7021533823053243
+        },
+        "goodputRps": {
+          "mean": 1.1437500000000003,
+          "low": -0.34208256832167705,
+          "high": 2.629582568321678
+        },
+        "p95Ms": {
+          "mean": -7.6875,
+          "low": -38.59948746341974,
+          "high": 23.22448746341974
+        },
+        "p99Ms": {
+          "mean": -26.21875,
+          "low": -125.61241401051932,
+          "high": 73.17491401051932
+        },
+        "sloBreachPercent": {
+          "mean": -1.3593750000000002,
+          "low": -3.270499823423153,
+          "high": 0.5517498234231526
+        },
+        "rejectionRatePercent": {
+          "mean": -1.1515624999999998,
+          "low": -3.084429533303188,
+          "high": 0.7813045333031883
+        },
+        "failureRatePercent": {
+          "mean": 0.0,
+          "low": -0.008901316252634019,
+          "high": 0.008901316252634019
+        }
+      }
+    }
+  }
+}

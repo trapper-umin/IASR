@@ -105,6 +105,25 @@ class DatasetLoggerTest {
     }
 
     @Test
+    @DisplayName("records the baseline proposal next to the intent only when the controller reports one")
+    void baselineProposalIsRecordedSeparately() {
+        DatasetLogger logger = new DatasetLogger(5.0);
+        ControlAction deviation = ControlAction.builder().set("concurrency_limit", 80, "coordinated_policy")
+                .baseline(Map.of("concurrency_limit", 100)).build();
+        ControlAction kept = ControlAction.builder().baseline(Map.of()).build();
+
+        logger.recordTick(state(10), action(80), deviation, Map.of(), Map.of(), java.time.Instant.now());
+        logger.recordTick(state(20), action(80), kept, Map.of(), Map.of(), java.time.Instant.now());
+        logger.recordTick(state(30), action(80), action(80), Map.of(), Map.of(), java.time.Instant.now());
+        logger.flush();
+
+        assertThat(lines()).hasSize(3);
+        assertThat(lines().get(0)).contains("\"intent\":{\"concurrency_limit\":80},\"baselineIntent\":{\"concurrency_limit\":100}");
+        assertThat(lines().get(1)).contains("\"baselineIntent\":{}");
+        assertThat(lines().get(2)).doesNotContain("baselineIntent");
+    }
+
+    @Test
     @DisplayName("a null action is recorded as an empty object rather than failing")
     void toleratesNullAction() {
         DatasetLogger logger = new DatasetLogger(5.0);

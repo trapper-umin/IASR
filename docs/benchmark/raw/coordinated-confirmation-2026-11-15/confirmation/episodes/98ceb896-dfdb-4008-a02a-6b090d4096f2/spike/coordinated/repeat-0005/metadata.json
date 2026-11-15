@@ -1,0 +1,179 @@
+{
+  "initialResources" : {
+    "concurrency_limit" : 10,
+    "hikari_max_pool" : 7
+  },
+  "configuration" : {
+    "iasr" : {
+      "enabled" : true,
+      "applyActions" : true,
+      "datasetLoggingEnabled" : true,
+      "sloLatencyMs" : 150.0,
+      "windowMs" : 1000,
+      "concurrency" : {
+        "initialLimit" : 10,
+        "minLimit" : 2,
+        "maxLimit" : 400,
+        "maxStep" : 20,
+        "maxStepDown" : 50,
+        "cooldownTicks" : 1,
+        "acquireTimeoutMs" : 100,
+        "blockIncreaseOnSloViolation" : true
+      },
+      "hikari" : {
+        "minPoolSize" : 2,
+        "maxPoolSize" : 16,
+        "maxStep" : 2,
+        "cooldownTicks" : 2,
+        "blockIncreaseOnSloViolation" : false
+      },
+      "controller" : {
+        "comfortFactor" : 0.7,
+        "concurrencyIncreaseStep" : 1,
+        "concurrencyDecreaseFactor" : 0.85,
+        "errorRateThreshold" : 0.01,
+        "timeoutRateThreshold" : 0.005,
+        "hikariStep" : 1,
+        "hikariPendingThreshold" : 0.0,
+        "hikariAcquireTimeThresholdMs" : 10.0,
+        "utilizationGate" : 0.9,
+        "sloTargetHeadroom" : 0.0,
+        "minGradient" : 0.9,
+        "hikariIdleShrinkThreshold" : 2.0
+      },
+      "policy" : {
+        "modelPath" : "docs/benchmark/models/coordinated-2026-11-15/policy.json",
+        "inferenceBudgetMs" : 20.0
+      }
+    },
+    "controllerClass" : "com.iasr.policy.coordinated.CoordinatedController",
+    "guardrails" : [ {
+      "actuatorName" : "concurrency_limit",
+      "minValue" : 2,
+      "maxValue" : 400,
+      "maxStep" : 20,
+      "cooldownTicks" : 1,
+      "blockIncreaseOnSloViolation" : true,
+      "maxStepDown" : 50
+    }, {
+      "actuatorName" : "hikari_max_pool",
+      "minValue" : 2,
+      "maxValue" : 16,
+      "maxStep" : 2,
+      "cooldownTicks" : 2,
+      "blockIncreaseOnSloViolation" : false,
+      "maxStepDown" : 0
+    } ],
+    "policy" : {
+      "modelVersion" : 3,
+      "treeCount" : 120,
+      "featureVersion" : 3,
+      "inferenceBudgetMs" : 20.0,
+      "resources" : [ "concurrency_limit", "hikari_max_pool" ],
+      "modelSha256" : "7bab153565a422aa00dd391e0c419d782bb6c515439a9a6b0b1fc036ae810a6e"
+    },
+    "backend" : {
+      "serviceMs" : 22,
+      "appMs" : 5,
+      "thrash" : 0.3,
+      "rowsPerMs" : 20000,
+      "kind" : "postgres",
+      "workers" : 12
+    },
+    "pool" : {
+      "maximum" : 7,
+      "minimumIdle" : 7,
+      "connectionTimeoutMs" : 3000
+    },
+    "load" : {
+      "warmupMs" : 6000,
+      "scenario" : "spike",
+      "clientThreads" : 64,
+      "requestTimeoutMs" : 3000,
+      "warmupRps" : 60,
+      "durationMs" : 45000
+    },
+    "runtime" : {
+      "availableProcessors" : 10,
+      "os" : "Mac OS X",
+      "javaVersion" : "17.0.16",
+      "arch" : "aarch64"
+    },
+    "sloMs" : 150.0,
+    "conditions" : {
+      "profile" : {
+        "name" : "spike",
+        "durationScale" : 1.0,
+        "profileVersion" : 1,
+        "loadScale" : 0.42,
+        "baseServiceMs" : 22,
+        "degradedFactor" : 2.1
+      },
+      "backend" : {
+        "serviceMs" : 22,
+        "appMs" : 5,
+        "thrash" : 0.3,
+        "rowsPerMs" : 20000,
+        "kind" : "postgres",
+        "workers" : 12
+      },
+      "load" : {
+        "warmupMs" : 6000,
+        "scenario" : "spike",
+        "clientThreads" : 64,
+        "requestTimeoutMs" : 3000,
+        "warmupRps" : 60,
+        "durationMs" : 45000
+      },
+      "runtime" : {
+        "availableProcessors" : 10,
+        "os" : "Mac OS X",
+        "javaVersion" : "17.0.16",
+        "arch" : "aarch64"
+      },
+      "initialPool" : 7,
+      "initialLimit" : 10,
+      "sloMs" : 150.0
+    }
+  },
+  "measurementInitialResources" : {
+    "concurrency_limit" : 9,
+    "hikari_max_pool" : 7
+  },
+  "timing" : {
+    "captureStartedAt" : "2026-11-15T09:20:50.789692Z",
+    "warmupStartedAt" : "2026-11-15T09:20:50.789814Z",
+    "measurementStartedAt" : "2026-11-15T09:20:57.141650Z",
+    "measurementScheduledEndAt" : "2026-11-15T09:21:42.141650Z",
+    "drainCompletedAt" : "2026-11-15T09:21:42.261437Z",
+    "captureEndedAt" : "2026-11-15T09:21:43.875302Z"
+  },
+  "inference" : {
+    "decisions" : 54,
+    "modelDecisions" : 51,
+    "deviationsFromBaseline" : 4,
+    "modelMoves" : 3,
+    "modelJointMoves" : 0,
+    "fallbacks" : {
+      "short_history" : 1,
+      "irregular_window" : 1,
+      "idle" : 1
+    },
+    "meanInferenceMs" : 0.1094975294117647,
+    "maxInferenceMs" : 0.391292
+  },
+  "metadataVersion" : 1,
+  "datasetSchemaVersion" : 3,
+  "runId" : "98ceb896-dfdb-4008-a02a-6b090d4096f2",
+  "episodeId" : "spike/coordinated/5",
+  "scenario" : "spike",
+  "mode" : "coordinated",
+  "repetition" : 5,
+  "orderSeed" : 20261121,
+  "source" : {
+    "dirty" : true,
+    "commit" : "5feaf1e7a8bd6b7086d5c5eccee65fc4bea3ea00"
+  },
+  "datasetRecords" : 54,
+  "status" : "complete"
+}

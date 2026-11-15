@@ -83,8 +83,10 @@ public class DatasetLogger {
         Map<String, Integer> actionMap = action != null ? action.desiredValues() : Map.of();
         Map<String, Integer> intentMap = intent != null ? intent.desiredValues() : Map.of();
         Map<String, String> reasons = intent != null ? intent.reasons() : Map.of();
+        Map<String, Integer> baselineMap = intent != null ? intent.baselineValues().orElse(null) : null;
         pending = new DatasetRecord(observedAt, windowSec, stateMap, actionMap,
-                intentMap, reasons, nextSequence++, previousObservation, resourcesBefore, cooldownRemaining);
+                intentMap, reasons, nextSequence++, previousObservation, resourcesBefore, cooldownRemaining,
+                baselineMap);
         previousObservation = observedAt;
     }
 

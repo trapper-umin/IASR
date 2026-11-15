@@ -155,10 +155,11 @@ public class ControlEngine {
 
                 // What the controller asked for, before the guardrails clamped
                 // it, annotated with which rule fired and what became of it.
-                intent = ControlAction.builder()
+                ControlAction.Builder intentBuilder = ControlAction.builder()
                         .also(rawAction.desiredValues())
-                        .alsoReasons(action.reasons())
-                        .build();
+                        .alsoReasons(action.reasons());
+                rawAction.baselineValues().ifPresent(intentBuilder::baseline);
+                intent = intentBuilder.build();
             }
 
             // 5. Dataset logging (if datasetLoggingEnabled)

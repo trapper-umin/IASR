@@ -1,0 +1,19 @@
+{
+  "mode" : "adaptive",
+  "scenario" : "slow-dependency",
+  "durationMs" : 45000,
+  "dispatched" : 2836,
+  "succeeded" : 1153,
+  "rejected429" : 1683,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 25.6,
+  "p50Ms" : 140.0,
+  "p95Ms" : 237.0,
+  "p99Ms" : 1621.0,
+  "maxMs" : 2188.0,
+  "sloBreachPercent" : 35.6,
+  "rejectionRatePercent" : 59.3,
+  "failureRatePercent" : 0.0
+}
