@@ -1,0 +1,19 @@
+{
+  "mode" : "explore-coordinated-hold",
+  "scenario" : "ramp",
+  "durationMs" : 45000,
+  "dispatched" : 5039,
+  "succeeded" : 2630,
+  "rejected429" : 2409,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 58.4,
+  "p50Ms" : 70.0,
+  "p95Ms" : 164.0,
+  "p99Ms" : 570.0,
+  "maxMs" : 1432.0,
+  "sloBreachPercent" : 9.4,
+  "rejectionRatePercent" : 47.8,
+  "failureRatePercent" : 0.0
+}

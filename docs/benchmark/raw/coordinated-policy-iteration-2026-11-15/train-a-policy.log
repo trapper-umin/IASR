@@ -1,0 +1,28 @@
+
+=== steady / coordinated ===
+2026-11-15T09:43:06.886+03:00  WARN 15524 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-1-Acceptor] did not stop cleanly
+   [1/1] goodput=48,0 rps  p95=35,0 ms  p99=38,0 ms  429=0,0%  hard-fail=0,0%
+
+=== spike / coordinated ===
+2026-11-15T09:43:26.264+03:00  WARN 15524 --- [o-auto-2-exec-5] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=13, inflight=13, queue=16)
+2026-11-15T09:43:31.302+03:00  WARN 15524 --- [o-auto-2-exec-6] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 146 request(s) rejected in the last 5000 ms (limit=7, inflight=7, queue=16)
+2026-11-15T09:43:36.318+03:00  WARN 15524 --- [o-auto-2-exec-6] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 135 request(s) rejected in the last 5000 ms (limit=6, inflight=6, queue=16)
+2026-11-15T09:43:41.387+03:00  WARN 15524 --- [-auto-2-exec-22] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 110 request(s) rejected in the last 5000 ms (limit=6, inflight=6, queue=16)
+   [1/1] goodput=86,8 rps  p95=190,0 ms  p99=202,0 ms  429=11,2%  hard-fail=0,0%
+
+=== ramp / coordinated ===
+2026-11-15T09:44:32.366+03:00  WARN 15524 --- [-auto-3-exec-19] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=15, inflight=15, queue=13)
+2026-11-15T09:44:37.411+03:00  WARN 15524 --- [-auto-3-exec-28] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 100 request(s) rejected in the last 5000 ms (limit=8, inflight=8, queue=15)
+2026-11-15T09:44:42.425+03:00  WARN 15524 --- [-auto-3-exec-30] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 120 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=17)
+2026-11-15T09:44:47.445+03:00  WARN 15524 --- [-auto-3-exec-30] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 305 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=19)
+   [1/1] goodput=97,0 rps  p95=206,0 ms  p99=229,0 ms  429=13,4%  hard-fail=0,0%
+
+=== slow-dependency / coordinated ===
+2026-11-15T09:45:14.789+03:00  WARN 15524 --- [-auto-4-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=10, inflight=12, queue=6)
+2026-11-15T09:45:19.804+03:00  WARN 15524 --- [o-auto-4-exec-5] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 47 request(s) rejected in the last 5000 ms (limit=9, inflight=10, queue=6)
+2026-11-15T09:45:29.670+03:00  WARN 15524 --- [-auto-4-exec-13] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 61 request(s) rejected in the last 5000 ms (limit=9, inflight=9, queue=6)
+2026-11-15T09:45:36.924+03:00  WARN 15524 --- [o-auto-4-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 57 request(s) rejected in the last 5000 ms (limit=9, inflight=9, queue=6)
+   [1/1] goodput=55,4 rps  p95=300,0 ms  p99=645,0 ms  429=7,7%  hard-fail=0,0%
+
+Report written to /private/tmp/claude-501/-Users-trapper--claude-spares-spare-8IcOC2/701eb3b1-7e7f-4445-8583-dfca9b7723f5/scratchpad/iter/train-a-policy
+All repetitions saved to /private/tmp/claude-501/-Users-trapper--claude-spares-spare-8IcOC2/701eb3b1-7e7f-4445-8583-dfca9b7723f5/scratchpad/iter/train-a-policy/episodes/98de6d13-92e8-4eae-834f-f71ed11f56d2

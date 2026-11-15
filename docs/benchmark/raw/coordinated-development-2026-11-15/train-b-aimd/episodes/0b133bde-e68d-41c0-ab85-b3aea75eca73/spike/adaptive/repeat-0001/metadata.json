@@ -1,0 +1,153 @@
+{
+  "initialResources" : {
+    "concurrency_limit" : 24,
+    "hikari_max_pool" : 8
+  },
+  "configuration" : {
+    "iasr" : {
+      "enabled" : true,
+      "applyActions" : true,
+      "datasetLoggingEnabled" : true,
+      "sloLatencyMs" : 150.0,
+      "windowMs" : 1000,
+      "concurrency" : {
+        "initialLimit" : 24,
+        "minLimit" : 2,
+        "maxLimit" : 400,
+        "maxStep" : 20,
+        "maxStepDown" : 50,
+        "cooldownTicks" : 1,
+        "acquireTimeoutMs" : 100,
+        "blockIncreaseOnSloViolation" : true
+      },
+      "hikari" : {
+        "minPoolSize" : 2,
+        "maxPoolSize" : 16,
+        "maxStep" : 2,
+        "cooldownTicks" : 2,
+        "blockIncreaseOnSloViolation" : false
+      },
+      "controller" : {
+        "comfortFactor" : 0.7,
+        "concurrencyIncreaseStep" : 1,
+        "concurrencyDecreaseFactor" : 0.85,
+        "errorRateThreshold" : 0.01,
+        "timeoutRateThreshold" : 0.005,
+        "hikariStep" : 1,
+        "hikariPendingThreshold" : 0.0,
+        "hikariAcquireTimeThresholdMs" : 10.0,
+        "utilizationGate" : 0.9,
+        "sloTargetHeadroom" : 0.0,
+        "minGradient" : 0.9,
+        "hikariIdleShrinkThreshold" : 2.0
+      }
+    },
+    "controllerClass" : "com.iasr.core.controller.BaselineController",
+    "guardrails" : [ {
+      "actuatorName" : "concurrency_limit",
+      "minValue" : 2,
+      "maxValue" : 400,
+      "maxStep" : 20,
+      "cooldownTicks" : 1,
+      "blockIncreaseOnSloViolation" : true,
+      "maxStepDown" : 50
+    }, {
+      "actuatorName" : "hikari_max_pool",
+      "minValue" : 2,
+      "maxValue" : 16,
+      "maxStep" : 2,
+      "cooldownTicks" : 2,
+      "blockIncreaseOnSloViolation" : false,
+      "maxStepDown" : 0
+    } ],
+    "backend" : {
+      "kind" : "postgres",
+      "workers" : 12,
+      "serviceMs" : 20,
+      "appMs" : 5,
+      "thrash" : 0.3,
+      "rowsPerMs" : 20000
+    },
+    "pool" : {
+      "minimumIdle" : 8,
+      "connectionTimeoutMs" : 3000,
+      "maximum" : 8
+    },
+    "load" : {
+      "warmupRps" : 60,
+      "durationMs" : 45000,
+      "warmupMs" : 6000,
+      "scenario" : "spike",
+      "clientThreads" : 64,
+      "requestTimeoutMs" : 3000
+    },
+    "runtime" : {
+      "javaVersion" : "17.0.16",
+      "arch" : "aarch64",
+      "availableProcessors" : 10,
+      "os" : "Mac OS X"
+    },
+    "sloMs" : 150.0,
+    "conditions" : {
+      "profile" : {
+        "loadScale" : 0.5,
+        "baseServiceMs" : 20,
+        "degradedFactor" : 2.0,
+        "name" : "spike",
+        "durationScale" : 1.0,
+        "profileVersion" : 1
+      },
+      "backend" : {
+        "kind" : "postgres",
+        "workers" : 12,
+        "serviceMs" : 20,
+        "appMs" : 5,
+        "thrash" : 0.3,
+        "rowsPerMs" : 20000
+      },
+      "load" : {
+        "warmupRps" : 60,
+        "durationMs" : 45000,
+        "warmupMs" : 6000,
+        "scenario" : "spike",
+        "clientThreads" : 64,
+        "requestTimeoutMs" : 3000
+      },
+      "runtime" : {
+        "javaVersion" : "17.0.16",
+        "arch" : "aarch64",
+        "availableProcessors" : 10,
+        "os" : "Mac OS X"
+      },
+      "initialPool" : 8,
+      "initialLimit" : 24,
+      "sloMs" : 150.0
+    }
+  },
+  "measurementInitialResources" : {
+    "concurrency_limit" : 18,
+    "hikari_max_pool" : 9
+  },
+  "timing" : {
+    "captureStartedAt" : "2026-11-14T21:46:53.805176Z",
+    "warmupStartedAt" : "2026-11-14T21:46:53.805374Z",
+    "measurementStartedAt" : "2026-11-14T21:47:00.718579Z",
+    "measurementScheduledEndAt" : "2026-11-14T21:47:45.718579Z",
+    "drainCompletedAt" : "2026-11-14T21:47:45.932004Z",
+    "captureEndedAt" : "2026-11-14T21:47:45.940557Z"
+  },
+  "metadataVersion" : 1,
+  "datasetSchemaVersion" : 3,
+  "runId" : "0b133bde-e68d-41c0-ab85-b3aea75eca73",
+  "episodeId" : "spike/adaptive/1",
+  "scenario" : "spike",
+  "mode" : "adaptive",
+  "repetition" : 1,
+  "orderSeed" : 20261115,
+  "source" : {
+    "commit" : "783a43f38d1d287b5dce477a6259e1549d8ebd31",
+    "dirty" : true
+  },
+  "datasetRecords" : 53,
+  "status" : "complete"
+}

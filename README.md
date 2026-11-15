@@ -2,7 +2,11 @@
 
 Runtime-контур управления (control loop) для динамической адаптации мягких ресурсов JVM-приложения **без перезапуска**.
 
-План развития в рамках магистерской диссертации — [docs/dissertation/plan.md](docs/dissertation/plan.md), постановка обучаемой политики — [спецификация обучения](docs/dissertation/learning-spec.md). Семантика метрик описана в [контракте](docs/dissertation/metrics-contract.md), сохранение всех повторов и `schemaVersion: 3` — в [формате эпизодов](docs/benchmark/episodes.md).
+План развития в рамках магистерской диссертации — [docs/dissertation/plan.md](docs/dissertation/plan.md).
+
+**Обучаемая согласованная политика.** Любой мягкий ресурс описывается единообразно (`SoftResource`), совместные действия над ними задаёт `CoordinatedActionSpace`, а обученная политика включается одним свойством `iasr.policy.model-path` и следует правилам там, где данных для уверенного решения нет. Метод — [coordinated-policy.md](docs/dissertation/coordinated-policy.md), обучение — [iasr-learning](iasr-learning/README.md), результат на PostgreSQL — [отчёт](docs/benchmark/analysis/coordinated-2026-11-15/README.md). Ниже описаны прежний прототип и история его проверки.
+
+Постановка прежнего прототипа — [спецификация обучения](docs/dissertation/learning-spec.md). Семантика метрик описана в [контракте](docs/dissertation/metrics-contract.md), сохранение всех повторов и `schemaVersion: 3` — в [формате эпизодов](docs/benchmark/episodes.md).
 
 Исследующая политика `explore`, матрица условий, разбиение train/validation/test и аудит покрытия описаны в [конвейере данных](docs/dissertation/data-pipeline.md).
 
@@ -217,7 +221,9 @@ Guardrail — это независимый уровень безопаснос�
 |--------|----------|----------|
 | **iasr-core** | `com.iasr:iasr-core` | Ядро: интерфейсы, контроллер, актюаторы, guardrails, dataset logger. Нет зависимостей на Spring/Micrometer |
 | **iasr-micrometer** | `com.iasr:iasr-micrometer` | Адаптер MetricsProvider → Micrometer MeterRegistry |
-| **iasr-spring-boot-starter** | `com.iasr:iasr-spring-boot-starter` | Автоконфигурация для Spring Boot 3.x |
+| **iasr-policy** | `com.iasr:iasr-policy` | Обучаемые политики: согласованная политика версии 3 (`coordinated`) и прежний прототип FQI |
+| **iasr-spring-boot-starter** | `com.iasr:iasr-spring-boot-starter` | Автоконфигурация для Spring Boot 3.x; включает обученную политику свойством `iasr.policy.model-path` |
+| **iasr-learning** | — (Python) | Сбор эпизодов, обучение политики, эталонные решения для JVM, парное сравнение режимов |
 | **iasr-benchmark** | — (не публикуется) | Нагрузочный стенд: измеряет, помогает ли контур и какой ценой |
 
 ## Быстрый старт (Spring Boot)

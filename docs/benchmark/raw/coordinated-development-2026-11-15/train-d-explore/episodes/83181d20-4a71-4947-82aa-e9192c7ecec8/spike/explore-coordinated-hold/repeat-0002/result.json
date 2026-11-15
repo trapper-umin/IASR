@@ -1,0 +1,19 @@
+{
+  "mode" : "explore-coordinated-hold",
+  "scenario" : "spike",
+  "durationMs" : 45000,
+  "dispatched" : 3521,
+  "succeeded" : 1441,
+  "rejected429" : 2080,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 32.0,
+  "p50Ms" : 109.0,
+  "p95Ms" : 381.0,
+  "p99Ms" : 1050.0,
+  "maxMs" : 2453.0,
+  "sloBreachPercent" : 33.2,
+  "rejectionRatePercent" : 59.1,
+  "failureRatePercent" : 0.0
+}

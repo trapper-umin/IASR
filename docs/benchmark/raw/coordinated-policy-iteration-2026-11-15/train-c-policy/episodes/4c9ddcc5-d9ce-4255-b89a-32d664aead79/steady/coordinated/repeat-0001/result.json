@@ -1,0 +1,19 @@
+{
+  "mode" : "coordinated",
+  "scenario" : "steady",
+  "durationMs" : 30000,
+  "dispatched" : 2161,
+  "succeeded" : 1824,
+  "rejected429" : 337,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 60.8,
+  "p50Ms" : 24.0,
+  "p95Ms" : 462.0,
+  "p99Ms" : 966.0,
+  "maxMs" : 1837.0,
+  "sloBreachPercent" : 8.9,
+  "rejectionRatePercent" : 15.6,
+  "failureRatePercent" : 0.0
+}

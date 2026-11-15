@@ -15,8 +15,8 @@
     <modules>
         <module>iasr-core</module>
         <module>iasr-micrometer</module>
-        <module>iasr-spring-boot-starter</module>
         <module>iasr-policy</module>
+        <module>iasr-spring-boot-starter</module>
         <module>iasr-benchmark</module>
     </modules>
 

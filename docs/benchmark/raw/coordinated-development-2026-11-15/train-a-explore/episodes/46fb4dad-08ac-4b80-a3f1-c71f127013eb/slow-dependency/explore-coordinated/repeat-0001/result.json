@@ -1,0 +1,19 @@
+{
+  "mode" : "explore-coordinated",
+  "scenario" : "slow-dependency",
+  "durationMs" : 45000,
+  "dispatched" : 2701,
+  "succeeded" : 2037,
+  "rejected429" : 664,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 45.3,
+  "p50Ms" : 53.0,
+  "p95Ms" : 264.0,
+  "p99Ms" : 322.0,
+  "maxMs" : 404.0,
+  "sloBreachPercent" : 27.6,
+  "rejectionRatePercent" : 24.6,
+  "failureRatePercent" : 0.0
+}

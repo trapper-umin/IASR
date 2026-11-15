@@ -1,0 +1,19 @@
+{
+  "mode" : "coordinated-pinned",
+  "scenario" : "spike",
+  "durationMs" : 45000,
+  "dispatched" : 6048,
+  "succeeded" : 3744,
+  "rejected429" : 2304,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 83.2,
+  "p50Ms" : 145.0,
+  "p95Ms" : 204.0,
+  "p99Ms" : 457.0,
+  "maxMs" : 1649.0,
+  "sloBreachPercent" : 45.3,
+  "rejectionRatePercent" : 38.1,
+  "failureRatePercent" : 0.0
+}

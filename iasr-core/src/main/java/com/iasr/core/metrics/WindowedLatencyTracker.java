@@ -23,6 +23,17 @@ public class WindowedLatencyTracker {
 
     private final ConcurrentLinkedQueue<Observation> observations = new ConcurrentLinkedQueue<>();
 
+    /**
+     * Latency objective used to count how many successful responses of a
+     * window met it. Non-positive means "no objective": every response counts.
+     */
+    private volatile double sloThresholdMs;
+
+    /** Set the latency objective for {@link WindowStats#withinSloFraction()}. */
+    public void setSloThresholdMs(double sloThresholdMs) {
+        this.sloThresholdMs = sloThresholdMs;
+    }
+
     private record Observation(double totalMs, double serviceMs) { }
 
     /**
@@ -67,6 +78,12 @@ public class WindowedLatencyTracker {
             serviceSum += drained.get(i).serviceMs();
         }
         Arrays.sort(arr);
+        double threshold = sloThresholdMs;
+        int within = arr.length;
+        if (threshold > 0) {
+            within = 0;
+            while (within < arr.length && arr[within] <= threshold) within++;
+        }
 
         return new WindowStats(
                 arr.length,
@@ -74,7 +91,8 @@ public class WindowedLatencyTracker {
                 percentile(arr, 0.95),
                 percentile(arr, 0.99),
                 arr[arr.length - 1],
-                serviceSum / arr.length
+                serviceSum / arr.length,
+                (double) within / arr.length
         );
     }
 
@@ -87,7 +105,13 @@ public class WindowedLatencyTracker {
      * Per-window latency statistics.
      */
     public record WindowStats(int count, double meanMs, double p95Ms, double p99Ms,
-                              double maxMs, double serviceMeanMs) {
+                              double maxMs, double serviceMeanMs, double withinSloFraction) {
+
+        /** Compatibility for callers that do not track an objective. */
+        public WindowStats(int count, double meanMs, double p95Ms, double p99Ms,
+                           double maxMs, double serviceMeanMs) {
+            this(count, meanMs, p95Ms, p99Ms, maxMs, serviceMeanMs, 1.0);
+        }
 
         /** Compatibility for callers supplying durations without a separate wait. */
         public WindowStats(int count, double meanMs, double p95Ms, double p99Ms, double maxMs) {

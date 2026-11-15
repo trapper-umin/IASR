@@ -1,0 +1,11 @@
+{
+  "createdAt" : "2026-11-14T21:14:21.322508Z",
+  "orderSeed" : 20261115,
+  "metadataVersion" : 1,
+  "source" : {
+    "dirty" : true,
+    "commit" : "783a43f38d1d287b5dce477a6259e1549d8ebd31"
+  },
+  "datasetSchemaVersion" : 3,
+  "runId" : "e2a56a7b-c0fb-406f-95e6-028d470ab1b2"
+}

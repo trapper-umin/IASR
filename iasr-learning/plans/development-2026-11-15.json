@@ -1,0 +1,239 @@
+{
+ "planVersion": 1,
+ "purpose": "development data for the coordinated policy: four training conditions and one validation condition, PostgreSQL",
+ "seed": 20261115,
+ "common": {
+  "bench.db.rowsPerMs": 20000,
+  "bench.sloMs": 150,
+  "bench.limitMin": 2,
+  "bench.poolMin": 2,
+  "bench.poolMax": 16
+ },
+ "cases": [
+  {
+   "id": "train-a-explore",
+   "role": "train",
+   "scenarios": [
+    "steady",
+    "spike",
+    "ramp",
+    "slow-dependency"
+   ],
+   "modes": [
+    "explore-coordinated",
+    "explore-coordinated-hold"
+   ],
+   "repeats": 2,
+   "properties": {
+    "bench.db.serviceMs": 16,
+    "bench.loadScale": 0.4,
+    "bench.poolSize": 4,
+    "bench.initialLimit": 12,
+    "bench.degradedFactor": 2.25,
+    "bench.epsilon": 0.5
+   }
+  },
+  {
+   "id": "train-a-aimd",
+   "role": "train",
+   "scenarios": [
+    "steady",
+    "spike",
+    "ramp",
+    "slow-dependency"
+   ],
+   "modes": [
+    "adaptive"
+   ],
+   "repeats": 1,
+   "properties": {
+    "bench.db.serviceMs": 16,
+    "bench.loadScale": 0.4,
+    "bench.poolSize": 4,
+    "bench.initialLimit": 12,
+    "bench.degradedFactor": 2.25,
+    "bench.epsilon": 0.5
+   }
+  },
+  {
+   "id": "train-b-explore",
+   "role": "train",
+   "scenarios": [
+    "steady",
+    "spike",
+    "ramp",
+    "slow-dependency"
+   ],
+   "modes": [
+    "explore-coordinated",
+    "explore-coordinated-hold"
+   ],
+   "repeats": 2,
+   "properties": {
+    "bench.db.serviceMs": 20,
+    "bench.loadScale": 0.5,
+    "bench.poolSize": 8,
+    "bench.initialLimit": 24,
+    "bench.degradedFactor": 2.0,
+    "bench.epsilon": 0.35
+   }
+  },
+  {
+   "id": "train-b-aimd",
+   "role": "train",
+   "scenarios": [
+    "steady",
+    "spike",
+    "ramp",
+    "slow-dependency"
+   ],
+   "modes": [
+    "adaptive"
+   ],
+   "repeats": 1,
+   "properties": {
+    "bench.db.serviceMs": 20,
+    "bench.loadScale": 0.5,
+    "bench.poolSize": 8,
+    "bench.initialLimit": 24,
+    "bench.degradedFactor": 2.0,
+    "bench.epsilon": 0.35
+   }
+  },
+  {
+   "id": "validation-v-explore",
+   "role": "validation",
+   "scenarios": [
+    "steady",
+    "spike",
+    "ramp",
+    "slow-dependency"
+   ],
+   "modes": [
+    "explore-coordinated",
+    "explore-coordinated-hold"
+   ],
+   "repeats": 1,
+   "properties": {
+    "bench.db.serviceMs": 18,
+    "bench.loadScale": 0.45,
+    "bench.poolSize": 6,
+    "bench.initialLimit": 14,
+    "bench.degradedFactor": 2.2,
+    "bench.epsilon": 0.5
+   }
+  },
+  {
+   "id": "validation-v-aimd",
+   "role": "validation",
+   "scenarios": [
+    "steady",
+    "spike",
+    "ramp",
+    "slow-dependency"
+   ],
+   "modes": [
+    "adaptive"
+   ],
+   "repeats": 1,
+   "properties": {
+    "bench.db.serviceMs": 18,
+    "bench.loadScale": 0.45,
+    "bench.poolSize": 6,
+    "bench.initialLimit": 14,
+    "bench.degradedFactor": 2.2,
+    "bench.epsilon": 0.5
+   }
+  },
+  {
+   "id": "train-c-explore",
+   "role": "train",
+   "scenarios": [
+    "steady",
+    "spike",
+    "ramp",
+    "slow-dependency"
+   ],
+   "modes": [
+    "explore-coordinated",
+    "explore-coordinated-hold"
+   ],
+   "repeats": 2,
+   "properties": {
+    "bench.db.serviceMs": 12,
+    "bench.loadScale": 0.6,
+    "bench.poolSize": 12,
+    "bench.initialLimit": 16,
+    "bench.degradedFactor": 2.5,
+    "bench.epsilon": 0.65
+   }
+  },
+  {
+   "id": "train-c-aimd",
+   "role": "train",
+   "scenarios": [
+    "steady",
+    "spike",
+    "ramp",
+    "slow-dependency"
+   ],
+   "modes": [
+    "adaptive"
+   ],
+   "repeats": 1,
+   "properties": {
+    "bench.db.serviceMs": 12,
+    "bench.loadScale": 0.6,
+    "bench.poolSize": 12,
+    "bench.initialLimit": 16,
+    "bench.degradedFactor": 2.5,
+    "bench.epsilon": 0.65
+   }
+  },
+  {
+   "id": "train-d-explore",
+   "role": "train",
+   "scenarios": [
+    "steady",
+    "spike",
+    "ramp",
+    "slow-dependency"
+   ],
+   "modes": [
+    "explore-coordinated",
+    "explore-coordinated-hold"
+   ],
+   "repeats": 2,
+   "properties": {
+    "bench.db.serviceMs": 24,
+    "bench.loadScale": 0.32,
+    "bench.poolSize": 3,
+    "bench.initialLimit": 8,
+    "bench.degradedFactor": 1.8,
+    "bench.epsilon": 0.5
+   }
+  },
+  {
+   "id": "train-d-aimd",
+   "role": "train",
+   "scenarios": [
+    "steady",
+    "spike",
+    "ramp",
+    "slow-dependency"
+   ],
+   "modes": [
+    "adaptive"
+   ],
+   "repeats": 1,
+   "properties": {
+    "bench.db.serviceMs": 24,
+    "bench.loadScale": 0.32,
+    "bench.poolSize": 3,
+    "bench.initialLimit": 8,
+    "bench.degradedFactor": 1.8,
+    "bench.epsilon": 0.5
+   }
+  }
+ ]
+}

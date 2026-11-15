@@ -1,0 +1,19 @@
+{
+  "mode" : "coordinated",
+  "scenario" : "spike",
+  "durationMs" : 45000,
+  "dispatched" : 6048,
+  "succeeded" : 2308,
+  "rejected429" : 3740,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 51.3,
+  "p50Ms" : 109.0,
+  "p95Ms" : 241.0,
+  "p99Ms" : 921.0,
+  "maxMs" : 1512.0,
+  "sloBreachPercent" : 19.6,
+  "rejectionRatePercent" : 61.8,
+  "failureRatePercent" : 0.0
+}

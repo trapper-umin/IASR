@@ -1,0 +1,41 @@
+
+=== steady / adaptive ===
+2026-11-15T01:28:58.810+03:00  WARN 97533 --- [o-auto-1-exec-2] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=8, inflight=8, queue=4)
+   [1/1] goodput=37,8 rps  p95=50,0 ms  p99=295,0 ms  429=1,6%  hard-fail=0,0%
+
+=== spike / adaptive ===
+2026-11-15T01:29:27.091+03:00  WARN 97533 --- [o-auto-2-exec-3] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=8, inflight=8, queue=13)
+2026-11-15T01:29:32.095+03:00  WARN 97533 --- [o-auto-2-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 350 request(s) rejected in the last 5000 ms (limit=5, inflight=6, queue=12)
+2026-11-15T01:29:37.104+03:00  WARN 97533 --- [o-auto-2-exec-6] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 459 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=13)
+2026-11-15T01:29:42.108+03:00  WARN 97533 --- [-auto-2-exec-14] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 500 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=13)
+2026-11-15T01:29:52.135+03:00  WARN 97533 --- [-auto-2-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 376 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=3)
+2026-11-15T01:29:57.169+03:00  WARN 97533 --- [-auto-2-exec-19] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 63 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=4)
+   [1/1] goodput=38,7 rps  p95=201,0 ms  p99=763,0 ms  429=50,5%  hard-fail=0,0%
+
+=== ramp / adaptive ===
+2026-11-15T01:30:04.834+03:00  WARN 97533 --- [o-auto-3-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 16 request(s) rejected in the last 5000 ms (limit=8, inflight=8, queue=6)
+2026-11-15T01:30:09.863+03:00  WARN 97533 --- [o-auto-3-exec-8] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 32 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=3)
+2026-11-15T01:30:16.982+03:00  WARN 97533 --- [-auto-3-exec-13] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 12 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=5)
+2026-11-15T01:30:21.989+03:00  WARN 97533 --- [o-auto-3-exec-3] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 118 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=7)
+2026-11-15T01:30:26.996+03:00  WARN 97533 --- [o-auto-3-exec-3] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 247 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=8)
+2026-11-15T01:30:32.004+03:00  WARN 97533 --- [o-auto-3-exec-4] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 269 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=10)
+2026-11-15T01:30:37.004+03:00  WARN 97533 --- [o-auto-3-exec-7] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 427 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=11)
+2026-11-15T01:30:42.005+03:00  WARN 97533 --- [-auto-3-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 442 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=13)
+2026-11-15T01:30:47.013+03:00  WARN 97533 --- [-auto-3-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 581 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=15)
+   [1/1] goodput=32,2 rps  p95=184,0 ms  p99=840,0 ms  429=64,1%  hard-fail=0,0%
+
+=== slow-dependency / adaptive ===
+2026-11-15T01:30:56.462+03:00  WARN 97533 --- [-auto-4-exec-12] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 118 request(s) rejected in the last 5000 ms (limit=6, inflight=6, queue=6)
+2026-11-15T01:31:01.507+03:00  WARN 97533 --- [o-auto-4-exec-2] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 105 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=5)
+2026-11-15T01:31:06.921+03:00  WARN 97533 --- [-auto-4-exec-13] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 127 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=5)
+2026-11-15T01:31:12.314+03:00  WARN 97533 --- [-auto-4-exec-12] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 136 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=4)
+2026-11-15T01:31:17.333+03:00  WARN 97533 --- [o-auto-4-exec-2] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 122 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=4)
+2026-11-15T01:31:22.340+03:00  WARN 97533 --- [o-auto-4-exec-3] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 160 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=5)
+2026-11-15T01:31:27.355+03:00  WARN 97533 --- [o-auto-4-exec-8] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 135 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=4)
+2026-11-15T01:31:32.362+03:00  WARN 97533 --- [o-auto-4-exec-5] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 161 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=5)
+2026-11-15T01:31:37.374+03:00  WARN 97533 --- [-auto-4-exec-13] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 122 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=4)
+2026-11-15T01:31:42.379+03:00  WARN 97533 --- [o-auto-4-exec-4] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 93 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=5)
+   [1/1] goodput=22,4 rps  p95=279,0 ms  p99=1316,0 ms  429=53,4%  hard-fail=0,0%
+
+Report written to /private/tmp/claude-501/-Users-trapper--claude-spares-spare-8IcOC2/701eb3b1-7e7f-4445-8583-dfca9b7723f5/scratchpad/dev/train-d-aimd
+All repetitions saved to /private/tmp/claude-501/-Users-trapper--claude-spares-spare-8IcOC2/701eb3b1-7e7f-4445-8583-dfca9b7723f5/scratchpad/dev/train-d-aimd/episodes/55dc02c5-4679-4767-8cd6-dea22e7219d2

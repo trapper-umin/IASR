@@ -1,0 +1,19 @@
+{
+  "mode" : "coordinated",
+  "scenario" : "slow-dependency",
+  "durationMs" : 45000,
+  "dispatched" : 3376,
+  "succeeded" : 1495,
+  "rejected429" : 1881,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 33.2,
+  "p50Ms" : 294.0,
+  "p95Ms" : 990.0,
+  "p99Ms" : 2124.0,
+  "maxMs" : 2248.0,
+  "sloBreachPercent" : 71.7,
+  "rejectionRatePercent" : 55.7,
+  "failureRatePercent" : 0.0
+}

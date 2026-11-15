@@ -71,6 +71,23 @@ public class IasrProperties {
     private final Concurrency concurrency = new Concurrency();
     private final Hikari hikari = new Hikari();
     private final ControllerProps controller = new ControllerProps();
+    private final Policy policy = new Policy();
+
+    // ── Nested: learned coordinated policy ───────────────────────────────
+
+    /**
+     * Learned coordinated policy. When {@code modelPath} is set, the loop is
+     * driven by the policy in that file and the rule-based controller becomes
+     * its fallback; when it is empty, the rules decide alone.
+     */
+    @Getter
+    @Setter
+    public static class Policy {
+        /** JSON policy produced by the iasr-learning pipeline. */
+        private String modelPath;
+        /** Upper bound on the time one decision may spend scoring candidates. */
+        private double inferenceBudgetMs = 20.0;
+    }
 
     // ── Nested: Concurrency ──────────────────────────────────────────────
 

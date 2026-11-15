@@ -30,6 +30,11 @@ public final class MetricNames {
     public static final String SERVICE_MEAN_MS      = "service_mean_ms";
 
     // ── Throughput ───────────────────────────────────────────────────────
+    /**
+     * Share of the window's successful responses whose latency, admission wait
+     * included, met the objective. Absent when the window had no successes.
+     */
+    public static final String SLO_GOOD_FRACTION    = "slo_good_fraction";
     public static final String GOODPUT_RPS          = "goodput_rps";
     public static final String ERROR_RATE           = "error_rate";
     public static final String TIMEOUT_RATE         = "timeout_rate";

@@ -1,0 +1,885 @@
+
+=== steady / explore-coordinated ===
+   [1/2] goodput=48,0 rps  p95=33,0 ms  p99=38,0 ms  429=0,0%  hard-fail=0,0%
+
+=== steady / explore-coordinated-hold ===
+   [1/2] goodput=48,0 rps  p95=33,0 ms  p99=46,0 ms  429=0,0%  hard-fail=0,0%
+
+=== steady / explore-coordinated-hold ===
+2026-11-15T00:03:25.079+03:00  WARN 80771 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-3-Acceptor] did not stop cleanly
+   [2/2] goodput=48,0 rps  p95=33,0 ms  p99=37,0 ms  429=0,0%  hard-fail=0,0%
+
+=== steady / explore-coordinated ===
+   [2/2] goodput=48,0 rps  p95=32,0 ms  p99=36,0 ms  429=0,0%  hard-fail=0,0%
+
+   steady / explore-coordinated median: goodput=48,0 rps  p95=33,0 ms  (spread p95 32,0–33,0)
+
+   steady / explore-coordinated-hold median: goodput=48,0 rps  p95=33,0 ms  (spread p95 33,0–33,0)
+
+=== spike / explore-coordinated-hold ===
+2026-11-15T00:04:23.395+03:00  WARN 80771 --- [o-auto-5-exec-1] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=14, inflight=14, queue=16)
+2026-11-15T00:04:28.445+03:00  WARN 80771 --- [o-auto-5-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 62 request(s) rejected in the last 5000 ms (limit=7, inflight=9, queue=16)
+2026-11-15T00:04:33.482+03:00  WARN 80771 --- [-auto-5-exec-15] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 177 request(s) rejected in the last 5000 ms (limit=7, inflight=7, queue=16)
+2026-11-15T00:04:38.511+03:00  WARN 80771 --- [-auto-5-exec-12] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 147 request(s) rejected in the last 5000 ms (limit=6, inflight=6, queue=16)
+2026-11-15T00:04:52.328+03:00  WARN 80771 --- [-auto-5-exec-16] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 34 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=4)
+2026-11-15T00:04:54.143+03:00  WARN 80771 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-5-Acceptor] did not stop cleanly
+   [1/2] goodput=88,4 rps  p95=173,0 ms  p99=201,0 ms  429=9,6%  hard-fail=0,0%
+
+=== spike / explore-coordinated ===
+2026-11-15T00:05:12.863+03:00  WARN 80771 --- [-auto-6-exec-13] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 7 request(s) rejected in the last 5000 ms (limit=9, inflight=9, queue=15)
+2026-11-15T00:05:17.864+03:00  WARN 80771 --- [o-auto-6-exec-7] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 442 request(s) rejected in the last 5000 ms (limit=8, inflight=8, queue=16)
+2026-11-15T00:05:18.772+03:00 ERROR 80771 --- [-auto-6-exec-15] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3005ms (total=4, active=4, idle=0, waiting=3)] with root cause
+
+java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3005ms (total=4, active=4, idle=0, waiting=3)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:686) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:179) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:144) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127) ~[040-HikariCP-5.1.0.jar:na]
+	at com.iasr.benchmark.app.BackendModel.call(BackendModel.java:174) ~[001-classes/:na]
+	at com.iasr.benchmark.app.BenchmarkApplication$WorkloadController.work(BenchmarkApplication.java:73) ~[001-classes/:na]
+	at jdk.internal.reflect.GeneratedMethodAccessor5.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[032-tomcat-embed-websocket-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at com.iasr.spring.ConcurrencyLimitFilter.doFilterInternal(ConcurrencyLimitFilter.java:128) ~[007-iasr-spring-boot-starter-1.1.0.jar:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:107) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2026-11-15T00:05:18.792+03:00 ERROR 80771 --- [o-auto-6-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3005ms (total=4, active=4, idle=0, waiting=3)] with root cause
+
+java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3005ms (total=4, active=4, idle=0, waiting=3)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:686) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:179) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:144) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127) ~[040-HikariCP-5.1.0.jar:na]
+	at com.iasr.benchmark.app.BackendModel.call(BackendModel.java:174) ~[001-classes/:na]
+	at com.iasr.benchmark.app.BenchmarkApplication$WorkloadController.work(BenchmarkApplication.java:73) ~[001-classes/:na]
+	at jdk.internal.reflect.GeneratedMethodAccessor5.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[032-tomcat-embed-websocket-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at com.iasr.spring.ConcurrencyLimitFilter.doFilterInternal(ConcurrencyLimitFilter.java:128) ~[007-iasr-spring-boot-starter-1.1.0.jar:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:107) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2026-11-15T00:05:18.794+03:00 ERROR 80771 --- [-auto-6-exec-25] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3001ms (total=4, active=4, idle=0, waiting=3)] with root cause
+
+java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3001ms (total=4, active=4, idle=0, waiting=3)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:686) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:179) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:144) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127) ~[040-HikariCP-5.1.0.jar:na]
+	at com.iasr.benchmark.app.BackendModel.call(BackendModel.java:174) ~[001-classes/:na]
+	at com.iasr.benchmark.app.BenchmarkApplication$WorkloadController.work(BenchmarkApplication.java:73) ~[001-classes/:na]
+	at jdk.internal.reflect.GeneratedMethodAccessor5.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[032-tomcat-embed-websocket-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at com.iasr.spring.ConcurrencyLimitFilter.doFilterInternal(ConcurrencyLimitFilter.java:128) ~[007-iasr-spring-boot-starter-1.1.0.jar:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:107) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2026-11-15T00:05:20.271+03:00 ERROR 80771 --- [-auto-6-exec-16] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3004ms (total=4, active=4, idle=0, waiting=4)] with root cause
+
+java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3004ms (total=4, active=4, idle=0, waiting=4)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:686) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:179) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:144) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127) ~[040-HikariCP-5.1.0.jar:na]
+	at com.iasr.benchmark.app.BackendModel.call(BackendModel.java:174) ~[001-classes/:na]
+	at com.iasr.benchmark.app.BenchmarkApplication$WorkloadController.work(BenchmarkApplication.java:73) ~[001-classes/:na]
+	at jdk.internal.reflect.GeneratedMethodAccessor5.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[032-tomcat-embed-websocket-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at com.iasr.spring.ConcurrencyLimitFilter.doFilterInternal(ConcurrencyLimitFilter.java:128) ~[007-iasr-spring-boot-starter-1.1.0.jar:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:107) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2026-11-15T00:05:21.777+03:00 ERROR 80771 --- [-auto-6-exec-18] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3005ms (total=4, active=4, idle=0, waiting=4)] with root cause
+
+java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3005ms (total=4, active=4, idle=0, waiting=4)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:686) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:179) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:144) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127) ~[040-HikariCP-5.1.0.jar:na]
+	at com.iasr.benchmark.app.BackendModel.call(BackendModel.java:174) ~[001-classes/:na]
+	at com.iasr.benchmark.app.BenchmarkApplication$WorkloadController.work(BenchmarkApplication.java:73) ~[001-classes/:na]
+	at jdk.internal.reflect.GeneratedMethodAccessor5.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[032-tomcat-embed-websocket-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at com.iasr.spring.ConcurrencyLimitFilter.doFilterInternal(ConcurrencyLimitFilter.java:128) ~[007-iasr-spring-boot-starter-1.1.0.jar:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:107) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2026-11-15T00:05:21.795+03:00 ERROR 80771 --- [o-auto-6-exec-4] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3002ms (total=4, active=4, idle=0, waiting=3)] with root cause
+
+java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3002ms (total=4, active=4, idle=0, waiting=3)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:686) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:179) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:144) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127) ~[040-HikariCP-5.1.0.jar:na]
+	at com.iasr.benchmark.app.BackendModel.call(BackendModel.java:174) ~[001-classes/:na]
+	at com.iasr.benchmark.app.BenchmarkApplication$WorkloadController.work(BenchmarkApplication.java:73) ~[001-classes/:na]
+	at jdk.internal.reflect.GeneratedMethodAccessor5.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[032-tomcat-embed-websocket-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at com.iasr.spring.ConcurrencyLimitFilter.doFilterInternal(ConcurrencyLimitFilter.java:128) ~[007-iasr-spring-boot-starter-1.1.0.jar:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:107) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2026-11-15T00:05:21.799+03:00 ERROR 80771 --- [o-auto-6-exec-9] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3005ms (total=4, active=4, idle=0, waiting=3)] with root cause
+
+java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3005ms (total=4, active=4, idle=0, waiting=3)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:686) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:179) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:144) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127) ~[040-HikariCP-5.1.0.jar:na]
+	at com.iasr.benchmark.app.BackendModel.call(BackendModel.java:174) ~[001-classes/:na]
+	at com.iasr.benchmark.app.BenchmarkApplication$WorkloadController.work(BenchmarkApplication.java:73) ~[001-classes/:na]
+	at jdk.internal.reflect.GeneratedMethodAccessor5.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[032-tomcat-embed-websocket-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at com.iasr.spring.ConcurrencyLimitFilter.doFilterInternal(ConcurrencyLimitFilter.java:128) ~[007-iasr-spring-boot-starter-1.1.0.jar:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:107) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2026-11-15T00:05:22.265+03:00 ERROR 80771 --- [-auto-6-exec-13] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3001ms (total=4, active=4, idle=0, waiting=3)] with root cause
+
+java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3001ms (total=4, active=4, idle=0, waiting=3)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:686) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:179) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:144) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127) ~[040-HikariCP-5.1.0.jar:na]
+	at com.iasr.benchmark.app.BackendModel.call(BackendModel.java:174) ~[001-classes/:na]
+	at com.iasr.benchmark.app.BenchmarkApplication$WorkloadController.work(BenchmarkApplication.java:73) ~[001-classes/:na]
+	at jdk.internal.reflect.GeneratedMethodAccessor5.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[032-tomcat-embed-websocket-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at com.iasr.spring.ConcurrencyLimitFilter.doFilterInternal(ConcurrencyLimitFilter.java:128) ~[007-iasr-spring-boot-starter-1.1.0.jar:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:107) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2026-11-15T00:05:22.865+03:00  WARN 80771 --- [-auto-6-exec-17] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 792 request(s) rejected in the last 5000 ms (limit=8, inflight=8, queue=16)
+2026-11-15T00:05:23.272+03:00 ERROR 80771 --- [o-auto-6-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3001ms (total=4, active=4, idle=0, waiting=5)] with root cause
+
+java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3001ms (total=4, active=4, idle=0, waiting=5)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:686) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:179) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:144) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127) ~[040-HikariCP-5.1.0.jar:na]
+	at com.iasr.benchmark.app.BackendModel.call(BackendModel.java:174) ~[001-classes/:na]
+	at com.iasr.benchmark.app.BenchmarkApplication$WorkloadController.work(BenchmarkApplication.java:73) ~[001-classes/:na]
+	at jdk.internal.reflect.GeneratedMethodAccessor5.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[032-tomcat-embed-websocket-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at com.iasr.spring.ConcurrencyLimitFilter.doFilterInternal(ConcurrencyLimitFilter.java:128) ~[007-iasr-spring-boot-starter-1.1.0.jar:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:107) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2026-11-15T00:05:24.800+03:00 ERROR 80771 --- [-auto-6-exec-14] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3005ms (total=4, active=4, idle=0, waiting=5)] with root cause
+
+java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3005ms (total=4, active=4, idle=0, waiting=5)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:686) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:179) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:144) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127) ~[040-HikariCP-5.1.0.jar:na]
+	at com.iasr.benchmark.app.BackendModel.call(BackendModel.java:174) ~[001-classes/:na]
+	at com.iasr.benchmark.app.BenchmarkApplication$WorkloadController.work(BenchmarkApplication.java:73) ~[001-classes/:na]
+	at jdk.internal.reflect.GeneratedMethodAccessor5.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[032-tomcat-embed-websocket-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at com.iasr.spring.ConcurrencyLimitFilter.doFilterInternal(ConcurrencyLimitFilter.java:128) ~[007-iasr-spring-boot-starter-1.1.0.jar:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:107) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2026-11-15T00:05:24.803+03:00 ERROR 80771 --- [o-auto-6-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3004ms (total=4, active=4, idle=0, waiting=5)] with root cause
+
+java.sql.SQLTransientConnectionException: bench-pool - Connection is not available, request timed out after 3004ms (total=4, active=4, idle=0, waiting=5)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:686) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:179) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:144) ~[040-HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127) ~[040-HikariCP-5.1.0.jar:na]
+	at com.iasr.benchmark.app.BackendModel.call(BackendModel.java:174) ~[001-classes/:na]
+	at com.iasr.benchmark.app.BenchmarkApplication$WorkloadController.work(BenchmarkApplication.java:73) ~[001-classes/:na]
+	at jdk.internal.reflect.GeneratedMethodAccessor5.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[035-spring-webmvc-6.1.10.jar:6.1.10]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[030-tomcat-embed-core-10.1.25.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[032-tomcat-embed-websocket-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at com.iasr.spring.ConcurrencyLimitFilter.doFilterInternal(ConcurrencyLimitFilter.java:128) ~[007-iasr-spring-boot-starter-1.1.0.jar:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:107) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[033-spring-web-6.1.10.jar:6.1.10]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[030-tomcat-embed-core-10.1.25.jar:10.1.25]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2026-11-15T00:05:27.871+03:00  WARN 80771 --- [-auto-6-exec-14] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 491 request(s) rejected in the last 5000 ms (limit=8, inflight=8, queue=16)
+2026-11-15T00:05:32.875+03:00  WARN 80771 --- [-auto-6-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 180 request(s) rejected in the last 5000 ms (limit=6, inflight=6, queue=5)
+   [1/2] goodput=54,6 rps  p95=170,0 ms  p99=196,0 ms  429=43,7%  hard-fail=0,4%
+
+=== spike / explore-coordinated ===
+2026-11-15T00:06:04.358+03:00  WARN 80771 --- [-auto-7-exec-31] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=17, inflight=17, queue=16)
+2026-11-15T00:06:09.366+03:00  WARN 80771 --- [-auto-7-exec-20] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 186 request(s) rejected in the last 5000 ms (limit=12, inflight=12, queue=16)
+2026-11-15T00:06:14.422+03:00  WARN 80771 --- [-auto-7-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 96 request(s) rejected in the last 5000 ms (limit=8, inflight=8, queue=16)
+2026-11-15T00:06:19.447+03:00  WARN 80771 --- [-auto-7-exec-32] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 172 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=16)
+   [2/2] goodput=80,9 rps  p95=214,0 ms  p99=225,0 ms  429=17,2%  hard-fail=0,0%
+
+=== spike / explore-coordinated-hold ===
+2026-11-15T00:06:42.216+03:00  WARN 80771 --- [-auto-8-exec-17] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 2 request(s) rejected in the last 5000 ms (limit=10, inflight=10, queue=6)
+2026-11-15T00:06:55.360+03:00  WARN 80771 --- [-auto-8-exec-20] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 19 request(s) rejected in the last 5000 ms (limit=7, inflight=7, queue=15)
+2026-11-15T00:07:00.372+03:00  WARN 80771 --- [-auto-8-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 256 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=16)
+2026-11-15T00:07:05.373+03:00  WARN 80771 --- [-auto-8-exec-13] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 349 request(s) rejected in the last 5000 ms (limit=4, inflight=4, queue=16)
+2026-11-15T00:07:10.386+03:00  WARN 80771 --- [o-auto-8-exec-2] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 461 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=16)
+2026-11-15T00:07:16.283+03:00  WARN 80771 --- [-auto-8-exec-10] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 514 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=5)
+   [2/2] goodput=61,0 rps  p95=161,0 ms  p99=254,0 ms  429=37,5%  hard-fail=0,0%
+
+   spike / explore-coordinated median: goodput=80,9 rps  p95=214,0 ms  (spread p95 170,0–214,0)
+
+   spike / explore-coordinated-hold median: goodput=88,4 rps  p95=173,0 ms  (spread p95 161,0–173,0)
+
+=== ramp / explore-coordinated-hold ===
+2026-11-15T00:07:40.880+03:00  WARN 80771 --- [o-auto-9-exec-4] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=9, inflight=9, queue=5)
+2026-11-15T00:07:54.524+03:00  WARN 80771 --- [o-auto-9-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 49 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=10)
+2026-11-15T00:07:59.547+03:00  WARN 80771 --- [-auto-9-exec-14] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 121 request(s) rejected in the last 5000 ms (limit=6, inflight=6, queue=12)
+2026-11-15T00:08:04.556+03:00  WARN 80771 --- [-auto-9-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 401 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=14)
+2026-11-15T00:08:09.563+03:00  WARN 80771 --- [o-auto-9-exec-4] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 534 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=16)
+2026-11-15T00:08:14.568+03:00  WARN 80771 --- [o-auto-9-exec-7] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 577 request(s) rejected in the last 5000 ms (limit=4, inflight=4, queue=18)
+   [1/2] goodput=58,4 rps  p95=164,0 ms  p99=570,0 ms  429=47,8%  hard-fail=0,0%
+
+=== ramp / explore-coordinated ===
+2026-11-15T00:08:24.713+03:00  WARN 80771 --- [-auto-10-exec-4] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 3 request(s) rejected in the last 5000 ms (limit=11, inflight=11, queue=7)
+2026-11-15T00:08:40.438+03:00  WARN 80771 --- [auto-10-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 2 request(s) rejected in the last 5000 ms (limit=4, inflight=5, queue=8)
+2026-11-15T00:08:45.448+03:00  WARN 80771 --- [-auto-10-exec-1] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 229 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=10)
+2026-11-15T00:08:50.465+03:00  WARN 80771 --- [-auto-10-exec-6] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 274 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=12)
+2026-11-15T00:08:55.472+03:00  WARN 80771 --- [auto-10-exec-17] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 433 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=14)
+2026-11-15T00:09:00.473+03:00  WARN 80771 --- [auto-10-exec-15] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 516 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=16)
+2026-11-15T00:09:05.473+03:00  WARN 80771 --- [-auto-10-exec-2] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 627 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=18)
+2026-11-15T00:09:10.475+03:00  WARN 80771 --- [auto-10-exec-13] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 660 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=20)
+   [1/2] goodput=50,3 rps  p95=164,0 ms  p99=175,0 ms  429=55,1%  hard-fail=0,0%
+
+=== ramp / explore-coordinated ===
+2026-11-15T00:09:28.671+03:00  WARN 80771 --- [-auto-11-exec-2] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=9, inflight=9, queue=7)
+2026-11-15T00:09:34.521+03:00  WARN 80771 --- [auto-11-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 137 request(s) rejected in the last 5000 ms (limit=6, inflight=6, queue=9)
+2026-11-15T00:09:39.546+03:00  WARN 80771 --- [auto-11-exec-10] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 139 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=11)
+2026-11-15T00:09:44.560+03:00  WARN 80771 --- [-auto-11-exec-6] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 294 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=13)
+2026-11-15T00:09:49.564+03:00  WARN 80771 --- [auto-11-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 435 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=15)
+2026-11-15T00:09:54.569+03:00  WARN 80771 --- [-auto-11-exec-7] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 571 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=17)
+2026-11-15T00:09:59.580+03:00  WARN 80771 --- [-auto-11-exec-1] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 682 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=19)
+   [2/2] goodput=53,2 rps  p95=192,0 ms  p99=245,0 ms  429=52,5%  hard-fail=0,0%
+
+=== ramp / explore-coordinated-hold ===
+2026-11-15T00:10:17.798+03:00  WARN 80771 --- [-auto-12-exec-1] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=7, inflight=7, queue=6)
+2026-11-15T00:10:22.824+03:00  WARN 80771 --- [-auto-12-exec-4] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 67 request(s) rejected in the last 5000 ms (limit=4, inflight=4, queue=8)
+2026-11-15T00:10:27.851+03:00  WARN 80771 --- [auto-12-exec-12] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 160 request(s) rejected in the last 5000 ms (limit=4, inflight=4, queue=10)
+2026-11-15T00:10:32.853+03:00  WARN 80771 --- [-auto-12-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 273 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=12)
+2026-11-15T00:10:37.854+03:00  WARN 80771 --- [auto-12-exec-16] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 381 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=14)
+2026-11-15T00:10:42.866+03:00  WARN 80771 --- [auto-12-exec-14] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 563 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=16)
+2026-11-15T00:10:47.875+03:00  WARN 80771 --- [auto-12-exec-12] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 699 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=18)
+2026-11-15T00:10:52.877+03:00  WARN 80771 --- [-auto-12-exec-5] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 755 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=19)
+2026-11-15T00:10:55.187+03:00  WARN 80771 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-12-Acceptor] did not stop cleanly
+   [2/2] goodput=45,1 rps  p95=203,0 ms  p99=233,0 ms  429=59,8%  hard-fail=0,0%
+
+   ramp / explore-coordinated median: goodput=53,2 rps  p95=192,0 ms  (spread p95 164,0–192,0)
+
+   ramp / explore-coordinated-hold median: goodput=45,1 rps  p95=203,0 ms  (spread p95 164,0–203,0)
+
+=== slow-dependency / explore-coordinated-hold ===
+2026-11-15T00:11:02.197+03:00  WARN 80771 --- [-auto-13-exec-5] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=12, inflight=12, queue=6)
+2026-11-15T00:11:07.198+03:00  WARN 80771 --- [auto-13-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 42 request(s) rejected in the last 5000 ms (limit=11, inflight=11, queue=6)
+2026-11-15T00:11:13.229+03:00  WARN 80771 --- [-auto-13-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 20 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=6)
+2026-11-15T00:11:18.230+03:00  WARN 80771 --- [auto-13-exec-15] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 73 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=6)
+2026-11-15T00:11:23.264+03:00  WARN 80771 --- [auto-13-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 171 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=6)
+2026-11-15T00:11:28.295+03:00  WARN 80771 --- [-auto-13-exec-2] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 193 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=6)
+2026-11-15T00:11:33.314+03:00  WARN 80771 --- [auto-13-exec-17] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 194 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=6)
+2026-11-15T00:11:38.380+03:00  WARN 80771 --- [auto-13-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 150 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=6)
+2026-11-15T00:11:43.692+03:00  WARN 80771 --- [auto-13-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 7 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=5)
+   [1/2] goodput=40,6 rps  p95=220,0 ms  p99=601,0 ms  429=32,3%  hard-fail=0,0%
+
+=== slow-dependency / explore-coordinated ===
+2026-11-15T00:12:08.492+03:00  WARN 80771 --- [auto-14-exec-14] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=8, inflight=8, queue=6)
+2026-11-15T00:12:13.541+03:00  WARN 80771 --- [-auto-14-exec-2] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 116 request(s) rejected in the last 5000 ms (limit=6, inflight=6, queue=6)
+2026-11-15T00:12:18.591+03:00  WARN 80771 --- [auto-14-exec-12] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 173 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=6)
+2026-11-15T00:12:23.641+03:00  WARN 80771 --- [-auto-14-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 178 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=6)
+2026-11-15T00:12:28.657+03:00  WARN 80771 --- [auto-14-exec-13] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 159 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=6)
+2026-11-15T00:12:35.090+03:00  WARN 80771 --- [-auto-14-exec-1] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 14 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=6)
+   [1/2] goodput=45,3 rps  p95=264,0 ms  p99=322,0 ms  429=24,6%  hard-fail=0,0%
+
+=== slow-dependency / explore-coordinated ===
+2026-11-15T00:12:59.510+03:00  WARN 80771 --- [auto-15-exec-10] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1 request(s) rejected in the last 5000 ms (limit=7, inflight=7, queue=6)
+2026-11-15T00:13:04.512+03:00  WARN 80771 --- [-auto-15-exec-7] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 181 request(s) rejected in the last 5000 ms (limit=4, inflight=4, queue=6)
+2026-11-15T00:13:09.513+03:00  WARN 80771 --- [-auto-15-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 153 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=6)
+2026-11-15T00:13:14.544+03:00  WARN 80771 --- [auto-15-exec-12] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 182 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=6)
+2026-11-15T00:13:19.561+03:00  WARN 80771 --- [auto-15-exec-10] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 180 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=6)
+2026-11-15T00:13:24.562+03:00  WARN 80771 --- [-auto-15-exec-9] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 49 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=6)
+   [2/2] goodput=42,4 rps  p95=234,0 ms  p99=323,0 ms  429=29,3%  hard-fail=0,0%
+
+=== slow-dependency / explore-coordinated-hold ===
+2026-11-15T00:13:38.726+03:00  WARN 80771 --- [auto-16-exec-14] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 8 request(s) rejected in the last 5000 ms (limit=11, inflight=11, queue=6)
+2026-11-15T00:13:47.610+03:00  WARN 80771 --- [-auto-16-exec-5] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 34 request(s) rejected in the last 5000 ms (limit=14, inflight=14, queue=6)
+2026-11-15T00:13:52.660+03:00  WARN 80771 --- [auto-16-exec-16] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 114 request(s) rejected in the last 5000 ms (limit=14, inflight=14, queue=6)
+2026-11-15T00:13:58.176+03:00  WARN 80771 --- [auto-16-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 221 request(s) rejected in the last 5000 ms (limit=14, inflight=14, queue=6)
+2026-11-15T00:14:03.191+03:00  WARN 80771 --- [-auto-16-exec-6] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 189 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=6)
+2026-11-15T00:14:08.206+03:00  WARN 80771 --- [-auto-16-exec-6] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 164 request(s) rejected in the last 5000 ms (limit=4, inflight=4, queue=6)
+2026-11-15T00:14:14.609+03:00  WARN 80771 --- [-auto-16-exec-3] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 185 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=6)
+2026-11-15T00:14:19.656+03:00  WARN 80771 --- [-auto-16-exec-5] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 26 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=6)
+   [2/2] goodput=39,1 rps  p95=669,0 ms  p99=1794,0 ms  429=34,9%  hard-fail=0,0%
+
+   slow-dependency / explore-coordinated median: goodput=45,3 rps  p95=264,0 ms  (spread p95 234,0–264,0)
+
+   slow-dependency / explore-coordinated-hold median: goodput=39,1 rps  p95=669,0 ms  (spread p95 220,0–669,0)
+
+Report written to /private/tmp/claude-501/-Users-trapper--claude-spares-spare-8IcOC2/701eb3b1-7e7f-4445-8583-dfca9b7723f5/scratchpad/dev/train-a-explore
+All repetitions saved to /private/tmp/claude-501/-Users-trapper--claude-spares-spare-8IcOC2/701eb3b1-7e7f-4445-8583-dfca9b7723f5/scratchpad/dev/train-a-explore/episodes/46fb4dad-08ac-4b80-a3f1-c71f127013eb

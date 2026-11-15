@@ -1,0 +1,45 @@
+
+=== steady / adaptive ===
+2026-11-15T01:12:22.759+03:00  WARN 94393 --- [o-auto-1-exec-5] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 17 request(s) rejected in the last 5000 ms (limit=14, inflight=14, queue=7)
+2026-11-15T01:12:30.678+03:00  WARN 94393 --- [o-auto-1-exec-4] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 82 request(s) rejected in the last 5000 ms (limit=9, inflight=9, queue=7)
+2026-11-15T01:12:37.192+03:00  WARN 94393 --- [-auto-1-exec-13] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 149 request(s) rejected in the last 5000 ms (limit=7, inflight=7, queue=7)
+2026-11-15T01:12:42.885+03:00  WARN 94393 --- [o-auto-1-exec-2] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 118 request(s) rejected in the last 5000 ms (limit=4, inflight=4, queue=7)
+2026-11-15T01:12:49.242+03:00  WARN 94393 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-1-Acceptor] did not stop cleanly
+   [1/1] goodput=56,7 rps  p95=318,0 ms  p99=844,0 ms  429=21,3%  hard-fail=0,0%
+
+=== spike / adaptive ===
+2026-11-15T01:12:57.016+03:00  WARN 94393 --- [-auto-2-exec-21] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 37 request(s) rejected in the last 5000 ms (limit=13, inflight=13, queue=7)
+2026-11-15T01:13:04.946+03:00  WARN 94393 --- [o-auto-2-exec-1] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 125 request(s) rejected in the last 5000 ms (limit=8, inflight=8, queue=7)
+2026-11-15T01:13:09.949+03:00  WARN 94393 --- [-auto-2-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 425 request(s) rejected in the last 5000 ms (limit=5, inflight=5, queue=24)
+2026-11-15T01:13:14.950+03:00  WARN 94393 --- [-auto-2-exec-26] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 904 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=24)
+2026-11-15T01:13:19.954+03:00  WARN 94393 --- [-auto-2-exec-26] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 966 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=24)
+2026-11-15T01:13:24.957+03:00  WARN 94393 --- [-auto-2-exec-23] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 924 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=24)
+2026-11-15T01:13:29.958+03:00  WARN 94393 --- [-auto-2-exec-26] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 497 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=7)
+2026-11-15T01:13:36.868+03:00  WARN 94393 --- [-auto-2-exec-23] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 134 request(s) rejected in the last 5000 ms (limit=3, inflight=3, queue=7)
+   [1/1] goodput=55,4 rps  p95=211,0 ms  p99=811,0 ms  429=62,2%  hard-fail=0,0%
+
+=== ramp / adaptive ===
+2026-11-15T01:13:46.644+03:00  WARN 94393 --- [-auto-3-exec-12] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 12 request(s) rejected in the last 5000 ms (limit=14, inflight=14, queue=6)
+2026-11-15T01:13:58.555+03:00  WARN 94393 --- [-auto-3-exec-12] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 31 request(s) rejected in the last 5000 ms (limit=9, inflight=9, queue=11)
+2026-11-15T01:14:03.561+03:00  WARN 94393 --- [o-auto-3-exec-6] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 349 request(s) rejected in the last 5000 ms (limit=6, inflight=7, queue=13)
+2026-11-15T01:14:08.562+03:00  WARN 94393 --- [-auto-3-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 416 request(s) rejected in the last 5000 ms (limit=4, inflight=4, queue=16)
+2026-11-15T01:14:13.562+03:00  WARN 94393 --- [-auto-3-exec-10] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 560 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=19)
+2026-11-15T01:14:18.572+03:00  WARN 94393 --- [-auto-3-exec-12] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 810 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=22)
+2026-11-15T01:14:23.573+03:00  WARN 94393 --- [-auto-3-exec-18] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 880 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=25)
+2026-11-15T01:14:28.580+03:00  WARN 94393 --- [o-auto-3-exec-1] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 1020 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=28)
+   [1/1] goodput=59,2 rps  p95=211,0 ms  p99=733,0 ms  429=64,7%  hard-fail=0,0%
+
+=== slow-dependency / adaptive ===
+2026-11-15T01:14:47.246+03:00  WARN 94393 --- [-auto-4-exec-12] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 39 request(s) rejected in the last 5000 ms (limit=14, inflight=14, queue=9)
+2026-11-15T01:14:52.577+03:00  WARN 94393 --- [-auto-4-exec-23] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 123 request(s) rejected in the last 5000 ms (limit=9, inflight=9, queue=9)
+2026-11-15T01:14:57.581+03:00  WARN 94393 --- [o-auto-4-exec-4] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 323 request(s) rejected in the last 5000 ms (limit=6, inflight=6, queue=9)
+2026-11-15T01:15:02.591+03:00  WARN 94393 --- [-auto-4-exec-17] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 311 request(s) rejected in the last 5000 ms (limit=4, inflight=4, queue=9)
+2026-11-15T01:15:07.591+03:00  WARN 94393 --- [-auto-4-exec-11] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 357 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=9)
+2026-11-15T01:15:12.593+03:00  WARN 94393 --- [-auto-4-exec-14] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 368 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=9)
+2026-11-15T01:15:17.601+03:00  WARN 94393 --- [-auto-4-exec-16] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 278 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=9)
+2026-11-15T01:15:22.605+03:00  WARN 94393 --- [-auto-4-exec-21] com.iasr.spring.ConcurrencyLimitFilter   : Concurrency limit shedding load: 200 request(s) rejected in the last 5000 ms (limit=2, inflight=2, queue=9)
+2026-11-15T01:15:26.912+03:00  WARN 94393 --- [           main] org.apache.tomcat.util.net.Acceptor      : The acceptor thread [http-nio-auto-4-Acceptor] did not stop cleanly
+   [1/1] goodput=45,4 rps  p95=288,0 ms  p99=1009,0 ms  429=49,6%  hard-fail=0,0%
+
+Report written to /private/tmp/claude-501/-Users-trapper--claude-spares-spare-8IcOC2/701eb3b1-7e7f-4445-8583-dfca9b7723f5/scratchpad/dev/train-c-aimd
+All repetitions saved to /private/tmp/claude-501/-Users-trapper--claude-spares-spare-8IcOC2/701eb3b1-7e7f-4445-8583-dfca9b7723f5/scratchpad/dev/train-c-aimd/episodes/193e73a6-ee5e-409b-ae13-4abf680da240

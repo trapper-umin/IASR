@@ -1,0 +1,38 @@
+{
+ "planVersion": 1,
+ "purpose": "closed-loop check of a candidate policy on the validation condition; used for model selection",
+ "seed": 20261117,
+ "common": {
+  "bench.db.rowsPerMs": 20000,
+  "bench.sloMs": 150,
+  "bench.limitMin": 2,
+  "bench.poolMin": 2,
+  "bench.poolMax": 16,
+  "bench.policy": "SET_AT_RUN_TIME",
+  "bench.inferenceBudgetMs": 20
+ },
+ "cases": [
+  {
+   "id": "validation-closed-loop",
+   "role": "validation",
+   "scenarios": [
+    "steady",
+    "spike",
+    "ramp",
+    "slow-dependency"
+   ],
+   "modes": [
+    "adaptive",
+    "coordinated"
+   ],
+   "repeats": 2,
+   "properties": {
+    "bench.db.serviceMs": 18,
+    "bench.loadScale": 0.45,
+    "bench.poolSize": 6,
+    "bench.initialLimit": 14,
+    "bench.degradedFactor": 2.2
+   }
+  }
+ ]
+}

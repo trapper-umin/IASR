@@ -76,6 +76,7 @@ public class BenchmarkRunner {
         }
         for (String mode : modes) {
             if (!Set.of("off", "fixed", "adaptive", "gradient", "bottleneck", "explore", "explore-balanced", "explore-joint",
+                    "explore-coordinated", "explore-coordinated-hold", "coordinated",
                     "learned", "learned-additive").contains(baseMode(mode))) {
                 throw new IllegalArgumentException("Unknown mode: " + mode);
             }
@@ -174,6 +175,7 @@ public class BenchmarkRunner {
         ListAppender<ILoggingEvent> datasetAppender = captureDataset();
         ControlEngine engine = context.getBeanProvider(ControlEngine.class).getIfAvailable();
         var learned = engine != null && engine.getConfig().controller() instanceof com.iasr.policy.LearnedController p ? p : null;
+        var coordinated = engine != null && engine.getConfig().controller() instanceof com.iasr.policy.coordinated.CoordinatedController p ? p : null;
         try {
             Map<String, Object> details = new LinkedHashMap<>();
             Map<String, String> timing = new LinkedHashMap<>();
@@ -208,6 +210,7 @@ public class BenchmarkRunner {
             timing.put("captureEndedAt", Instant.now().toString());
             details.put("timing", timing);
             if (learned != null) details.put("inference", learned.statistics());
+            if (coordinated != null) details.put("inference", coordinated.statistics());
 
             List<String> datasetLines = datasetAppender.list.stream()
                     .map(ILoggingEvent::getFormattedMessage)
@@ -236,6 +239,12 @@ public class BenchmarkRunner {
             config.put("iasr", context.getBean(IasrProperties.class));
             config.put("controllerClass", engine.getConfig().controller().getClass().getName());
             config.put("guardrails", engine.getConfig().guardrails());
+            if (engine.getConfig().controller() instanceof com.iasr.policy.coordinated.CoordinatedController policy) {
+                config.put("policy", policy.parameters());
+            }
+            if (engine.getConfig().controller() instanceof CoordinatedExplorer exploring) {
+                config.put("exploration", exploring.parameters());
+            }
             if (engine.getConfig().controller() instanceof ExplorationController exploring) {
                 config.put("exploration", exploring.parameters());
             }
@@ -343,6 +352,15 @@ public class BenchmarkRunner {
             if (model == null || model.isBlank()) throw new IllegalArgumentException("Missing -D" + modelProperty + "=<JSON model>");
             props.put("bench.learned.modelPath", model);
             builder = new SpringApplicationBuilder(BenchmarkApplication.class, LearnedConfig.class);
+        } else if (base.startsWith("explore-coordinated")) {
+            props.put("bench.exploration.anchor", base.endsWith("-hold") ? "HOLD" : "BASELINE");
+            builder = new SpringApplicationBuilder(BenchmarkApplication.class, CoordinatedExplorationConfig.class);
+        } else if ("coordinated".equals(base)) {
+            String model = System.getProperty("bench.policy");
+            if (model == null || model.isBlank()) throw new IllegalArgumentException("Missing -Dbench.policy=<JSON policy>");
+            props.put("iasr.policy.model-path", model);
+            props.put("iasr.policy.inference-budget-ms", System.getProperty("bench.inferenceBudgetMs", "20"));
+            builder = new SpringApplicationBuilder(BenchmarkApplication.class);
         } else if (base.startsWith("explore")) {
             props.put("bench.exploration.sampling", switch (base) {
                 case "explore-balanced" -> "BALANCED";
@@ -403,6 +421,33 @@ public class BenchmarkRunner {
                     props.getSloLatencyMs(), props.getWindowMs() / 1000.0, Integer.getInteger("bench.poolPeriod", 5)),
                     baseline, Double.parseDouble(System.getProperty("bench.epsilon", "0.5")), seed,
                     sampling, props.getSloLatencyMs());
+        }
+    }
+
+    /** Relative moves offered on the stand; recorded with every exploring episode. */
+    static com.iasr.core.resource.CoordinatedActionSpace coordinatedSpace(IasrProperties props) {
+        var rules = policyRules(props);
+        var level = com.iasr.core.resource.ActionLevel.HOLD;
+        return new com.iasr.core.resource.CoordinatedActionSpace(List.of(
+                new com.iasr.core.resource.CoordinatedActionSpace.Managed(
+                        com.iasr.core.resource.SoftResource.CONCURRENCY, rules.get(0), List.of(
+                        new com.iasr.core.resource.ActionLevel(-0.25, 2), new com.iasr.core.resource.ActionLevel(-0.1, 1), level,
+                        new com.iasr.core.resource.ActionLevel(0.1, 1), new com.iasr.core.resource.ActionLevel(0.25, 2))),
+                new com.iasr.core.resource.CoordinatedActionSpace.Managed(
+                        com.iasr.core.resource.SoftResource.CONNECTION_POOL, rules.get(1), List.of(
+                        new com.iasr.core.resource.ActionLevel(-0.15, 1), level,
+                        new com.iasr.core.resource.ActionLevel(0.15, 1)))),
+                props.getSloLatencyMs());
+    }
+    @org.springframework.context.annotation.Configuration(proxyBeanMethods = false)
+    static class CoordinatedExplorationConfig {
+        @org.springframework.context.annotation.Bean
+        public com.iasr.core.controller.Controller coordinatedExplorer(
+                IasrProperties props,
+                @org.springframework.beans.factory.annotation.Value("${bench.exploration.seed}") long seed,
+                @org.springframework.beans.factory.annotation.Value("${bench.exploration.anchor}") CoordinatedExplorer.Anchor anchor) {
+            return new CoordinatedExplorer(coordinatedSpace(props), policyBaseline(props),
+                    Double.parseDouble(System.getProperty("bench.epsilon", "0.5")), seed, anchor);
         }
     }
 
@@ -482,7 +527,7 @@ public class BenchmarkRunner {
         props.put("iasr.dataset-logging-enabled", true);
 
         props.put("iasr.concurrency.initial-limit", Integer.getInteger("bench.initialLimit", 100));
-        props.put("iasr.concurrency.min-limit", 5);
+        props.put("iasr.concurrency.min-limit", Integer.getInteger("bench.limitMin", 5));
         props.put("iasr.concurrency.max-limit", 400);
         props.put("iasr.concurrency.max-step", 20);
         override(props, "iasr.concurrency.max-step-down", "bench.maxStepDown");

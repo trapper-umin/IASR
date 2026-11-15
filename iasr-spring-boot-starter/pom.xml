@@ -23,6 +23,12 @@
             <groupId>com.iasr</groupId>
             <artifactId>iasr-micrometer</artifactId>
         </dependency>
+        <!-- Learned coordinated policy: present on the classpath, used only when iasr.policy.model-path is set -->
+        <dependency>
+            <groupId>com.iasr</groupId>
+            <artifactId>iasr-policy</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- Spring Boot -->
         <dependency>

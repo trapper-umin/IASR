@@ -1,0 +1,9 @@
+scenario,mode,dispatched,succeeded,rejected_429,server_errors,client_timeouts,goodput_rps,p50_ms,p95_ms,p99_ms,max_ms,slo_breach_pct,rejection_pct,hard_failure_pct
+steady,adaptive,1621,1232,389,0,0,41.1,39.0,252.0,1055.0,1808.0,8.3,24.0,0.0
+steady,coordinated,1621,1276,345,0,0,42.5,36.0,270.0,1123.0,2162.0,9.1,21.3,0.0
+spike,adaptive,4948,2325,2623,0,0,51.7,117.0,259.0,649.0,1381.0,31.7,53.0,0.0
+spike,coordinated,4948,1915,3033,0,0,42.6,133.0,357.0,1317.0,1581.0,31.6,61.3,0.0
+ramp,adaptive,5669,1867,3802,0,0,41.5,131.0,245.0,820.0,1569.0,19.1,67.1,0.0
+ramp,coordinated,5669,1942,3727,0,0,43.2,131.0,226.0,761.0,2223.0,10.7,65.7,0.0
+slow-dependency,adaptive,3038,1297,1741,0,0,28.8,141.0,361.0,1815.0,2070.0,41.9,57.3,0.0
+slow-dependency,coordinated,3038,1230,1808,0,0,27.3,145.0,510.0,1679.0,2728.0,48.1,59.5,0.0

@@ -71,8 +71,10 @@ public class IasrAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public WindowedLatencyTracker iasrLatencyTracker() {
-        return new WindowedLatencyTracker();
+    public WindowedLatencyTracker iasrLatencyTracker(IasrProperties props) {
+        WindowedLatencyTracker tracker = new WindowedLatencyTracker();
+        tracker.setSloThresholdMs(props.getSloLatencyMs());
+        return tracker;
     }
 
     // ── ConcurrencyLimiter ───────────────────────────────────────────────
@@ -193,8 +195,39 @@ public class IasrAutoConfiguration {
             ObjectProvider<List<Actuator>> additionalActuatorsProvider,
             ObjectProvider<com.iasr.core.controller.Controller> controllerProvider) {
 
-        IasrProperties.ControllerProps cp = props.getController();
-        com.iasr.core.controller.Controller controller = buildController(props, controllerProvider);
+        List<ActuatorGuardrail> guardrails = new java.util.ArrayList<>();
+        guardrails.add(new ActuatorGuardrail(
+                ConcurrencyLimiter.ACTUATOR_NAME,
+                props.getConcurrency().getMinLimit(),
+                props.getConcurrency().getMaxLimit(),
+                props.getConcurrency().getMaxStep(),
+                props.getConcurrency().getCooldownTicks(),
+                props.getConcurrency().isBlockIncreaseOnSloViolation(),
+                props.getConcurrency().getMaxStepDown()));
+
+        // Discover HikariPoolActuator (or any other Actuator) if present
+        boolean hasHikari = false;
+        List<Actuator> managed = new java.util.ArrayList<>();
+        managed.add(concurrencyLimiter);
+        List<Actuator> extras = additionalActuatorsProvider.getIfAvailable();
+        if (extras != null) {
+            for (Actuator actuator : extras) {
+                if (actuator instanceof ConcurrencyLimiter) continue;
+                managed.add(actuator);
+                if ("hikari_max_pool".equals(actuator.name())) {
+                    hasHikari = true;
+                    guardrails.add(new ActuatorGuardrail(
+                            actuator.name(),
+                            props.getHikari().getMinPoolSize(),
+                            props.getHikari().getMaxPoolSize(),
+                            props.getHikari().getMaxStep(),
+                            props.getHikari().getCooldownTicks(),
+                            props.getHikari().isBlockIncreaseOnSloViolation()));
+                }
+            }
+        }
+
+        com.iasr.core.controller.Controller controller = buildController(props, controllerProvider, guardrails);
 
         ControlEngineConfig.Builder cfgBuilder = ControlEngineConfig.builder()
                 .windowMs(props.getWindowMs())
@@ -202,38 +235,9 @@ public class IasrAutoConfiguration {
                 .applyActions(props.isApplyActions())
                 .datasetLoggingEnabled(props.isDatasetLoggingEnabled())
                 .metricsProvider(metricsProvider)
-                .controller(controller)
-                .addActuator(concurrencyLimiter)
-                .addGuardrail(new ActuatorGuardrail(
-                        ConcurrencyLimiter.ACTUATOR_NAME,
-                        props.getConcurrency().getMinLimit(),
-                        props.getConcurrency().getMaxLimit(),
-                        props.getConcurrency().getMaxStep(),
-                        props.getConcurrency().getCooldownTicks(),
-                        props.getConcurrency().isBlockIncreaseOnSloViolation(),
-                        props.getConcurrency().getMaxStepDown()
-                ));
-
-        // Discover HikariPoolActuator (or any other Actuator) if present
-        boolean hasHikari = false;
-        List<Actuator> extras = additionalActuatorsProvider.getIfAvailable();
-        if (extras != null) {
-            for (Actuator actuator : extras) {
-                if (actuator instanceof ConcurrencyLimiter) continue;
-                cfgBuilder.addActuator(actuator);
-                if ("hikari_max_pool".equals(actuator.name())) {
-                    hasHikari = true;
-                    cfgBuilder.addGuardrail(new ActuatorGuardrail(
-                            actuator.name(),
-                            props.getHikari().getMinPoolSize(),
-                            props.getHikari().getMaxPoolSize(),
-                            props.getHikari().getMaxStep(),
-                            props.getHikari().getCooldownTicks(),
-                            props.getHikari().isBlockIncreaseOnSloViolation()
-                    ));
-                }
-            }
-        }
+                .controller(controller);
+        managed.forEach(cfgBuilder::addActuator);
+        guardrails.forEach(cfgBuilder::addGuardrail);
 
         ControlEngine engine = new ControlEngine(cfgBuilder.build());
         log.info("IASR ControlEngine created: mode={}, SLO={}ms, window={}ms, actuators={}",
@@ -256,7 +260,8 @@ public class IasrAutoConfiguration {
      */
     private com.iasr.core.controller.Controller buildController(
             IasrProperties props,
-            ObjectProvider<com.iasr.core.controller.Controller> controllerProvider) {
+            ObjectProvider<com.iasr.core.controller.Controller> controllerProvider,
+            List<ActuatorGuardrail> guardrails) {
 
         com.iasr.core.controller.Controller supplied = controllerProvider.getIfAvailable();
         if (supplied != null) {
@@ -265,7 +270,7 @@ public class IasrAutoConfiguration {
         }
 
         IasrProperties.ControllerProps cp = props.getController();
-        return new BaselineController(
+        BaselineController rules = new BaselineController(
                 props.getSloLatencyMs(),
                 cp.getComfortFactor(),
                 cp.getConcurrencyIncreaseStep(),
@@ -279,5 +284,36 @@ public class IasrAutoConfiguration {
                 cp.getSloTargetHeadroom(),
                 cp.getMinGradient(),
                 cp.getHikariIdleShrinkThreshold());
+
+        String modelPath = props.getPolicy().getModelPath();
+        if (modelPath == null || modelPath.isBlank()) {
+            return rules;
+        }
+        return LearnedPolicy.create(modelPath, props, guardrails, rules);
+    }
+
+    /**
+     * Kept in its own class so that the policy types are resolved only when a
+     * model is actually configured.
+     */
+    private static final class LearnedPolicy {
+        static com.iasr.core.controller.Controller create(String modelPath, IasrProperties props,
+                                                          List<ActuatorGuardrail> guardrails,
+                                                          com.iasr.core.controller.Controller rules) {
+            double budgetMs = props.getPolicy().getInferenceBudgetMs();
+            if (!Double.isFinite(budgetMs) || budgetMs <= 0) {
+                throw new IllegalArgumentException("iasr.policy.inference-budget-ms must be positive");
+            }
+            try {
+                var model = com.iasr.policy.coordinated.PolicyModel.load(java.nio.file.Path.of(modelPath));
+                log.info("IASR: coordinated learned policy loaded from [{}], sha256={}, resources={}",
+                        modelPath, model.sha256(),
+                        model.resources().stream().map(r -> r.signals().actuatorName()).toList());
+                return new com.iasr.policy.coordinated.CoordinatedController(
+                        model, guardrails, props.getSloLatencyMs(), rules, (long) (budgetMs * 1e6));
+            } catch (java.io.IOException e) {
+                throw new IllegalStateException("Cannot read iasr.policy.model-path [" + modelPath + "]", e);
+            }
+        }
     }
 }

@@ -1,0 +1,14 @@
+2026-11-15 00:01:33.610 MSK [80762] LOG:  starting PostgreSQL 17.10 (Homebrew) on aarch64-apple-darwin25.4.0, compiled by Apple clang version 21.0.0 (clang-2100.0.123.102), 64-bit
+2026-11-15 00:01:33.611 MSK [80762] LOG:  listening on IPv4 address "127.0.0.1", port 57178
+2026-11-15 00:01:33.611 MSK [80762] LOG:  listening on Unix socket "/tmp/iasr-pg-lfntbb_2/.s.PGSQL.57178"
+2026-11-15 00:01:33.613 MSK [80765] LOG:  database system was shut down at 2026-11-15 00:01:33 MSK
+2026-11-15 00:01:33.614 MSK [80762] LOG:  database system is ready to accept connections
+2026-11-15 00:06:33.611 MSK [80763] LOG:  checkpoint starting: time
+2026-11-15 00:08:13.274 MSK [80763] LOG:  checkpoint complete: wrote 984 buffers (6.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=99.642 s, sync=0.010 s, total=99.663 s; sync files=310, longest=0.004 s, average=0.001 s; distance=4635 kB, estimate=4635 kB; lsn=0/19A01C0, redo lsn=0/19A0130
+2026-11-15 01:31:43.800 MSK [80762] LOG:  received fast shutdown request
+2026-11-15 01:31:43.800 MSK [80762] LOG:  aborting any active transactions
+2026-11-15 01:31:43.802 MSK [80762] LOG:  background worker "logical replication launcher" (PID 80768) exited with exit code 1
+2026-11-15 01:31:43.802 MSK [80763] LOG:  shutting down
+2026-11-15 01:31:43.802 MSK [80763] LOG:  checkpoint starting: shutdown immediate
+2026-11-15 01:31:43.804 MSK [80763] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.003 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=4172 kB; lsn=0/19A0270, redo lsn=0/19A0270
+2026-11-15 01:31:43.807 MSK [80762] LOG:  database system is shut down

@@ -1,0 +1,166 @@
+{
+  "initialResources" : {
+    "concurrency_limit" : 8,
+    "hikari_max_pool" : 3
+  },
+  "configuration" : {
+    "iasr" : {
+      "enabled" : true,
+      "applyActions" : true,
+      "datasetLoggingEnabled" : true,
+      "sloLatencyMs" : 150.0,
+      "windowMs" : 1000,
+      "concurrency" : {
+        "initialLimit" : 8,
+        "minLimit" : 2,
+        "maxLimit" : 400,
+        "maxStep" : 20,
+        "maxStepDown" : 50,
+        "cooldownTicks" : 1,
+        "acquireTimeoutMs" : 100,
+        "blockIncreaseOnSloViolation" : true
+      },
+      "hikari" : {
+        "minPoolSize" : 2,
+        "maxPoolSize" : 16,
+        "maxStep" : 2,
+        "cooldownTicks" : 2,
+        "blockIncreaseOnSloViolation" : false
+      },
+      "controller" : {
+        "comfortFactor" : 0.7,
+        "concurrencyIncreaseStep" : 1,
+        "concurrencyDecreaseFactor" : 0.85,
+        "errorRateThreshold" : 0.01,
+        "timeoutRateThreshold" : 0.005,
+        "hikariStep" : 1,
+        "hikariPendingThreshold" : 0.0,
+        "hikariAcquireTimeThresholdMs" : 10.0,
+        "utilizationGate" : 0.9,
+        "sloTargetHeadroom" : 0.0,
+        "minGradient" : 0.9,
+        "hikariIdleShrinkThreshold" : 2.0
+      }
+    },
+    "controllerClass" : "com.iasr.benchmark.CoordinatedExplorer",
+    "guardrails" : [ {
+      "actuatorName" : "concurrency_limit",
+      "minValue" : 2,
+      "maxValue" : 400,
+      "maxStep" : 20,
+      "cooldownTicks" : 1,
+      "blockIncreaseOnSloViolation" : true,
+      "maxStepDown" : 50
+    }, {
+      "actuatorName" : "hikari_max_pool",
+      "minValue" : 2,
+      "maxValue" : 16,
+      "maxStep" : 2,
+      "cooldownTicks" : 2,
+      "blockIncreaseOnSloViolation" : false,
+      "maxStepDown" : 0
+    } ],
+    "exploration" : {
+      "anchor" : "baseline",
+      "actionSpace" : "coordinated-relative-v1",
+      "epsilon" : 0.5,
+      "policySeed" : -3447581832005736198,
+      "resources" : [ {
+        "actuator" : "concurrency_limit",
+        "levels" : [ [ -0.25, 2 ], [ -0.1, 1 ], [ 0.0, 0 ], [ 0.1, 1 ], [ 0.25, 2 ] ]
+      }, {
+        "actuator" : "hikari_max_pool",
+        "levels" : [ [ -0.15, 1 ], [ 0.0, 0 ], [ 0.15, 1 ] ]
+      } ]
+    },
+    "backend" : {
+      "serviceMs" : 24,
+      "appMs" : 5,
+      "thrash" : 0.3,
+      "rowsPerMs" : 20000,
+      "kind" : "postgres",
+      "workers" : 12
+    },
+    "pool" : {
+      "minimumIdle" : 3,
+      "connectionTimeoutMs" : 3000,
+      "maximum" : 3
+    },
+    "load" : {
+      "warmupRps" : 60,
+      "durationMs" : 45000,
+      "warmupMs" : 6000,
+      "scenario" : "slow-dependency",
+      "clientThreads" : 64,
+      "requestTimeoutMs" : 3000
+    },
+    "runtime" : {
+      "availableProcessors" : 10,
+      "os" : "Mac OS X",
+      "javaVersion" : "17.0.16",
+      "arch" : "aarch64"
+    },
+    "sloMs" : 150.0,
+    "conditions" : {
+      "profile" : {
+        "degradedFactor" : 1.8,
+        "name" : "slow-dependency",
+        "durationScale" : 1.0,
+        "profileVersion" : 1,
+        "loadScale" : 0.32,
+        "baseServiceMs" : 24
+      },
+      "backend" : {
+        "serviceMs" : 24,
+        "appMs" : 5,
+        "thrash" : 0.3,
+        "rowsPerMs" : 20000,
+        "kind" : "postgres",
+        "workers" : 12
+      },
+      "load" : {
+        "warmupRps" : 60,
+        "durationMs" : 45000,
+        "warmupMs" : 6000,
+        "scenario" : "slow-dependency",
+        "clientThreads" : 64,
+        "requestTimeoutMs" : 3000
+      },
+      "runtime" : {
+        "availableProcessors" : 10,
+        "os" : "Mac OS X",
+        "javaVersion" : "17.0.16",
+        "arch" : "aarch64"
+      },
+      "initialPool" : 3,
+      "initialLimit" : 8,
+      "sloMs" : 150.0
+    }
+  },
+  "measurementInitialResources" : {
+    "concurrency_limit" : 5,
+    "hikari_max_pool" : 5
+  },
+  "timing" : {
+    "captureStartedAt" : "2026-11-14T22:25:53.271522Z",
+    "warmupStartedAt" : "2026-11-14T22:25:53.271661Z",
+    "measurementStartedAt" : "2026-11-14T22:25:59.603471Z",
+    "measurementScheduledEndAt" : "2026-11-14T22:26:44.603471Z",
+    "drainCompletedAt" : "2026-11-14T22:26:44.994590Z",
+    "captureEndedAt" : "2026-11-14T22:26:46.611292Z"
+  },
+  "metadataVersion" : 1,
+  "datasetSchemaVersion" : 3,
+  "runId" : "83181d20-4a71-4947-82aa-e9192c7ecec8",
+  "episodeId" : "slow-dependency/explore-coordinated/1",
+  "scenario" : "slow-dependency",
+  "mode" : "explore-coordinated",
+  "repetition" : 1,
+  "orderSeed" : 20261115,
+  "source" : {
+    "dirty" : true,
+    "commit" : "783a43f38d1d287b5dce477a6259e1549d8ebd31"
+  },
+  "datasetRecords" : 54,
+  "status" : "complete"
+}

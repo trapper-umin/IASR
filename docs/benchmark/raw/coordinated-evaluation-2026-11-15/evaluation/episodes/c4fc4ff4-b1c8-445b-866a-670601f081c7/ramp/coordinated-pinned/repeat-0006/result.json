@@ -1,0 +1,19 @@
+{
+  "mode" : "coordinated-pinned",
+  "scenario" : "ramp",
+  "durationMs" : 45000,
+  "dispatched" : 6929,
+  "succeeded" : 2215,
+  "rejected429" : 4714,
+  "serverErrors" : 0,
+  "clientTimeouts" : 0,
+  "otherFailures" : 0,
+  "goodputRps" : 49.2,
+  "p50Ms" : 123.0,
+  "p95Ms" : 260.0,
+  "p99Ms" : 1124.0,
+  "maxMs" : 1950.0,
+  "sloBreachPercent" : 15.4,
+  "rejectionRatePercent" : 68.0,
+  "failureRatePercent" : 0.0
+}

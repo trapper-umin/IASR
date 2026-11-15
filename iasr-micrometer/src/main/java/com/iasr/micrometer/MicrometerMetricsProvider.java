@@ -215,6 +215,7 @@ public class MicrometerMetricsProvider implements MetricsProvider {
             b.put(MetricNames.LATENCY_P99_MS, round3(windowStats.p99Ms()));
             serviceMeanMs = round3(windowStats.serviceMeanMs());
             b.put(MetricNames.LATENCY_MEAN_MS, round3(windowStats.meanMs()));
+            b.put(MetricNames.SLO_GOOD_FRACTION, round3(windowStats.withinSloFraction()));
         } else if (latencyTracker == null && httpRequestsDelta >= MIN_REQUESTS_PER_WINDOW) {
             // No tracker (non-Spring usage): this mean includes every HTTP status.
             // Compute mean from Micrometer totalTime delta (per-window).

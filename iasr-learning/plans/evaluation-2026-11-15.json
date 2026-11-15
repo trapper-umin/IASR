@@ -1,0 +1,60 @@
+{
+ "planVersion": 1,
+ "purpose": "held-out comparison of the coordinated learned policy with the rule-based controller, PostgreSQL",
+ "frozenBeforeTraining": true,
+ "protocol": {
+  "reference": "adaptive",
+  "pairedBy": [
+   "scenario",
+   "repetition"
+  ],
+  "primary": "servedWithinSloPercent pooled over the four scenarios, coordinated minus adaptive",
+  "secondary": [
+   "goodputRps",
+   "p95Ms",
+   "p99Ms",
+   "sloBreachPercent",
+   "rejectionRatePercent",
+   "per-scenario differences",
+   "coordinated minus coordinated-pinned"
+  ],
+  "interval": "paired Student 95%, unadjusted; secondary contrasts are descriptive",
+  "conditions": "service time, load scale, starting pool and limit and degradation factor differ from every training and validation case",
+  "modelSelection": "hyperparameters are chosen on the validation case only; this plan is run once"
+ },
+ "seed": 20261116,
+ "common": {
+  "bench.db.rowsPerMs": 20000,
+  "bench.sloMs": 150,
+  "bench.limitMin": 2,
+  "bench.poolMin": 2,
+  "bench.poolMax": 16,
+  "bench.policy": "docs/benchmark/models/coordinated-2026-11-15/policy.json",
+  "bench.inferenceBudgetMs": 20
+ },
+ "cases": [
+  {
+   "id": "evaluation",
+   "role": "test",
+   "scenarios": [
+    "steady",
+    "spike",
+    "ramp",
+    "slow-dependency"
+   ],
+   "modes": [
+    "adaptive",
+    "coordinated",
+    "coordinated-pinned"
+   ],
+   "repeats": 6,
+   "properties": {
+    "bench.db.serviceMs": 14,
+    "bench.loadScale": 0.55,
+    "bench.poolSize": 5,
+    "bench.initialLimit": 20,
+    "bench.degradedFactor": 2.4
+   }
+  }
+ ]
+}

@@ -1,0 +1,19 @@
+{
+  "mode" : "adaptive",
+  "scenario" : "spike",
+  "durationMs" : 45000,
+  "dispatched" : 4948,
+  "succeeded" : 2442,
+  "rejected429" : 2501,
+  "serverErrors" : 0,
+  "clientTimeouts" : 5,
+  "otherFailures" : 0,
+  "goodputRps" : 54.3,
+  "p50Ms" : 148.0,
+  "p95Ms" : 194.0,
+  "p99Ms" : 253.0,
+  "maxMs" : 1172.0,
+  "sloBreachPercent" : 48.2,
+  "rejectionRatePercent" : 50.5,
+  "failureRatePercent" : 0.1
+}
